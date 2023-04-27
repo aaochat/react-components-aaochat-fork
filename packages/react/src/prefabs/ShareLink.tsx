@@ -1,33 +1,16 @@
 import type { ChatMessage, ReceivedChatMessage } from '@livekit/components-core';
-import { setupChat } from '@livekit/components-core';
 import * as React from 'react';
 import { useRoomContext } from '../context';
-import { useObservableState } from '../hooks/internal/useObservableState';
-import { cloneSingleChild } from '../utils';
-import type { MessageFormatter } from '../components/ChatEntry';
-import { ChatEntry } from '../components/ChatEntry';
 
 export type { ChatMessage, ReceivedChatMessage };
 
-/** @public */
-export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
-  messageFormatter?: MessageFormatter;
-}
-
-/** @public */
-export function useChat() {
+export function useGetLink() {
   const room = useRoomContext();
-  const [setup, setSetup] = React.useState<ReturnType<typeof setupChat>>();
-  const isSending = useObservableState(setup?.isSendingObservable, false);
-  const chatMessages = useObservableState(setup?.messageObservable, []);
 
-  React.useEffect(() => {
-    const setupChatReturn = setupChat(room);
-    setSetup(setupChatReturn);
-    return setupChatReturn.destroy;
-  }, [room]);
+  const host = typeof window ? window.location.hostname : '';
+  const link = `${host}/join/${room.name}`;
 
-  return { send: setup?.send, chatMessages, isSending };
+  return { link: link };
 }
 
 /**
@@ -42,19 +25,19 @@ export function useChat() {
  * ```
  * @public
  */
-export function ShareLink({ messageFormatter, ...props }: ChatProps) {
+export function ShareLink({ ...props }: any) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
-  const { send, chatMessages, isSending } = useChat();
+  const { link } = useGetLink();
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (inputRef.current && inputRef.current.value.trim() !== '') {
-      if (send) {
-        await send(inputRef.current.value);
-        inputRef.current.value = '';
-        inputRef.current.focus();
-      }
+      // if (send) {
+      //   await send(inputRef.current.value);
+      //   inputRef.current.value = '';
+      //   inputRef.current.focus();
+      // }
     }
   }
 
@@ -62,44 +45,25 @@ export function ShareLink({ messageFormatter, ...props }: ChatProps) {
     if (ulRef) {
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
     }
-  }, [ulRef, chatMessages]);
+  }, [ulRef]);
 
   return (
-    <div {...props} className="lk-chat">
-      <ul className="lk-list lk-chat-messages" ref={ulRef}>
-        {props.children
-          ? chatMessages.map((msg, idx) =>
-              cloneSingleChild(props.children, {
-                entry: msg,
-                key: idx,
-                messageFormatter,
-              }),
-            )
-          : chatMessages.map((msg, idx, allMsg) => {
-              const hideName = idx >= 1 && allMsg[idx - 1].from === msg.from;
-              // If the time delta between two messages is bigger than 60s show timestamp.
-              const hideTimestamp = idx >= 1 && msg.timestamp - allMsg[idx - 1].timestamp < 60_000;
+    <div {...props} className="lk-chat lk-sharelink">
+      <div>
+        <h3>{link}</h3>
+        <button type="button" className="lk-button lk-chat-form-button">
+          Copy
+        </button>
+      </div>
 
-              return (
-                <ChatEntry
-                  key={idx}
-                  hideName={hideName}
-                  hideTimestamp={hideName === false ? false : hideTimestamp} // If we show the name always show the timestamp as well.
-                  entry={msg}
-                  messageFormatter={messageFormatter}
-                />
-              );
-            })}
-      </ul>
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input
           className="lk-form-control lk-chat-form-input"
-          disabled={isSending}
           ref={inputRef}
           type="text"
-          placeholder="Enter a message..."
+          placeholder="Search User..."
         />
-        <button type="submit" className="lk-button lk-chat-form-button" disabled={isSending}>
+        <button type="submit" className="lk-button lk-chat-form-button">
           Send
         </button>
       </form>

@@ -2,13 +2,16 @@ import { PIN_DEFAULT_STATE, WIDGET_DEFAULT_STATE } from '@livekit/components-cor
 import * as React from 'react';
 import type { PinContextType } from './pin-context';
 import type { ChatContextType } from './chat-context';
+import type { ShareLinkContextType } from './sharelink-context';
 import { chatReducer } from './chat-context';
+import { shareLinkReducer } from './sharelink-context';
 import { pinReducer } from './pin-context';
 
 /** @public */
 export type LayoutContextType = {
   pin: PinContextType;
   widget: ChatContextType;
+  shareWidget: ShareLinkContextType;
 };
 
 /** @public */
@@ -45,9 +48,14 @@ export function useEnsureLayoutContext(layoutContext?: LayoutContextType) {
 export function useCreateLayoutContext(): LayoutContextType {
   const [pinState, pinDispatch] = React.useReducer(pinReducer, PIN_DEFAULT_STATE);
   const [widgetState, widgetDispatch] = React.useReducer(chatReducer, WIDGET_DEFAULT_STATE);
+  const [shareWidgetState, shareWidgetDispatch] = React.useReducer(
+    shareLinkReducer,
+    WIDGET_DEFAULT_STATE,
+  );
   return {
     pin: { dispatch: pinDispatch, state: pinState },
     widget: { dispatch: widgetDispatch, state: widgetState },
+    shareWidget: { dispatch: shareWidgetDispatch, state: shareWidgetState },
   };
 }
 
@@ -55,10 +63,17 @@ export function useCreateLayoutContext(): LayoutContextType {
 export function useEnsureCreateLayoutContext(layoutContext?: LayoutContextType): LayoutContextType {
   const [pinState, pinDispatch] = React.useReducer(pinReducer, PIN_DEFAULT_STATE);
   const [widgetState, widgetDispatch] = React.useReducer(chatReducer, WIDGET_DEFAULT_STATE);
+  const [shareWidgetState, shareWidgetDispatch] = React.useReducer(
+    shareLinkReducer,
+    WIDGET_DEFAULT_STATE,
+  );
+  console.log('shareWidgetState', shareWidgetState);
+
   return (
     layoutContext ?? {
       pin: { dispatch: pinDispatch, state: pinState },
       widget: { dispatch: widgetDispatch, state: widgetState },
+      shareWidget: { dispatch: shareWidgetDispatch, state: shareWidgetState },
     }
   );
 }

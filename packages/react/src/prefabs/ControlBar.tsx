@@ -6,6 +6,7 @@ import { TrackToggle } from '../components/controls/TrackToggle';
 import { StartAudio } from '../components/controls/StartAudio';
 import { ChatIcon, LeaveIcon } from '../assets/icons';
 import { ChatToggle } from '../components/controls/ChatToggle';
+import { ShareLinkToggle } from '../components/controls/ShareLinkToggle';
 import { isMobileBrowser } from '@livekit/components-core';
 import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
@@ -153,10 +154,10 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
         </ChatToggle>
       )}
       {visibleControls.sharelink && (
-        <ChatToggle>
+        <ShareLinkToggle>
           {showIcon && <ChatIcon />}
           {showText && 'Invite'}
-        </ChatToggle>
+        </ShareLinkToggle>
       )}
       {visibleControls.users && (
         <ChatToggle>

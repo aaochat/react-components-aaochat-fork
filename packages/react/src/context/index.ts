@@ -1,4 +1,5 @@
 export {} from './chat-context';
+export {} from './sharelink-context';
 export {
   LayoutContext,
   LayoutContextType,

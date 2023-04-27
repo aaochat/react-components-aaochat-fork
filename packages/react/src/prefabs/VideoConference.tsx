@@ -6,7 +6,6 @@ import { FocusLayout, FocusLayoutContainer } from '../components/layout/FocusLay
 import { GridLayout } from '../components/layout/GridLayout';
 import type { WidgetState } from '@livekit/components-core';
 import { isEqualTrackRef, isTrackReference, log } from '@livekit/components-core';
-import { Chat } from './Chat';
 import { ShareLink } from './ShareLink';
 import { Users } from './Users';
 import { ConnectionStateToast } from '../components/Toast';
@@ -57,6 +56,7 @@ export function VideoConference({ chatMessageFormatter, ...props }: VideoConfere
   );
 
   const widgetUpdate = (state: WidgetState) => {
+    console.log('updating widget state', state);
     log.debug('updating widget state', state);
     setWidgetState(state);
   };
@@ -112,18 +112,8 @@ export function VideoConference({ chatMessageFormatter, ...props }: VideoConfere
           )}
           <ControlBar controls={{ chat: false, sharelink: true, users: true }} />
         </div>
-        <Chat
-          style={{ display: widgetState.showChat ? 'flex' : 'none' }}
-          messageFormatter={chatMessageFormatter}
-        />
-        <Users
-          style={{ display: widgetState.showUser ? 'flex' : 'none' }}
-          messageFormatter={chatMessageFormatter}
-        />
-        <ShareLink
-          style={{ display: widgetState.showShareLink ? 'flex' : 'none' }}
-          messageFormatter={chatMessageFormatter}
-        />
+        <ShareLink style={{ display: widgetState.showShareLink ? 'flex' : 'none' }} />
+        <Users style={{ display: widgetState.showUser ? 'flex' : 'none' }} />
       </LayoutContextProvider>
       <RoomAudioRenderer />
       <ConnectionStateToast />

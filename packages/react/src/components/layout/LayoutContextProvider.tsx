@@ -32,5 +32,12 @@ export function LayoutContextProvider({
     }
   }, [onWidgetChange, layoutContextValue.widget.state]);
 
+  React.useEffect(() => {
+    log.debug('Widget Updated', { widgetState: layoutContextValue.shareWidget.state });
+    if (onWidgetChange && layoutContextValue.shareWidget.state) {
+      onWidgetChange(layoutContextValue.shareWidget.state);
+    }
+  }, [onWidgetChange, layoutContextValue.shareWidget.state]);
+
   return <LayoutContext.Provider value={layoutContextValue}>{children}</LayoutContext.Provider>;
 }
