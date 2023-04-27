@@ -18,6 +18,8 @@ export type ControlBarControls = {
   chat?: boolean;
   screenShare?: boolean;
   leave?: boolean;
+  sharelink?: boolean;
+  users?: boolean;
 };
 
 /** @public */
@@ -43,14 +45,33 @@ export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
  * @public
  */
 export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
-  const [isChatOpen, setIsChatOpen] = React.useState(false);
   const layoutContext = useMaybeLayoutContext();
+  const [isChatOpen, setIsChatOpen] = React.useState(false);
   React.useEffect(() => {
     if (layoutContext?.widget.state?.showChat !== undefined) {
       setIsChatOpen(layoutContext?.widget.state?.showChat);
     }
   }, [layoutContext?.widget.state?.showChat]);
-  const isTooLittleSpace = useMediaQuery(`(max-width: ${isChatOpen ? 1000 : 760}px)`);
+
+  // Participant list for control the action of user
+  const [isUserOpen, setIsUserOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (layoutContext?.widget.state?.showUser !== undefined) {
+      setIsUserOpen(layoutContext?.widget.state?.showUser);
+    }
+  }, [layoutContext?.widget.state?.showUser]);
+
+  // Share join link option for participant
+  const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (layoutContext?.widget.state?.showShareLink !== undefined) {
+      setIsShareLinkOpen(layoutContext?.widget.state?.showShareLink);
+    }
+  }, [layoutContext?.widget.state?.showShareLink]);
+
+  const isTooLittleSpace = useMediaQuery(
+    `(max-width: ${isChatOpen || isUserOpen || isShareLinkOpen ? 1000 : 760}px)`,
+  );
 
   const defaultVariation = isTooLittleSpace ? 'minimal' : 'verbose';
   variation ??= defaultVariation;
@@ -64,11 +85,16 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
     visibleControls.chat = false;
     visibleControls.microphone = false;
     visibleControls.screenShare = false;
+    visibleControls.sharelink = false;
+    visibleControls.users = false;
+    
   } else {
     visibleControls.camera ??= localPermissions.canPublish;
     visibleControls.microphone ??= localPermissions.canPublish;
     visibleControls.screenShare ??= localPermissions.canPublish;
     visibleControls.chat ??= localPermissions.canPublishData && controls?.chat;
+    visibleControls.sharelink ??= localPermissions.canPublishData && controls?.sharelink;
+    visibleControls.users ??= localPermissions.canPublishData && controls?.users;
   }
 
   const showIcon = React.useMemo(
@@ -124,6 +150,18 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
         <ChatToggle>
           {showIcon && <ChatIcon />}
           {showText && 'Chat'}
+        </ChatToggle>
+      )}
+      {visibleControls.sharelink && (
+        <ChatToggle>
+          {showIcon && <ChatIcon />}
+          {showText && 'Invite'}
+        </ChatToggle>
+      )}
+      {visibleControls.users && (
+        <ChatToggle>
+          {showIcon && <ChatIcon />}
+          {showText && 'Participants'}
         </ChatToggle>
       )}
       {visibleControls.leave && (

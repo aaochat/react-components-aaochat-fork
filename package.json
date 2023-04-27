@@ -7,9 +7,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:core": "turbo run build --filter=@livekit/components-core...",
-    "build:next": "turbo run build --filter=@livekit/component-example-next...",
     "build:react": "turbo run build --filter=@livekit/components-react...",
-    "build:storybook": "turbo run build --filter=@livekit/component-docs-storybook...",
     "build:styles": "turbo run build --filter=@livekit/components-styles...",
     "dev:next": "turbo run dev --filter=@livekit/component-example-next...",
     "dev:storybook": "turbo run dev --filter=@livekit/component-docs-storybook...",
@@ -25,8 +23,6 @@
   },
   "workspaces": [
     "packages/*",
-    "examples/*",
-    "docs/*",
     "tooling/*"
   ],
   "dependencies": {},

@@ -8,8 +8,14 @@ export const PIN_DEFAULT_STATE: PinState = [];
 // ## WidgetState Types
 export type WidgetState = {
   showChat: boolean;
+  showUser: boolean;
+  showShareLink: boolean;
 };
-export const WIDGET_DEFAULT_STATE: WidgetState = { showChat: false };
+export const WIDGET_DEFAULT_STATE: WidgetState = {
+  showChat: false,
+  showUser: false,
+  showShareLink: false,
+};
 
 // ## Track Source Types
 export type TrackSourceWithOptions = { source: Track.Source; withPlaceholder: boolean };

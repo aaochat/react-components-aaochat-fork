@@ -7,6 +7,8 @@ import { GridLayout } from '../components/layout/GridLayout';
 import type { WidgetState } from '@livekit/components-core';
 import { isEqualTrackRef, isTrackReference, log } from '@livekit/components-core';
 import { Chat } from './Chat';
+import { ShareLink } from './ShareLink';
+import { Users } from './Users';
 import { ConnectionStateToast } from '../components/Toast';
 import type { MessageFormatter } from '../components/ChatEntry';
 import { RoomEvent, Track } from 'livekit-client';
@@ -40,7 +42,11 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  * @public
  */
 export function VideoConference({ chatMessageFormatter, ...props }: VideoConferenceProps) {
-  const [widgetState, setWidgetState] = React.useState<WidgetState>({ showChat: false });
+  const [widgetState, setWidgetState] = React.useState<WidgetState>({
+    showChat: false,
+    showUser: false,
+    showShareLink: false,
+  });
 
   const tracks = useTracks(
     [
@@ -104,10 +110,18 @@ export function VideoConference({ chatMessageFormatter, ...props }: VideoConfere
               </FocusLayoutContainer>
             </div>
           )}
-          <ControlBar controls={{ chat: true }} />
+          <ControlBar controls={{ chat: false, sharelink: true, users: true }} />
         </div>
         <Chat
           style={{ display: widgetState.showChat ? 'flex' : 'none' }}
+          messageFormatter={chatMessageFormatter}
+        />
+        <Users
+          style={{ display: widgetState.showUser ? 'flex' : 'none' }}
+          messageFormatter={chatMessageFormatter}
+        />
+        <ShareLink
+          style={{ display: widgetState.showShareLink ? 'flex' : 'none' }}
           messageFormatter={chatMessageFormatter}
         />
       </LayoutContextProvider>

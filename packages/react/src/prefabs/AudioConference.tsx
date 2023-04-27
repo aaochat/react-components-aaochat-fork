@@ -28,7 +28,11 @@ export type AudioConferenceProps = React.HTMLAttributes<HTMLDivElement>;
  * @public
  */
 export function AudioConference({ ...props }: AudioConferenceProps) {
-  const [widgetState, setWidgetState] = React.useState<WidgetState>({ showChat: false });
+  const [widgetState, setWidgetState] = React.useState<WidgetState>({
+    showChat: false,
+    showUser: false,
+    showShareLink: false,
+  });
   const participants = useParticipants();
 
   return (
