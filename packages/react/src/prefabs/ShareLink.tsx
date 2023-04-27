@@ -1,13 +1,10 @@
-import type { ChatMessage, ReceivedChatMessage } from '@livekit/components-core';
 import * as React from 'react';
 import { useRoomContext } from '../context';
-
-export type { ChatMessage, ReceivedChatMessage };
 
 export function useGetLink() {
   const room = useRoomContext();
 
-  const host = typeof window ? window.location.hostname : '';
+  const host = typeof window ? window.location.origin : '';
   const link = `${host}/join/${room.name}`;
 
   return { link: link };
@@ -41,6 +38,10 @@ export function ShareLink({ ...props }: any) {
     }
   }
 
+  async function handleCopy() {
+    navigator.clipboard.writeText(link);
+  }
+
   React.useEffect(() => {
     if (ulRef) {
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
@@ -49,12 +50,12 @@ export function ShareLink({ ...props }: any) {
 
   return (
     <div {...props} className="lk-chat lk-sharelink">
-      <div>
-        <h3>{link}</h3>
-        <button type="button" className="lk-button lk-chat-form-button">
+      <form className="lk-chat-form" onSubmit={handleSubmit}>
+        <input className="lk-form-control lk-chat-form-input" type="text" value={link} readOnly />
+        <button type="button" className="lk-button lk-chat-form-button" onClick={handleCopy}>
           Copy
         </button>
-      </div>
+      </form>
 
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input
