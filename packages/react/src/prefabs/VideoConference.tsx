@@ -22,6 +22,7 @@ import { ParticipantTile } from '../components';
  */
 export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElement> {
   chatMessageFormatter?: MessageFormatter;
+  showShareButton: boolean;
 }
 
 /**
@@ -110,7 +111,7 @@ export function VideoConference({ chatMessageFormatter, ...props }: VideoConfere
               </FocusLayoutContainer>
             </div>
           )}
-          <ControlBar controls={{ chat: false, sharelink: true, users: true }} />
+          <ControlBar controls={{ chat: false, sharelink: props.showShareButton, users: true }} />
         </div>
         <ShareLink style={{ display: widgetState.showShareLink ? 'flex' : 'none' }} />
         <Users style={{ display: widgetState.showUser ? 'flex' : 'none' }} />
