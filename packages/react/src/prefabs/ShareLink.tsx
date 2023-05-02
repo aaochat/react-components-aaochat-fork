@@ -31,40 +31,67 @@ export function ShareLink({ ...props }: any) {
   const ulRef = React.useRef<HTMLUListElement>(null);
   const { link } = useGetLink();
   const [ users, setUsers ] = React.useState<string[]>([]);
-  const [checkedValues, setCheckedValues] = React.useState<string[]>([]);
+  // const [ checkedValues, setCheckedValues ] = React.useState<string[]>([]);
+
+  async function getUsers(key: string) {
+    fetch(`${getHostUrl()}/api/get-users/${key}`).then(async (res) => {
+      if (res.ok) {
+        const body = await res.json();
+        setUsers(body);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
+
+  // React.useEffect({
+  //   getUsers();
+  // }, []);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (inputRef.current && inputRef.current.value.trim() !== '') {
-      fetch(`${getHostUrl()}/api/get-users/${inputRef.current.value}`).then(async (res) => {
-        if (res.ok) {
-          const body = await res.json();
-          setUsers(body);
-        } else {
-          throw Error('Error fetching server url, check server logs');
-        }
-      });
+      getUsers(inputRef.current.value);
     }
   }
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setCheckedValues([...checkedValues, event.target.value]);
-    } else {
-      setCheckedValues(checkedValues.filter((value: string) => value !== event.target.value));
-    }
-  };
+  // const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.checked) {
+  //     setCheckedValues([...checkedValues, event.target.value]);
+  //   } else {
+  //     setCheckedValues(checkedValues.filter((value: string) => value !== event.target.value));
+  //   }
+  // };
 
-  async function handleSend() {
+  // async function handleSend() {
+  //   const data = {
+  //     method: "POST", // *GET, POST, PUT, DELETE, etc.
+  //     body: JSON.stringify({
+  //        "users": checkedValues , // body data type must match "Content-Type" header
+  //        "joinLink": link 
+  //   })
+  //   };
+
+  //   fetch(`${getHostUrl()}/api/invite-users`, data).then(async (res) => {
+  //       if (res.ok) {
+  //         const body = await res.json();
+  //         setUsers(body);
+  //       } else {
+  //         throw Error('Error fetching server url, check server logs');
+  //       }
+  //     });
+  // }
+  
+  async function handleInvite(user: string) {
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       body: JSON.stringify({
-         "users": checkedValues , // body data type must match "Content-Type" header
+         "user": user , // body data type must match "Content-Type" header
          "joinLink": link 
     })
     };
 
-    fetch(`${getHostUrl()}/api/invite-users`, data).then(async (res) => {
+    fetch(`${getHostUrl()}/api/send-invite`, data).then(async (res) => {
         if (res.ok) {
           const body = await res.json();
           setUsers(body);
@@ -73,7 +100,6 @@ export function ShareLink({ ...props }: any) {
         }
       });
   }
-  
 
   async function handleCopy() {
     navigator.clipboard.writeText(link);
@@ -104,7 +130,7 @@ export function ShareLink({ ...props }: any) {
           placeholder="Search User..."
           onKeyUp={handleSubmit}
         />
-        <button type="submit" onClick={handleSend} className="lk-button lk-chat-form-button">
+        <button type="submit" onClick={handleSubmit} className="lk-button lk-chat-form-button">
           Send
         </button>
       </form>
@@ -113,15 +139,19 @@ export function ShareLink({ ...props }: any) {
         {users.map((user, index) => {
           return (
             <li key={index} className="lk-chat-entry">
-              <input
+              {/* <input
                 type="checkbox"
                 name="selectedUser"
                 id='selectedUser'
                 value={user}
                 checked={checkedValues.includes(user)}
                 onChange={handleCheckboxChange}
-              />
+              /> */}
               <span className="lk-message-body">{user}</span>
+
+              <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
+                Invite
+              </button>
             </li>
           )
         })}
