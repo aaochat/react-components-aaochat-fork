@@ -36,41 +36,23 @@ export function useChat() {
  * @public
  */
 export function Users({ ...props }: any) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
-  const { send, chatMessages, isSending } = useChat();
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    if (inputRef.current && inputRef.current.value.trim() !== '') {
-      if (send) {
-        await send(inputRef.current.value);
-        inputRef.current.value = '';
-        inputRef.current.focus();
-      }
-    }
-  }
 
   React.useEffect(() => {
     if (ulRef) {
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
     }
-  }, [ulRef, chatMessages]);
+  }, [ulRef]);
 
   return (
     <div {...props} className="lk-chat lk-users">
-      <form className="lk-chat-form" onSubmit={handleSubmit}>
-        <input
-          className="lk-form-control lk-chat-form-input"
-          disabled={isSending}
-          ref={inputRef}
-          type="text"
-          placeholder="Enter a message..."
-        />
-        <button type="submit" className="lk-button lk-chat-form-button" disabled={isSending}>
-          Send
-        </button>
-      </form>
+      <ul>
+        <li>User 1</li>
+        <li>User 2</li>
+        <li>User 3</li>
+        <li>User 4</li>
+      </ul>
     </div>
   );
 }

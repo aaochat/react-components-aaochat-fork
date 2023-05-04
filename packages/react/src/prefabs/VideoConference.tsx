@@ -9,7 +9,7 @@ import { isEqualTrackRef, isTrackReference, log } from '@livekit/components-core
 import { ShareLink } from './ShareLink';
 import { Users } from './Users';
 import { ConnectionStateToast } from '../components/Toast';
-import type { MessageFormatter } from '../components/ChatEntry';
+// import type { MessageFormatter } from '../components/ChatEntry';
 import { RoomEvent, Track } from 'livekit-client';
 import { useTracks } from '../hooks/useTracks';
 import { usePinnedTracks } from '../hooks/usePinnedTracks';
@@ -21,8 +21,9 @@ import { ParticipantTile } from '../components';
  * @public
  */
 export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElement> {
-  chatMessageFormatter?: MessageFormatter;
+  // chatMessageFormatter?: MessageFormatter;
   showShareButton: boolean;
+  showParticipantButton: boolean;
 }
 
 /**
@@ -41,7 +42,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  * ```
  * @public
  */
-export function VideoConference({ chatMessageFormatter, ...props }: VideoConferenceProps) {
+export function VideoConference({ ...props }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: false,
     showUser: false,
@@ -57,7 +58,8 @@ export function VideoConference({ chatMessageFormatter, ...props }: VideoConfere
   );
 
   const widgetUpdate = (state: WidgetState) => {
-    console.log('updating widget state', state);
+    console.log(state);
+
     log.debug('updating widget state', state);
     setWidgetState(state);
   };
@@ -111,7 +113,13 @@ export function VideoConference({ chatMessageFormatter, ...props }: VideoConfere
               </FocusLayoutContainer>
             </div>
           )}
-          <ControlBar controls={{ chat: false, sharelink: props.showShareButton, users: true }} />
+          <ControlBar
+            controls={{
+              chat: false,
+              sharelink: props.showShareButton,
+              users: props.showParticipantButton,
+            }}
+          />
         </div>
         <ShareLink style={{ display: widgetState.showShareLink ? 'flex' : 'none' }} />
         <Users style={{ display: widgetState.showUser ? 'flex' : 'none' }} />

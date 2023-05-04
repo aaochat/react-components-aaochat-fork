@@ -16,8 +16,7 @@ export function mergeProps<
   return mergePropsReactAria(...props.filter(isProp));
 }
 
-const merged = mergeProps({ className: 'test', 'data-lk-participant-name': 'my_name' });
-console.log({ merged });
+// const merged = mergeProps({ className: 'test', 'data-lk-participant-name': 'my_name' });
 
 /** @internal */
 export function cloneSingleChild(

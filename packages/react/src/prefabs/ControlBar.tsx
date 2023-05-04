@@ -11,6 +11,7 @@ import { isMobileBrowser } from '@livekit/components-core';
 import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
 import { useMaybeLayoutContext } from '../context';
+import { UserToggle } from '../components/controls/UserToggle';
 
 /** @public */
 export type ControlBarControls = {
@@ -47,20 +48,13 @@ export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
  */
 export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
+
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   React.useEffect(() => {
     if (layoutContext?.widget.state?.showChat !== undefined) {
       setIsChatOpen(layoutContext?.widget.state?.showChat);
     }
   }, [layoutContext?.widget.state?.showChat]);
-
-  // Participant list for control the action of user
-  const [isUserOpen, setIsUserOpen] = React.useState(false);
-  React.useEffect(() => {
-    if (layoutContext?.widget.state?.showUser !== undefined) {
-      setIsUserOpen(layoutContext?.widget.state?.showUser);
-    }
-  }, [layoutContext?.widget.state?.showUser]);
 
   // Share join link option for participant
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
@@ -70,8 +64,16 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
     }
   }, [layoutContext?.widget.state?.showShareLink]);
 
+  // Participant list for control the action of user
+  const [isUserOpen, setIsUserOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (layoutContext?.widget.state?.showUser !== undefined) {
+      setIsUserOpen(layoutContext?.widget.state?.showUser);
+    }
+  }, [layoutContext?.widget.state?.showUser]);
+
   const isTooLittleSpace = useMediaQuery(
-    `(max-width: ${isChatOpen || isUserOpen || isShareLinkOpen ? 1000 : 760}px)`,
+    `(max-width: ${isChatOpen || isShareLinkOpen || isUserOpen ? 1000 : 760}px)`,
   );
 
   const defaultVariation = isTooLittleSpace ? 'minimal' : 'verbose';
@@ -159,10 +161,10 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
         </ShareLinkToggle>
       )}
       {visibleControls.users && (
-        <ChatToggle>
+        <UserToggle>
           {showIcon && <ChatIcon />}
           {showText && 'Participants'}
-        </ChatToggle>
+        </UserToggle>
       )}
       {visibleControls.leave && (
         <DisconnectButton>

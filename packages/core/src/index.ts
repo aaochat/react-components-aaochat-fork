@@ -18,6 +18,7 @@ export * from './components/chat';
 export * from './components/startAudio';
 export * from './components/chatToggle';
 export * from './components/shareLinkToggle';
+export * from './components/userToggle';
 export * from './components/focusToggle';
 export * from './components/clearPinButton';
 export * from './components/room';

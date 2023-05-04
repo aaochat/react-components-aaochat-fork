@@ -7,7 +7,6 @@ export type ShareLinkContextAction =
   | { msg: 'hide_sharelink' }
   | { msg: 'toggle_sharelink' };
 
-
 /** @internal */
 export type ShareLinkContextType = {
   dispatch?: React.Dispatch<ShareLinkContextAction>;

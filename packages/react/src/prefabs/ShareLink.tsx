@@ -106,8 +106,6 @@ export function ShareLink({ ...props }: any) {
   }
 
   React.useEffect(() => {
-    console.log(users);
-    
     if (ulRef) {
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
     }

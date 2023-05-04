@@ -26,18 +26,24 @@ export function LayoutContextProvider({
   }, [layoutContextValue.pin.state, onPinChange]);
 
   React.useEffect(() => {
-    log.debug('Widget Updated', { widgetState: layoutContextValue.widget.state });
+    log.debug('Chat Widget Updated', { widgetState: layoutContextValue.widget.state });
     if (onWidgetChange && layoutContextValue.widget.state) {
       onWidgetChange(layoutContextValue.widget.state);
     }
   }, [onWidgetChange, layoutContextValue.widget.state]);
 
   React.useEffect(() => {
-    log.debug('Widget Updated', { widgetState: layoutContextValue.shareWidget.state });
+    log.debug('Share Widget Updated', { widgetState: layoutContextValue.shareWidget.state });
     if (onWidgetChange && layoutContextValue.shareWidget.state) {
       onWidgetChange(layoutContextValue.shareWidget.state);
     }
   }, [onWidgetChange, layoutContextValue.shareWidget.state]);
+
+  React.useEffect(() => {
+    if (onWidgetChange && layoutContextValue.userWidget.state) {
+      onWidgetChange(layoutContextValue.userWidget.state);
+    }
+  }, [onWidgetChange, layoutContextValue.userWidget.state]);
 
   return <LayoutContext.Provider value={layoutContextValue}>{children}</LayoutContext.Provider>;
 }

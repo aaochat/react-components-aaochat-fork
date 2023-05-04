@@ -3,8 +3,10 @@ import * as React from 'react';
 import type { PinContextType } from './pin-context';
 import type { ChatContextType } from './chat-context';
 import type { ShareLinkContextType } from './sharelink-context';
+import type { UserContextType } from './users-context';
 import { chatReducer } from './chat-context';
 import { shareLinkReducer } from './sharelink-context';
+import { userReducer } from './users-context';
 import { pinReducer } from './pin-context';
 
 /** @public */
@@ -12,6 +14,7 @@ export type LayoutContextType = {
   pin: PinContextType;
   widget: ChatContextType;
   shareWidget: ShareLinkContextType;
+  userWidget: UserContextType;
 };
 
 /** @public */
@@ -52,10 +55,12 @@ export function useCreateLayoutContext(): LayoutContextType {
     shareLinkReducer,
     WIDGET_DEFAULT_STATE,
   );
+  const [userWidgetState, userWidgetDispatch] = React.useReducer(userReducer, WIDGET_DEFAULT_STATE);
   return {
     pin: { dispatch: pinDispatch, state: pinState },
     widget: { dispatch: widgetDispatch, state: widgetState },
     shareWidget: { dispatch: shareWidgetDispatch, state: shareWidgetState },
+    userWidget: { dispatch: userWidgetDispatch, state: userWidgetState },
   };
 }
 
@@ -67,13 +72,14 @@ export function useEnsureCreateLayoutContext(layoutContext?: LayoutContextType):
     shareLinkReducer,
     WIDGET_DEFAULT_STATE,
   );
-  console.log('shareWidgetState', shareWidgetState);
+  const [userWidgetState, userWidgetDispatch] = React.useReducer(userReducer, WIDGET_DEFAULT_STATE);
 
   return (
     layoutContext ?? {
       pin: { dispatch: pinDispatch, state: pinState },
       widget: { dispatch: widgetDispatch, state: widgetState },
       shareWidget: { dispatch: shareWidgetDispatch, state: shareWidgetState },
+      userWidget: { dispatch: userWidgetDispatch, state: userWidgetState },
     }
   );
 }

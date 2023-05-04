@@ -11,6 +11,7 @@ export type WidgetState = {
   showUser: boolean;
   showShareLink: boolean;
 };
+
 export const WIDGET_DEFAULT_STATE: WidgetState = {
   showChat: false,
   showUser: false,

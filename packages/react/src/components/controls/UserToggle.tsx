@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { useLayoutContext } from '../../context';
 import { mergeProps } from '../../utils';
-import { setupShareLinkToggle } from '@livekit/components-core';
+import { setupUserToggle } from '@livekit/components-core';
 
-interface UseToggleShareLinkProps {
+interface UseToggleUserProps {
   props: React.ButtonHTMLAttributes<HTMLButtonElement>;
 }
 
-function useToggleShareLink({ props }: UseToggleShareLinkProps) {
-  const { dispatch } = useLayoutContext().shareWidget;
-  const { className } = React.useMemo(() => setupShareLinkToggle(), []);
+function useToggleUserLink({ props }: UseToggleUserProps) {
+  const { dispatch } = useLayoutContext().userWidget;
+  const { className } = React.useMemo(() => setupUserToggle(), []);
 
   const mergedProps = React.useMemo(
     () =>
       mergeProps(props, {
         className,
         onClick: () => {
-          if (dispatch) dispatch({ msg: 'toggle_sharelink' });
+          if (dispatch) dispatch({ msg: 'toggle_users' });
         },
       }),
     [props, className, dispatch],
@@ -26,7 +26,7 @@ function useToggleShareLink({ props }: UseToggleShareLinkProps) {
 }
 
 /** @public */
-export type ShareLinkToggleProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+export type UserToggleProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**
  * The ShareLinkToggle component toggles the visibility of the chat component.
@@ -39,8 +39,8 @@ export type ShareLinkToggleProps = React.ButtonHTMLAttributes<HTMLButtonElement>
  * ```
  * @public
  */
-export function ShareLinkToggle(props: ShareLinkToggleProps) {
-  const { mergedProps } = useToggleShareLink({ props });
+export function UserToggle(props: UserToggleProps) {
+  const { mergedProps } = useToggleUserLink({ props });
 
   return <button {...mergedProps}>{props.children}</button>;
 }
