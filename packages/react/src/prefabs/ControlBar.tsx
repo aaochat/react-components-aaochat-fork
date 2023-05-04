@@ -88,7 +88,6 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
     visibleControls.screenShare = false;
     visibleControls.sharelink = false;
     visibleControls.users = false;
-    
   } else {
     visibleControls.camera ??= localPermissions.canPublish;
     visibleControls.microphone ??= localPermissions.canPublish;

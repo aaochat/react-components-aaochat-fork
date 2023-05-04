@@ -139,14 +139,6 @@ export function ShareLink({ ...props }: any) {
         {users.map((user, index) => {
           return (
             <li key={index} className="lk-chat-entry">
-              {/* <input
-                type="checkbox"
-                name="selectedUser"
-                id='selectedUser'
-                value={user}
-                checked={checkedValues.includes(user)}
-                onChange={handleCheckboxChange}
-              /> */}
               <span className="lk-message-body">{user}</span>
 
               <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
