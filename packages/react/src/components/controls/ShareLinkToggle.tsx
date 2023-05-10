@@ -8,7 +8,7 @@ interface UseToggleShareLinkProps {
 }
 
 function useToggleShareLink({ props }: UseToggleShareLinkProps) {
-  const { dispatch } = useLayoutContext().shareWidget;
+  const { dispatch } = useLayoutContext().widget;
   const { className } = React.useMemo(() => setupShareLinkToggle(), []);
 
   const mergedProps = React.useMemo(
@@ -16,7 +16,7 @@ function useToggleShareLink({ props }: UseToggleShareLinkProps) {
       mergeProps(props, {
         className,
         onClick: () => {
-          if (dispatch) dispatch({ msg: 'toggle_sharelink' });
+          if (dispatch) dispatch({ msg: 'show_invite' });
         },
       }),
     [props, className, dispatch],

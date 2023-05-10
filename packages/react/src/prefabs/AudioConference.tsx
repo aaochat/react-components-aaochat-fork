@@ -29,9 +29,7 @@ export type AudioConferenceProps = React.HTMLAttributes<HTMLDivElement>;
  */
 export function AudioConference({ ...props }: AudioConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
-    showChat: false,
-    showUser: false,
-    showShareLink: false,
+    showChat: null,
   });
   const participants = useParticipants();
 
@@ -46,7 +44,7 @@ export function AudioConference({ ...props }: AudioConferenceProps) {
         <ControlBar
           controls={{ microphone: true, screenShare: false, camera: false, chat: true }}
         />
-        {widgetState.showChat && <Chat />}
+        {widgetState.showChat == 'show_chat' && <Chat />}
       </div>
     </LayoutContextProvider>
   );

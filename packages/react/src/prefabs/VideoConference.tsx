@@ -44,9 +44,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  */
 export function VideoConference({ ...props }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
-    showChat: false,
-    showUser: false,
-    showShareLink: false,
+    showChat: null,
   });
 
   const tracks = useTracks(
@@ -121,8 +119,11 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
             }}
           />
         </div>
-        <ShareLink style={{ display: widgetState.showShareLink ? 'flex' : 'none' }} />
-        <Users style={{ display: widgetState.showUser ? 'flex' : 'none' }} />
+        <ShareLink style={{ display: widgetState.showChat == 'show_invite' ? 'flex' : 'none' }} />
+        <Users
+          style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
+          layoutValue={layoutContext}
+        />
       </LayoutContextProvider>
       <RoomAudioRenderer />
       <ConnectionStateToast />

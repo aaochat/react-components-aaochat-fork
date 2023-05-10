@@ -4,8 +4,8 @@ import type * as React from 'react';
 /** @internal */
 export type ChatContextAction =
   | { msg: 'show_chat' }
-  | { msg: 'hide_chat' }
-  | { msg: 'toggle_chat' };
+  | { msg: 'show_invite' }
+  | { msg: 'show_users' };
 
 /** @internal */
 export type ChatContextType = {
@@ -16,12 +16,12 @@ export type ChatContextType = {
 /** @internal */
 export function chatReducer(state: WidgetState, action: ChatContextAction): WidgetState {
   if (action.msg === 'show_chat') {
-    return { ...state, showChat: true };
-  } else if (action.msg === 'hide_chat') {
-    return { ...state, showChat: false };
-  } else if (action.msg === 'toggle_chat') {
-    return { ...state, showChat: !state.showChat };
+    return { ...state, showChat: 'show_chat' };
+  } else if (action.msg === 'show_invite') {
+    return { ...state, showChat: 'show_invite' };
+  } else if (action.msg === 'show_users') {
+    return { ...state, showChat: 'show_users' };
   } else {
-    return { ...state };
+    return { ...state, showChat: null };
   }
 }

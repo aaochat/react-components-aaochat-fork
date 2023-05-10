@@ -32,18 +32,5 @@ export function LayoutContextProvider({
     }
   }, [onWidgetChange, layoutContextValue.widget.state]);
 
-  React.useEffect(() => {
-    log.debug('Share Widget Updated', { widgetState: layoutContextValue.shareWidget.state });
-    if (onWidgetChange && layoutContextValue.shareWidget.state) {
-      onWidgetChange(layoutContextValue.shareWidget.state);
-    }
-  }, [onWidgetChange, layoutContextValue.shareWidget.state]);
-
-  React.useEffect(() => {
-    if (onWidgetChange && layoutContextValue.userWidget.state) {
-      onWidgetChange(layoutContextValue.userWidget.state);
-    }
-  }, [onWidgetChange, layoutContextValue.userWidget.state]);
-
   return <LayoutContext.Provider value={layoutContextValue}>{children}</LayoutContext.Provider>;
 }

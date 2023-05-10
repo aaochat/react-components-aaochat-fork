@@ -8,7 +8,7 @@ interface UseToggleUserProps {
 }
 
 function useToggleUserLink({ props }: UseToggleUserProps) {
-  const { dispatch } = useLayoutContext().userWidget;
+  const { dispatch } = useLayoutContext().widget;
   const { className } = React.useMemo(() => setupUserToggle(), []);
 
   const mergedProps = React.useMemo(
@@ -16,7 +16,7 @@ function useToggleUserLink({ props }: UseToggleUserProps) {
       mergeProps(props, {
         className,
         onClick: () => {
-          if (dispatch) dispatch({ msg: 'toggle_users' });
+          if (dispatch) dispatch({ msg: 'show_users' });
         },
       }),
     [props, className, dispatch],

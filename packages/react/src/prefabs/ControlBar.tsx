@@ -50,27 +50,17 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
 
   const [isChatOpen, setIsChatOpen] = React.useState(false);
-  React.useEffect(() => {
-    if (layoutContext?.widget.state?.showChat !== undefined) {
-      setIsChatOpen(layoutContext?.widget.state?.showChat);
-    }
-  }, [layoutContext?.widget.state?.showChat]);
-
-  // Share join link option for participant
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
-  React.useEffect(() => {
-    if (layoutContext?.widget.state?.showShareLink !== undefined) {
-      setIsShareLinkOpen(layoutContext?.widget.state?.showShareLink);
-    }
-  }, [layoutContext?.widget.state?.showShareLink]);
-
-  // Participant list for control the action of user
   const [isUserOpen, setIsUserOpen] = React.useState(false);
   React.useEffect(() => {
-    if (layoutContext?.widget.state?.showUser !== undefined) {
-      setIsUserOpen(layoutContext?.widget.state?.showUser);
+    if (layoutContext?.widget.state?.showChat == 'show_chat') {
+      setIsChatOpen(layoutContext?.widget.state?.showChat == 'show_chat');
+    } else if (layoutContext?.widget.state?.showChat == 'show_invite') {
+      setIsShareLinkOpen(layoutContext?.widget.state?.showChat == 'show_invite');
+    } else if (layoutContext?.widget.state?.showChat == 'show_users') {
+      setIsUserOpen(layoutContext?.widget.state?.showChat == 'show_users');
     }
-  }, [layoutContext?.widget.state?.showUser]);
+  }, [layoutContext?.widget.state?.showChat]);
 
   const isTooLittleSpace = useMediaQuery(
     `(max-width: ${isChatOpen || isShareLinkOpen || isUserOpen ? 1000 : 760}px)`,

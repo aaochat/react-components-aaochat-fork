@@ -16,7 +16,7 @@ function useToggleChat({ props }: UseToggleChatProps) {
       mergeProps(props, {
         className,
         onClick: () => {
-          if (dispatch) dispatch({ msg: 'toggle_chat' });
+          if (dispatch) dispatch({ msg: 'show_chat' });
         },
       }),
     [props, className, dispatch],
