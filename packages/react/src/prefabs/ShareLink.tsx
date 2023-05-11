@@ -169,9 +169,6 @@ export function ShareLink({ ...props }: any) {
           placeholder="Search User..."
           onKeyUp={handleSubmit}
         />
-        <button type="submit" onClick={handleSubmit} className="lk-button lk-chat-form-button">
-          Send
-        </button>
       </form>
 
       <ul className="lk-list lk-chat-messages" ref={ulRef}>
@@ -180,7 +177,7 @@ export function ShareLink({ ...props }: any) {
             <li key={index} className="lk-chat-entry">
               <div>
                 <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
-                <span className="lk-message-body">{user.designation}</span>
+                <span className="lk-message-body lk-message-text">{user.designation}</span>
               </div>
 
               <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
