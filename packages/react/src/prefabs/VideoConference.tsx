@@ -24,6 +24,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   // chatMessageFormatter?: MessageFormatter;
   showShareButton: boolean;
   showParticipantButton: boolean;
+  leaveButton: string;
 }
 
 /**
@@ -116,6 +117,7 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
               chat: false,
               sharelink: props.showShareButton,
               users: props.showParticipantButton,
+              leaveButton: props.leaveButton,
             }}
           />
         </div>

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useRoomContext } from '../context';
 
 export function useGetLink() {
-
   const host = getHostUrl();
   const link = `${host}/join/${useGetRoom().name}`;
 
@@ -59,8 +58,6 @@ export function ShareLink({ ...props }: any) {
   }
 
   async function getUsers() {
-    console.log(room);
-
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -124,16 +121,21 @@ export function ShareLink({ ...props }: any) {
   async function handleInvite(user: User) {
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
-        "user": user, // body data type must match "Content-Type" header
-        "joinLink": link
+        "users": JSON.stringify([user]), // body data type must match "Content-Type" header
+        "message": link,
+        "meeting_id": room.name,
       })
     };
 
-    fetch(`${getHostUrl()}/api/send-invite`, data).then(async (res) => {
+    fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
         const body = await res.json();
-        setUsers(body);
+        console.log(body);
+
       } else {
         throw Error('Error fetching server url, check server logs');
       }
@@ -177,7 +179,7 @@ export function ShareLink({ ...props }: any) {
           return (
             <li key={index} className="lk-chat-entry">
               <div>
-                <span className="lk-message-body">{user.user_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
+                <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
                 <span className="lk-message-body">{user.designation}</span>
               </div>
 

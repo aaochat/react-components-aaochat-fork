@@ -22,6 +22,7 @@ export type ControlBarControls = {
   leave?: boolean;
   sharelink?: boolean;
   users?: boolean;
+  leaveButton?: string;
 };
 
 /** @public */
@@ -159,7 +160,7 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
       {visibleControls.leave && (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
-          {showText && 'Leave'}
+          {showText && visibleControls.leaveButton}
         </DisconnectButton>
       )}
       <StartAudio label="Start Audio" />
