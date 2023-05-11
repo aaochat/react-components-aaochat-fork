@@ -23,10 +23,10 @@ export function Users({ ...props }: any) {
   const decoder = new TextDecoder();
 
   // async function muteAllMircophone() {
-  //   room.participants.forEach((participant) => {
-  //     const p = room.localParticipant;
-  //   });
-  //   await p.setCameraEnabled(false);
+  // room.participants.forEach((participant) => {
+  //   const p = room.localParticipant;
+  // });
+  // await p.setCameraEnabled(false);
   // }
 
   room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
@@ -57,7 +57,6 @@ export function Users({ ...props }: any) {
   }, [ulRef]);
 
   async function admitUser(username: string, type: string) {
-    console.log(`Admin clicked user ${username}`);
     const postData = {
       method: 'POST',
       body: JSON.stringify({ room: room.name, username: username, type: type }),
@@ -74,7 +73,7 @@ export function Users({ ...props }: any) {
 
   return (
     <div {...props} className="lk-chat lk-users">
-      <div>
+      <div className="lk-participants">
         <h3>Participants</h3>
         {/* <button onClick={muteAllMircophone}>Mute All</button> */}
         {participants?.length ? (
@@ -88,26 +87,28 @@ export function Users({ ...props }: any) {
         )}
       </div>
 
-      <div>
+      <div className="lk-waitinroom">
         <h3>Waiting room</h3>
-        {waitingRoom.length}
         {waitingRoom.length > 0 ? (
           waitingRoom.map((item: any) => (
             <div style={{ position: 'relative' }} key={item.username}>
               <div className="lk-participant-metadata">
                 <div className="lk-pa rticipant-metadata-item">{item.username}</div>
-                <button
-                  className="lk-waiting-room"
-                  onClick={() => admitUser(item.username, 'accepted')}
-                >
-                  Admit
-                </button>
-                <button
-                  className="lk-waiting-room"
-                  onClick={() => admitUser(item.username, 'rejected')}
-                >
-                  Reject
-                </button>
+                <div>
+                  <button
+                    className="lk-button lk-waiting-room lk-success"
+                    onClick={() => admitUser(item.username, 'accepted')}
+                  >
+                    Admit
+                  </button>
+                  <button
+                    className="lk-button lk-waiting-room lk-danger"
+                    onClick={() => admitUser(item.username, 'rejected')}
+                  >
+                    Reject
+                  </button>
+                </div>
+
               </div>
             </div>
           ))
