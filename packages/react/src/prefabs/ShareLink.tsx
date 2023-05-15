@@ -24,6 +24,7 @@ export type User = {
   full_name: string;
   designation: string;
   ext_no: string;
+  invited: boolean
 };
 
 /**
@@ -46,6 +47,7 @@ export function ShareLink({ ...props }: any) {
   const [searched, setSearched] = React.useState<User[]>([]);
   // const [ checkedValues, setCheckedValues ] = React.useState<string[]>([]);
   const room = useGetRoom();
+
   async function searchUsers(key: string) {
     if (key) {
       const filteredData = users.filter(function (item) {
@@ -91,33 +93,6 @@ export function ShareLink({ ...props }: any) {
     }
   }
 
-  // const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.checked) {
-  //     setCheckedValues([...checkedValues, event.target.value]);
-  //   } else {
-  //     setCheckedValues(checkedValues.filter((value: string) => value !== event.target.value));
-  //   }
-  // };
-
-  // async function handleSend() {
-  //   const data = {
-  //     method: "POST", // *GET, POST, PUT, DELETE, etc.
-  //     body: JSON.stringify({
-  //        "users": checkedValues , // body data type must match "Content-Type" header
-  //        "joinLink": link 
-  //   })
-  //   };
-
-  //   fetch(`${getHostUrl()}/api/invite-users`, data).then(async (res) => {
-  //       if (res.ok) {
-  //         const body = await res.json();
-  //         setUsers(body);
-  //       } else {
-  //         throw Error('Error fetching server url, check server logs');
-  //       }
-  //     });
-  // }
-
   async function handleInvite(user: User) {
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -133,9 +108,30 @@ export function ShareLink({ ...props }: any) {
 
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
-        const body = await res.json();
-        console.log(body);
+        user.invited = true;
+        // 1. Find the todo with the provided id
+        const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
+        // 2. Mark the todo as complete
+        const updatedUser = { ...users[currentUserIndex], invited: true };
+        // 3. Update the todo list with the updated todo
+        const newUsers = [
+          ...users.slice(0, currentUserIndex),
+          updatedUser,
+          ...users.slice(currentUserIndex + 1)
+        ];
+        setUsers(newUsers);
 
+        // 1. Find the todo with the provided id
+        const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
+        // 2. Mark the todo as complete
+        const updatedSearched = { ...users[currentSearchedIndex], invited: true };
+        // 3. Update the todo list with the updated todo
+        const newSearched = [
+          ...users.slice(0, currentSearchedIndex),
+          updatedSearched,
+          ...users.slice(currentSearchedIndex + 1)
+        ];
+        setSearched(newSearched);
       } else {
         throw Error('Error fetching server url, check server logs');
       }
@@ -181,7 +177,7 @@ export function ShareLink({ ...props }: any) {
               </div>
 
               <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
-                Invite
+                {user.invited ? 'Invited' : 'Invite'}
               </button>
             </li>
           )
