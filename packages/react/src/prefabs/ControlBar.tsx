@@ -12,6 +12,8 @@ import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
 import { useMaybeLayoutContext } from '../context';
 import { UserToggle } from '../components/controls/UserToggle';
+import SvgInviteIcon from '../assets/icons/InviteIcon';
+import SvgUserIcon from '../assets/icons/UsersIcon';
 
 /** @public */
 export type ControlBarControls = {
@@ -147,13 +149,13 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
       )}
       {visibleControls.sharelink && (
         <ShareLinkToggle>
-          {showIcon && <ChatIcon />}
+          {showIcon && <SvgInviteIcon />}
           {showText && 'Invite'}
         </ShareLinkToggle>
       )}
       {visibleControls.users && (
         <UserToggle>
-          {showIcon && <ChatIcon />}
+          {showIcon && <SvgUserIcon />}
           {showText && 'Participants'}
         </UserToggle>
       )}
