@@ -43,9 +43,11 @@ export function Users({ ...props }: any) {
         if (waitingRoom.length == 0) {
           setWaitingRoom([newUser]);
         } else {
-          const array = waitingRoom;
-          array.push(newUser);
-          setWaitingRoom(array);
+          // const array = waitingRoom;
+          // array.push(newUser);
+          // console.log(array);
+
+          setWaitingRoom([...waitingRoom, newUser]);
         }
         console.log('New data pushed of waiting room', waitingRoom);
       }
@@ -65,7 +67,9 @@ export function Users({ ...props }: any) {
     };
     fetch(`/api/accept-request`, postData).then(async (res) => {
       if (res.status) {
-        const remaining = waitingRoom.filter((item: any) => item.username !== username);
+        const remaining = waitingRoom.filter(
+          (item: LocalUserChoices) => item.username !== username,
+        );
         setWaitingRoom(remaining);
       } else {
         throw Error('Error fetching server url, check server logs');
@@ -119,36 +123,29 @@ export function Users({ ...props }: any) {
               small={false}
               disabled={false}
             />
-            <label htmlFor="toggleSwitch">Enable / Disable</label>
           </div>
         </div>
-        {waitingRoom.length > 0 ? (
-          waitingRoom.map((item: any) => (
-            <div style={{ position: 'relative' }} key={item.username}>
-              <div className="lk-participant-metadata">
-                <div className="lk-pa rticipant-metadata-item">{item.username}</div>
-                <div>
-                  <button
-                    className="lk-button lk-waiting-room lk-success"
-                    onClick={() => admitUser(item.username, 'accepted')}
-                  >
-                    Admit
-                  </button>
-                  <button
-                    className="lk-button lk-waiting-room lk-danger"
-                    onClick={() => admitUser(item.username, 'rejected')}
-                  >
-                    Reject
-                  </button>
-                </div>
+        {waitingRoom.map((item: LocalUserChoices) => (
+          <div style={{ position: 'relative' }} key={item.username}>
+            <div className="lk-participant-metadata">
+              <div className="lk-pa rticipant-metadata-item">{item.username}</div>
+              <div>
+                <button
+                  className="lk-button lk-waiting-room lk-success"
+                  onClick={() => admitUser(item.username, 'accepted')}
+                >
+                  Admit
+                </button>
+                <button
+                  className="lk-button lk-waiting-room lk-danger"
+                  onClick={() => admitUser(item.username, 'rejected')}
+                >
+                  Reject
+                </button>
               </div>
             </div>
-          ))
-        ) : (
-          <div>
-            <h5>No Participants</h5>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

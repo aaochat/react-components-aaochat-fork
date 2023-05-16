@@ -167,22 +167,26 @@ export function ShareLink({ ...props }: any) {
         />
       </form>
 
-      <ul className="lk-list lk-chat-messages" ref={ulRef}>
-        {searched.map((user, index) => {
-          return (
-            <li key={index} className="lk-chat-entry">
-              <div>
-                <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
-                <span className="lk-message-body lk-message-text">{user.designation}</span>
-              </div>
+      {searched.length > 0 ? (
+        <ul className="lk-list lk-chat-messages" ref={ulRef}>
+          {searched.map((user, index) => {
+            return (
+              <li key={index} className="lk-chat-entry">
+                <div>
+                  <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
+                  <span className="lk-message-body lk-message-text">{user.designation}</span>
+                </div>
 
-              <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
-                {user.invited ? 'Invited' : 'Invite'}
-              </button>
-            </li>
-          )
-        })}
-      </ul>
+                <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
+                  {user.invited ? 'Invited' : 'Invite'}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      ) : (
+        ''
+      )}
     </div>
   );
 }
