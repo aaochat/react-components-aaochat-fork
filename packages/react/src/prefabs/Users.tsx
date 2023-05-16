@@ -7,6 +7,7 @@ import { ParticipantList } from '../components/participant/ParticipantList';
 import { useRoomContext } from '../context';
 import { RoomEvent } from 'livekit-client';
 import type { LocalUserChoices } from './PreJoin';
+import { ToggleSwitch } from '../components/ToggleSwitch';
 
 export type UserDataProps = {
   /** The participants to loop over.
@@ -21,6 +22,7 @@ export function Users({ ...props }: any) {
   const [waitingRoom, setWaitingRoom] = React.useState<LocalUserChoices[]>([]);
   const room = useRoomContext();
   const decoder = new TextDecoder();
+  const [toggleWaiting, setToggleWaiting] = React.useState<boolean>(true);
 
   // async function muteAllMircophone() {
   // room.participants.forEach((participant) => {
@@ -71,6 +73,23 @@ export function Users({ ...props }: any) {
     });
   }
 
+  const onToggleWaitingChange = (checked: any) => {
+    console.log(checked);
+
+    const postData = {
+      method: 'POST',
+      body: JSON.stringify({ room: room.name, waiting_room: checked }),
+    };
+
+    fetch(`/api/set-waitingroom`, postData).then(async (res) => {
+      if (res.status) {
+        setToggleWaiting(checked);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  };
+
   return (
     <div {...props} className="lk-chat lk-users">
       <div className="lk-participants">
@@ -88,7 +107,21 @@ export function Users({ ...props }: any) {
       </div>
 
       <div className="lk-waitinroom">
-        <h3>Waiting room</h3>
+        <div>
+          <h3>Waiting room</h3>
+          <div>
+            <ToggleSwitch
+              id="toggleSwitch"
+              checked={toggleWaiting}
+              onChange={onToggleWaitingChange}
+              name={'toggleSwitch'}
+              optionLabels={['Yes', 'No']}
+              small={false}
+              disabled={false}
+            />
+            <label htmlFor="toggleSwitch">Enable / Disable</label>
+          </div>
+        </div>
         {waitingRoom.length > 0 ? (
           waitingRoom.map((item: any) => (
             <div style={{ position: 'relative' }} key={item.username}>
@@ -108,7 +141,6 @@ export function Users({ ...props }: any) {
                     Reject
                   </button>
                 </div>
-
               </div>
             </div>
           ))
