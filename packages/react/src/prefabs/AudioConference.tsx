@@ -43,6 +43,7 @@ export function AudioConference({ ...props }: AudioConferenceProps) {
         </div>
         <ControlBar
           controls={{ microphone: true, screenShare: false, camera: false, chat: true }}
+          waitingRoomCount={0}
         />
         {widgetState.showChat == 'show_chat' && <Chat />}
       </div>

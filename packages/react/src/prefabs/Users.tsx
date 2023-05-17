@@ -1,6 +1,4 @@
 import * as React from 'react';
-// import { useEnsureCreateLayoutContext, useRoomContext } from '../context';
-// import { getHostUrl } from './ShareLink';
 import { useParticipants } from '../hooks';
 import { ParticipantLoop } from '../components';
 import { ParticipantList } from '../components/participant/ParticipantList';
@@ -8,7 +6,10 @@ import { useRoomContext } from '../context';
 import { RoomEvent } from 'livekit-client';
 import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
-
+/** @public */
+export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
+  onWaitingRoomChange: (state: number) => void;
+}
 export type UserDataProps = {
   /** The participants to loop over.
    * If not provided, the participants from the current room context are used.
@@ -16,7 +17,7 @@ export type UserDataProps = {
   participants: LocalUserChoices[];
 };
 
-export function Users({ ...props }: any) {
+export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   const ulRef = React.useRef<HTMLUListElement>(null);
   const participants = useParticipants();
   const [waitingRoom, setWaitingRoom] = React.useState<LocalUserChoices[]>([]);
@@ -37,22 +38,21 @@ export function Users({ ...props }: any) {
     if (strData.type == 'joining') {
       const newUser = strData.data;
       const isExist = waitingRoom.find((item: any) => item.username == newUser.username);
-      console.log('Username exist in array', isExist);
 
       if (!isExist) {
         if (waitingRoom.length == 0) {
           setWaitingRoom([newUser]);
         } else {
-          // const array = waitingRoom;
-          // array.push(newUser);
-          // console.log(array);
-
           setWaitingRoom([...waitingRoom, newUser]);
         }
-        console.log('New data pushed of waiting room', waitingRoom);
       }
     }
   });
+
+  React.useEffect(() => {
+    console.log('Calling onWaitingRoomChange', waitingRoom.length);
+    onWaitingRoomChange(waitingRoom.length);
+  }, [onWaitingRoomChange, waitingRoom]);
 
   React.useEffect(() => {
     if (ulRef) {
@@ -78,8 +78,6 @@ export function Users({ ...props }: any) {
   }
 
   const onToggleWaitingChange = (checked: any) => {
-    console.log(checked);
-
     const postData = {
       method: 'POST',
       body: JSON.stringify({ room: room.name, waiting_room: checked }),
@@ -112,14 +110,14 @@ export function Users({ ...props }: any) {
 
       <div className="lk-waitinroom">
         <div>
-          <h3>Waiting room</h3>
+          <h3>Waiting Room</h3>
           <div>
             <ToggleSwitch
               id="toggleSwitch"
               checked={toggleWaiting}
               onChange={onToggleWaitingChange}
               name={'toggleSwitch'}
-              optionLabels={['Yes', 'No']}
+              optionLabels={['On', 'Off']}
               small={false}
               disabled={false}
             />
@@ -134,7 +132,7 @@ export function Users({ ...props }: any) {
                   className="lk-button lk-waiting-room lk-success"
                   onClick={() => admitUser(item.username, 'accepted')}
                 >
-                  Admit
+                  Approve
                 </button>
                 <button
                   className="lk-button lk-waiting-room lk-danger"

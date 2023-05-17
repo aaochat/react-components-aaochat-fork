@@ -48,6 +48,8 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
     showChat: null,
   });
 
+  const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
+
   const tracks = useTracks(
     [
       { source: Track.Source.Camera, withPlaceholder: true },
@@ -57,10 +59,13 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
   );
 
   const widgetUpdate = (state: WidgetState) => {
-    console.log(state);
-
     log.debug('updating widget state', state);
     setWidgetState(state);
+  };
+
+  const updateCount = (count: number) => {
+    log.debug('count ', count);
+    setWaitingRoomCount(count);
   };
 
   const layoutContext = useCreateLayoutContext();
@@ -119,12 +124,13 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
               users: props.showParticipantButton,
               leaveButton: props.leaveButton,
             }}
+            waitingRoomCount={waitingRoomCount}
           />
         </div>
         <ShareLink style={{ display: widgetState.showChat == 'show_invite' ? 'flex' : 'none' }} />
         <Users
           style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
-          layoutValue={layoutContext}
+          onWaitingRoomChange={updateCount}
         />
       </LayoutContextProvider>
       <RoomAudioRenderer />

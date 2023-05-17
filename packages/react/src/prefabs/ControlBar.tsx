@@ -31,6 +31,7 @@ export type ControlBarControls = {
 export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
   variation?: 'minimal' | 'verbose' | 'textOnly';
   controls?: ControlBarControls;
+  waitingRoomCount: number;
 };
 
 /**
@@ -49,7 +50,7 @@ export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
  * ```
  * @public
  */
-export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
+export function ControlBar({ variation, controls, waitingRoomCount, ...props }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
 
   const [isChatOpen, setIsChatOpen] = React.useState(false);
@@ -154,10 +155,13 @@ export function ControlBar({ variation, controls, ...props }: ControlBarProps) {
         </ShareLinkToggle>
       )}
       {visibleControls.users && (
-        <UserToggle>
-          {showIcon && <SvgUserIcon />}
-          {showText && 'Participants'}
-        </UserToggle>
+        <div className="waiting-count">
+          {waitingRoomCount && <span>{waitingRoomCount}</span>}
+          <UserToggle>
+            {showIcon && <SvgUserIcon />}
+            {showText && 'Participants'}
+          </UserToggle>
+        </div>
       )}
       {visibleControls.leave && (
         <DisconnectButton>
