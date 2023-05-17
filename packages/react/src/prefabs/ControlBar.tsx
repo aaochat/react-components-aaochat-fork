@@ -156,7 +156,7 @@ export function ControlBar({ variation, controls, waitingRoomCount, ...props }: 
       )}
       {visibleControls.users && (
         <div className="waiting-count">
-          {waitingRoomCount && <span>{waitingRoomCount}</span>}
+          {waitingRoomCount !== 0 && <span>{waitingRoomCount}</span>}
           <UserToggle>
             {showIcon && <SvgUserIcon />}
             {showText && 'Participants'}
