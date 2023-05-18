@@ -6,7 +6,6 @@ import { Toast } from '../components';
 export function useGetLink() {
   const host = getHostUrl();
   const link = `${host}/join/${useGetRoom().name}`;
-
   return { link: link };
 }
 
@@ -147,9 +146,9 @@ export function ShareLink({ ...props }: any) {
 
   React.useEffect(() => {
     if (showToast) {
-      setInterval(() => {
+      setTimeout(() => {
         setShowToast(false);
-      }, 2000)
+      }, 3000)
     }
   }, [showToast]);
 

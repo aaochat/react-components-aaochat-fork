@@ -17,6 +17,7 @@ import { CarouselLayout } from '../components/layout/CarouselLayout';
 import { useCreateLayoutContext } from '../context/layout-context';
 import { ParticipantTile } from '../components';
 import { Toast } from '../components';
+import { UserToggle } from '../components/controls/UserToggle';
 
 /**
  * @public
@@ -82,10 +83,10 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
   React.useEffect(() => {
     if (waiting) {
       // Remove toast message after 2 second
-      setInterval(() => {
+      setTimeout(() => {
         console.log('Waiting room interval stop');
         setWaiting(null);
-      }, 2000);
+      }, 3000);
     }
   }, [waiting]);
 
@@ -145,10 +146,16 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
           onWaitingRoomChange={updateCount}
           setWaiting={setWaiting}
         />
+        {waiting ? (
+          <Toast className="lk-toast-connection-state">
+            <UserToggle>{waiting}</UserToggle>
+          </Toast>
+        ) : (
+          <></>
+        )}
       </LayoutContextProvider>
       <RoomAudioRenderer />
       <ConnectionStateToast />
-      {waiting ? <Toast className="lk-toast-connection-state">{waiting}</Toast> : <></>}
     </div>
   );
 }

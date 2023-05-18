@@ -155,13 +155,11 @@ export function ControlBar({ variation, controls, waitingRoomCount, ...props }: 
         </ShareLinkToggle>
       )}
       {visibleControls.users && (
-        <div className="waiting-count">
-          {waitingRoomCount !== 0 && <span>{waitingRoomCount}</span>}
-          <UserToggle>
-            {showIcon && <SvgUserIcon />}
-            {showText && 'Participants'}
-          </UserToggle>
-        </div>
+        <UserToggle>
+          {showIcon && <SvgUserIcon />}
+          {showText && 'Participants'}
+          {waitingRoomCount !== 0 && <span className="waiting-count">{waitingRoomCount}</span>}
+        </UserToggle>
       )}
       {visibleControls.leave && (
         <DisconnectButton>
