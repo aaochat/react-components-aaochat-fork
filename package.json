@@ -13,7 +13,6 @@
     "dev:storybook": "turbo run dev --filter=@livekit/component-docs-storybook...",
     "format:check": "prettier --check \"**/src/**/*.{ts,tsx,md}\"",
     "format:write": "prettier --write \"**/src/**/*.{ts,tsx,md}\"",
-    "gen:docs": "turbo run gen:docs",
     "lint": "turbo run lint",
     "release": "turbo run build --filter=./packages/* && changeset publish",
     "start:next": "turbo run start --filter=@livekit/component-example-next...",
@@ -22,10 +21,13 @@
     "api:check": "turbo run api-check"
   },
   "workspaces": [
-    "packages/*",
-    "tooling/*"
+    "packages/*"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "livekit-client": "^1.7.0",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },

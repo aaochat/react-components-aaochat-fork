@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import * as React from 'react';
 import { useRoomContext } from '../context';
+import { Toast } from '../components';
 
 export function useGetLink() {
   const host = getHostUrl();
@@ -45,6 +46,7 @@ export function ShareLink({ ...props }: any) {
   const { link } = useGetLink();
   const [users, setUsers] = React.useState<User[]>([]);
   const [searched, setSearched] = React.useState<User[]>([]);
+  const [showToast, setShowToast] = React.useState<boolean>(false);
   // const [ checkedValues, setCheckedValues ] = React.useState<string[]>([]);
   const room = useGetRoom();
 
@@ -109,9 +111,9 @@ export function ShareLink({ ...props }: any) {
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
         user.invited = true;
-        // 1. Find the todo with the provided id
+        // 1. Find the user with the provided id
         const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the todo as complete
+        // 2. Mark the user as invited
         const updatedUser = { ...users[currentUserIndex], invited: true };
         // 3. Update the todo list with the updated todo
         const newUsers = [
@@ -121,15 +123,15 @@ export function ShareLink({ ...props }: any) {
         ];
         setUsers(newUsers);
 
-        // 1. Find the todo with the provided id
+        // 1. Find the user with the provided id
         const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
         // 2. Mark the todo as complete
-        const updatedSearched = { ...users[currentSearchedIndex], invited: true };
+        const updatedSearched = { ...searched[currentSearchedIndex], invited: true };
         // 3. Update the todo list with the updated todo
         const newSearched = [
-          ...users.slice(0, currentSearchedIndex),
+          ...searched.slice(0, currentSearchedIndex),
           updatedSearched,
-          ...users.slice(currentSearchedIndex + 1)
+          ...searched.slice(currentSearchedIndex + 1)
         ];
         setSearched(newSearched);
       } else {
@@ -140,7 +142,16 @@ export function ShareLink({ ...props }: any) {
 
   async function handleCopy() {
     navigator.clipboard.writeText(link);
+    setShowToast(true);
   }
+
+  React.useEffect(() => {
+    if (showToast) {
+      setInterval(() => {
+        setShowToast(false);
+      }, 2000)
+    }
+  }, [showToast]);
 
   React.useEffect(() => {
     if (ulRef) {
@@ -156,6 +167,8 @@ export function ShareLink({ ...props }: any) {
           Copy
         </button>
       </form>
+
+      {showToast ? <Toast className="lk-toast-connection-state">Copied</Toast> : <></>}
 
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input
@@ -177,7 +190,7 @@ export function ShareLink({ ...props }: any) {
                   <span className="lk-message-body lk-message-text">{user.designation}</span>
                 </div>
 
-                <button type="button" onClick={() => handleInvite(user)} className="lk-button lk-chat-form-button">
+                <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
                   {user.invited ? 'Invited' : 'Invite'}
                 </button>
               </li>

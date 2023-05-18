@@ -16,6 +16,7 @@ import { usePinnedTracks } from '../hooks/usePinnedTracks';
 import { CarouselLayout } from '../components/layout/CarouselLayout';
 import { useCreateLayoutContext } from '../context/layout-context';
 import { ParticipantTile } from '../components';
+import { Toast } from '../components';
 
 /**
  * @public
@@ -48,6 +49,7 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
     showChat: null,
   });
 
+  const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
 
   const tracks = useTracks(
@@ -76,6 +78,16 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
 
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
+
+  React.useEffect(() => {
+    if (waiting) {
+      // Remove toast message after 2 second
+      setInterval(() => {
+        console.log('Waiting room interval stop');
+        setWaiting(null);
+      }, 2000);
+    }
+  }, [waiting]);
 
   React.useEffect(() => {
     // if screen share tracks are published, and no pin is set explicitly, auto set the screen share
@@ -131,10 +143,12 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
         <Users
           style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
           onWaitingRoomChange={updateCount}
+          setWaiting={setWaiting}
         />
       </LayoutContextProvider>
       <RoomAudioRenderer />
       <ConnectionStateToast />
+      {waiting ? <Toast className="lk-toast-connection-state">{waiting}</Toast> : <></>}
     </div>
   );
 }

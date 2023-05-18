@@ -9,6 +9,7 @@ import { ToggleSwitch } from '../components/ToggleSwitch';
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
   onWaitingRoomChange: (state: number) => void;
+  setWaiting: (state: string | null) => void;
 }
 export type UserDataProps = {
   /** The participants to loop over.
@@ -17,13 +18,14 @@ export type UserDataProps = {
   participants: LocalUserChoices[];
 };
 
-export function Users({ onWaitingRoomChange, ...props }: UserProps) {
+export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) {
   const ulRef = React.useRef<HTMLUListElement>(null);
-  const participants = useParticipants();
-  const [waitingRoom, setWaitingRoom] = React.useState<LocalUserChoices[]>([]);
+  const participants = useParticipants(); // List of joined participant
+  const [waitingRoom, setWaitingRoom] = React.useState<LocalUserChoices[]>([]); // List of users in waiting room
+  const [toggleWaiting, setToggleWaiting] = React.useState<boolean>(true); // Enable / Disable waiting room
+
   const room = useRoomContext();
   const decoder = new TextDecoder();
-  const [toggleWaiting, setToggleWaiting] = React.useState<boolean>(true);
 
   // async function muteAllMircophone() {
   // room.participants.forEach((participant) => {
@@ -45,12 +47,14 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
         } else {
           setWaitingRoom([...waitingRoom, newUser]);
         }
+        // Set toast message
+        setWaiting(`${newUser.username} is in waiting room`);
       }
     }
   });
 
   React.useEffect(() => {
-    console.log('Calling onWaitingRoomChange', waitingRoom.length);
+    // Updating list user count in waiting room to parent component
     onWaitingRoomChange(waitingRoom.length);
   }, [onWaitingRoomChange, waitingRoom]);
 
@@ -60,6 +64,12 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
     }
   }, [ulRef]);
 
+  /**
+   * Accept or reject user from waiting room
+   *
+   * @param username Username
+   * @param type Accept or Reject
+   */
   async function admitUser(username: string, type: string) {
     const postData = {
       method: 'POST',
@@ -77,6 +87,11 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
     });
   }
 
+  /**
+   * Toggle waiting room to enable or disable
+   *
+   * @param checked
+   */
   const onToggleWaitingChange = (checked: any) => {
     const postData = {
       method: 'POST',
@@ -123,6 +138,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
             />
           </div>
         </div>
+
         {waitingRoom.map((item: LocalUserChoices) => (
           <div style={{ position: 'relative' }} key={item.username}>
             <div className="lk-participant-metadata">
