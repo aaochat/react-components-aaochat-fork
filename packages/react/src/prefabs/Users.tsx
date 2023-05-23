@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as React from 'react';
 import { useParticipants } from '../hooks';
 import { ParticipantLoop } from '../components';
@@ -33,6 +34,33 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
   // });
   // await p.setCameraEnabled(false);
   // }
+
+  /**
+   * Get list of users in waiting room
+   */
+  async function usersList() {
+    const postData = {
+      method: 'POST',
+      body: JSON.stringify({
+        meeting_id: room.name,
+      }),
+    };
+    fetch(`/api/get-waiting-room-users`, postData).then(async (res) => {
+      if (res.ok) {
+        const body = await res.json();
+        setWaitingRoom(body.users);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    // Updating list user count in waiting room to parent component
+    if (room.name) {
+      usersList();
+    }
+  }, [room.name]);
 
   room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
     const strData = JSON.parse(decoder.decode(payload));
