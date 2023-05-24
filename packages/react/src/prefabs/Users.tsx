@@ -85,13 +85,12 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
   });
 
   // async function checkWaitingRoom() {
-  //   const interval = setInterval(() => {
+  //   // const interval = setInterval(() => {
   //     if(waitingRoom.length) {
   //       const waitingRoomFilter = waitingRoom.filter(function (item)  {
   //         const currentTime = new Date().valueOf() - 7000;
   //         const lastTime = new Date(item.lastRequestTime)
   //         console.log(`Waiting room ${currentTime}`, `Last time ${lastTime.valueOf()}`);
-          
   //         return lastTime.valueOf() > currentTime;
   //       });
   
@@ -99,8 +98,8 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
         
   //       setWaitingRoom(waitingRoomFilter)
   //     }      
-  //   }, 1000);
-  //   return () => clearInterval(interval);
+  //   // }, 1000);
+  //   // return () => clearInterval(interval);
   // } 
 
   React.useEffect(() => {
@@ -113,6 +112,18 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
     }
   }, [ulRef]);
+
+  const [currentTime, setCurrentTime] = React.useState<Date>(new Date());
+
+  React.useEffect(() => {
+    setCurrentTime(new Date());
+  }, ['']);
+
+  React.useEffect(() => {
+    setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+  }, [currentTime]);
 
   /**
    * Accept or reject user from waiting room
@@ -189,7 +200,10 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
           </div>
         </div>
 
-        {waitingRoom.map((item: LocalUserChoices) => (
+        {waitingRoom.filter(function (item){ 
+          const lastTime = new Date(item.lastRequestTime)
+          return lastTime.valueOf() > currentTime.valueOf() - 7000; 
+        }).map((item: LocalUserChoices) => (
           <div style={{ position: 'relative' }} key={item.username}>
             <div className="lk-participant-metadata">
               <div className="lk-pa rticipant-metadata-item">{item.username}</div>
