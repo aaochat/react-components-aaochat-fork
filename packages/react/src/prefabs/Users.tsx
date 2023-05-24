@@ -68,8 +68,8 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
     if (strData.type == 'joining') {
       const newUser = strData.data;
       let isExist = waitingRoom.find((item: any) => item.username == newUser.username);
-
-      if (!isExist) {
+      
+      if (isExist == undefined) { // When not exist
         if (waitingRoom.length == 0) {
           setWaitingRoom([newUser]);
         } else {
@@ -83,6 +83,7 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
       }
     }
   });
+  
 
   // async function checkWaitingRoom() {
   //   // const interval = setInterval(() => {
@@ -112,18 +113,6 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
     }
   }, [ulRef]);
-
-  const [currentTime, setCurrentTime] = React.useState<number>(new Date().valueOf() - 7000);
-
-  React.useEffect(() => {
-    setCurrentTime(new Date().valueOf() - 7000);
-  }, ['']);
-
-  React.useEffect(() => {
-    setInterval(() => {
-      setCurrentTime(new Date().valueOf() - 7000);
-    }, 2000);
-  }, [currentTime]);
 
   /**
    * Accept or reject user from waiting room
@@ -200,10 +189,7 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
           </div>
         </div>
 
-        {waitingRoom.filter(function (item){ 
-          const lastTime = new Date(item.lastRequestTime)
-          return lastTime.valueOf() > currentTime; 
-        }).map((item: LocalUserChoices) => (
+        {waitingRoom.map((item: LocalUserChoices) => (
           <div style={{ position: 'relative' }} key={item.username}>
             <div className="lk-participant-metadata">
               <div className="lk-pa rticipant-metadata-item">{item.username}</div>
