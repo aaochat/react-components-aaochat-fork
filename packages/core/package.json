@@ -46,7 +46,6 @@
     "@livekit/components-styles": "~1.0.0",
     "@size-limit/file": "^8.2.4",
     "@size-limit/webpack": "^8.2.4",
-    "eslint-config-lk-custom": "^0.1.1",
     "size-limit": "^8.2.4",
     "tsup": "^6.7.0",
     "typescript": "^5.0.0",

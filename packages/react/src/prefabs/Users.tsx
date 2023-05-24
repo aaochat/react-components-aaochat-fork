@@ -113,16 +113,16 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
     }
   }, [ulRef]);
 
-  const [currentTime, setCurrentTime] = React.useState<Date>(new Date());
+  const [currentTime, setCurrentTime] = React.useState<number>(new Date().valueOf() - 7000);
 
   React.useEffect(() => {
-    setCurrentTime(new Date());
+    setCurrentTime(new Date().valueOf() - 7000);
   }, ['']);
 
   React.useEffect(() => {
     setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+      setCurrentTime(new Date().valueOf() - 7000);
+    }, 2000);
   }, [currentTime]);
 
   /**
@@ -202,7 +202,7 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
 
         {waitingRoom.filter(function (item){ 
           const lastTime = new Date(item.lastRequestTime)
-          return lastTime.valueOf() > currentTime.valueOf() - 7000; 
+          return lastTime.valueOf() > currentTime; 
         }).map((item: LocalUserChoices) => (
           <div style={{ position: 'relative' }} key={item.username}>
             <div className="lk-participant-metadata">
