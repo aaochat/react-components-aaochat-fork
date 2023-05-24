@@ -10,7 +10,7 @@ import { ToggleSwitch } from '../components/ToggleSwitch';
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
   onWaitingRoomChange: (state: number) => void;
-  setWaiting: (state: string | null) => void;
+  setWaiting: (state: string) => void;
 }
 export type UserDataProps = {
   /** The participants to loop over.
@@ -22,7 +22,7 @@ export type UserDataProps = {
 export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) {
   const ulRef = React.useRef<HTMLUListElement>(null);
   const participants = useParticipants(); // List of joined participant
-  const [waitingRoom, setWaitingRoom] = React.useState<LocalUserChoices[]>([]); // List of users in waiting room
+  const [waitingRoom, setWaitingRoom] = React.useState<any[]>([]); // List of users in waiting room
   const [toggleWaiting, setToggleWaiting] = React.useState<boolean>(true); // Enable / Disable waiting room
 
   const room = useRoomContext();
@@ -64,10 +64,10 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
 
   room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
     const strData = JSON.parse(decoder.decode(payload));
-
+    
     if (strData.type == 'joining') {
       const newUser = strData.data;
-      const isExist = waitingRoom.find((item: any) => item.username == newUser.username);
+      let isExist = waitingRoom.find((item: any) => item.username == newUser.username);
 
       if (!isExist) {
         if (waitingRoom.length == 0) {
@@ -77,9 +77,31 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
         }
         // Set toast message
         setWaiting(`${newUser.username} is in waiting room`);
+      } else {
+        isExist = newUser
+        setWaitingRoom(waitingRoom);
       }
     }
   });
+
+  // async function checkWaitingRoom() {
+  //   const interval = setInterval(() => {
+  //     if(waitingRoom.length) {
+  //       const waitingRoomFilter = waitingRoom.filter(function (item)  {
+  //         const currentTime = new Date().valueOf() - 7000;
+  //         const lastTime = new Date(item.lastRequestTime)
+  //         console.log(`Waiting room ${currentTime}`, `Last time ${lastTime.valueOf()}`);
+          
+  //         return lastTime.valueOf() > currentTime;
+  //       });
+  
+  //       console.log('Filtered data', waitingRoomFilter);
+        
+  //       setWaitingRoom(waitingRoomFilter)
+  //     }      
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // } 
 
   React.useEffect(() => {
     // Updating list user count in waiting room to parent component

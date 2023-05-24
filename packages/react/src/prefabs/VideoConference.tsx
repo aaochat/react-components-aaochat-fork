@@ -70,6 +70,11 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
     log.debug('count ', count);
     setWaitingRoomCount(count);
   };
+  const setWaitingMessage = (message: string) => {
+    if (props.showParticipantButton) {
+      setWaiting(message);
+    }
+  };
 
   const layoutContext = useCreateLayoutContext();
 
@@ -144,7 +149,7 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
         <Users
           style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
           onWaitingRoomChange={updateCount}
-          setWaiting={setWaiting}
+          setWaiting={setWaitingMessage}
         />
         {waiting ? (
           <Toast className="lk-toast-connection-state">
