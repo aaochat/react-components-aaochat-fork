@@ -62,47 +62,49 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
     }
   }, [room.name]);
 
-  room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
-    const strData = JSON.parse(decoder.decode(payload));
-    
-    if (strData.type == 'joining') {
-      const newUser = strData.data;
-      let isExist = waitingRoom.find((item: any) => item.username == newUser.username);
+  React.useEffect(() => {
+    room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
+      const strData = JSON.parse(decoder.decode(payload));
       
-      if (isExist == undefined) { // When not exist
-        if (waitingRoom.length == 0) {
-          setWaitingRoom([newUser]);
-        } else {
-          setWaitingRoom([...waitingRoom, newUser]);
-        }
-        // Set toast message
-        setWaiting(`${newUser.username} is in waiting room`);
-      } else {
-        isExist = newUser
-        setWaitingRoom(waitingRoom);
-      }
-    }
-  });
-  
-
-  // async function checkWaitingRoom() {
-  //   // const interval = setInterval(() => {
-  //     if(waitingRoom.length) {
-  //       const waitingRoomFilter = waitingRoom.filter(function (item)  {
-  //         const currentTime = new Date().valueOf() - 7000;
-  //         const lastTime = new Date(item.lastRequestTime)
-  //         console.log(`Waiting room ${currentTime}`, `Last time ${lastTime.valueOf()}`);
-  //         return lastTime.valueOf() > currentTime;
-  //       });
-  
-  //       console.log('Filtered data', waitingRoomFilter);
+      if (strData.type == 'joining') {
+        const newUser = strData.data;
+        const isExist = waitingRoom.find((item: any) => item.username == newUser.username);
         
-  //       setWaitingRoom(waitingRoomFilter)
-  //     }      
-  //   // }, 1000);
-  //   // return () => clearInterval(interval);
-  // } 
+        console.log(`Is Exist ${isExist}`);
+        
+        if (isExist == undefined) { // When not exist
+          if (waitingRoom.length == 0) {
+            setWaitingRoom([newUser]);
+          } else {
+            setWaitingRoom([...waitingRoom, newUser]);
+          }
+          // Set toast message
+          setWaiting(`${newUser.username} is in waiting room`);
+        } else {
+          const newState = waitingRoom.map(obj =>
+            obj.username == newUser.username ? newUser : obj
+          );
+          setWaitingRoom(newState);
+          console.log('Update waiting room user time', waitingRoom);          
+        }
+      }
+    });    
+  }, [waitingRoom, setWaiting, room, decoder]);  
 
+  // React.useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const waitingRoomFilter = waitingRoom.filter(function (item)  {
+  //       const currentTime = new Date().valueOf() - 7000;
+  //       const lastTime = new Date(item.lastRequestTime)
+  //       console.log(`Waiting room ${currentTime}`, `Last time ${lastTime.valueOf()}`);
+  //       return lastTime.valueOf() > currentTime;
+  //     });
+  //     console.log('Filtered data', waitingRoomFilter);
+  //     setWaitingRoom(waitingRoomFilter)     
+  //   }, 2000);
+  //   clearInterval(interval)
+  // }, [waitingRoom]);
+  
   React.useEffect(() => {
     // Updating list user count in waiting room to parent component
     onWaitingRoomChange(waitingRoom.length);

@@ -45,7 +45,12 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  * ```
  * @public
  */
-export function VideoConference({ ...props }: VideoConferenceProps) {
+export function VideoConference({
+  showShareButton,
+  showParticipantButton,
+  leaveButton,
+  ...props
+}: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
   });
@@ -71,7 +76,7 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
     setWaitingRoomCount(count);
   };
   const setWaitingMessage = (message: string) => {
-    if (props.showParticipantButton) {
+    if (showParticipantButton) {
       setWaiting(message);
     }
   };
@@ -138,9 +143,9 @@ export function VideoConference({ ...props }: VideoConferenceProps) {
           <ControlBar
             controls={{
               chat: false,
-              sharelink: props.showShareButton,
-              users: props.showParticipantButton,
-              leaveButton: props.leaveButton,
+              sharelink: showShareButton,
+              users: showParticipantButton,
+              leaveButton: leaveButton,
             }}
             waitingRoomCount={waitingRoomCount}
           />
