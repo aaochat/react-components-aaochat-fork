@@ -89,7 +89,15 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
         }
       }
     });    
-  }, [waitingRoom, setWaiting, room, decoder]);  
+  }, [waitingRoom, setWaiting, room, decoder]);
+
+  // const [currentTime, setcurrentTime] = React.useState<number>(new Date().valueOf() - 10000);
+  // React.useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setcurrentTime(new Date().valueOf() - 10000);
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // React.useEffect(() => {
   //   const interval = setInterval(() => {
@@ -190,6 +198,10 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
             />
           </div>
         </div>
+
+        {/* {waitingRoom.filter((item) => {
+          const lastTime = new Date(item.lastRequestTime)
+          return lastTime.valueOf() > currentTime;  */}
 
         {waitingRoom.map((item: LocalUserChoices) => (
           <div style={{ position: 'relative' }} key={item.username}>
