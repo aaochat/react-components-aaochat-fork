@@ -70,8 +70,6 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
         const newUser = strData.data;
         const isExist = waitingRoom.find((item: any) => item.username == newUser.username);
         
-        console.log(`Is Exist ${isExist}`);
-        
         if (isExist == undefined) { // When not exist
           if (waitingRoom.length == 0) {
             setWaitingRoom([newUser]);
@@ -84,8 +82,7 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
           const newState = waitingRoom.map(obj =>
             obj.username == newUser.username ? newUser : obj
           );
-          setWaitingRoom(newState);
-          console.log('Update waiting room user time', waitingRoom);          
+          setWaitingRoom(newState);         
         }
       }
     });    
