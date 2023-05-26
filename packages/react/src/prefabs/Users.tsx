@@ -4,7 +4,7 @@ import { useParticipants } from '../hooks';
 import { ParticipantLoop } from '../components';
 import { ParticipantList } from '../components/participant/ParticipantList';
 import { useRoomContext } from '../context';
-import { RoomEvent } from 'livekit-client';
+// import { RoomEvent } from 'livekit-client';
 import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 /** @public */
@@ -19,14 +19,14 @@ export type UserDataProps = {
   participants: LocalUserChoices[];
 };
 
-export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) {
+export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   const ulRef = React.useRef<HTMLUListElement>(null);
   const participants = useParticipants(); // List of joined participant
   const [waitingRoom, setWaitingRoom] = React.useState<any[]>([]); // List of users in waiting room
   const [toggleWaiting, setToggleWaiting] = React.useState<boolean>(true); // Enable / Disable waiting room
 
   const room = useRoomContext();
-  const decoder = new TextDecoder();
+  // const decoder = new TextDecoder();
 
   // async function muteAllMircophone() {
   // room.participants.forEach((participant) => {
@@ -62,39 +62,40 @@ export function Users({ onWaitingRoomChange, setWaiting, ...props }: UserProps) 
     }
   }, [room.name]);
 
-  React.useEffect(() => {
-    room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
-      const strData = JSON.parse(decoder.decode(payload));
+  // React.useEffect(() => {
+  //   room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
+  //     const strData = JSON.parse(decoder.decode(payload));
       
-      if (strData.type == 'joining') {
-        const newUser = strData.data;
-        const isExist = waitingRoom.find((item: any) => item.username == newUser.username);
+  //     if (strData.type == 'joining') {
+  //       const newUser = strData.data;
+  //       const isExist = waitingRoom.find((item: any) => item.username == newUser.username);
         
-        if (isExist == undefined) { // When not exist
-          if (waitingRoom.length == 0) {
-            setWaitingRoom([newUser]);
-          } else {
-            setWaitingRoom([...waitingRoom, newUser]);
-          }
-          // Set toast message
-          setWaiting(`${newUser.username} is in waiting room`);
-        } else {
-          const newState = waitingRoom.map(obj =>
-            obj.username == newUser.username ? newUser : obj
-          );
-          setWaitingRoom(newState);         
-        }
-      }
-    });    
-  }, [waitingRoom, setWaiting, room, decoder]);
+  //       if (isExist == undefined) { // When not exist
+  //         if (waitingRoom.length == 0) {
+  //           setWaitingRoom([newUser]);
+  //         } else {
+  //           setWaitingRoom([...waitingRoom, newUser]);
+  //         }
+  //         // Set toast message
+  //         setWaiting(`${newUser.username} is in waiting room`);
+  //       } else {
+  //         const newState = waitingRoom.map(obj =>
+  //           obj.username == newUser.username ? newUser : obj
+  //         );
+  //         setWaitingRoom(newState);         
+  //       }
+  //     }
+  //   });    
+  // }, [waitingRoom, setWaiting, room, decoder]);
 
   // const [currentTime, setcurrentTime] = React.useState<number>(new Date().valueOf() - 10000);
-  // React.useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setcurrentTime(new Date().valueOf() - 10000);
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      usersList();
+      // setWaiting(`Users are in waiting room`)
+    }, 2000)
+    return () => clearInterval(interval);
+  }, []);
 
   // React.useEffect(() => {
   //   const interval = setInterval(() => {

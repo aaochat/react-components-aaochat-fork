@@ -80,9 +80,7 @@ export function VideoConference({
       setWaiting(message);
     }
   };
-
   const layoutContext = useCreateLayoutContext();
-
   const screenShareTracks = tracks
     .filter(isTrackReference)
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
