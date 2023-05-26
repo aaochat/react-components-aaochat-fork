@@ -128,7 +128,6 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
     <div {...props} className="lk-chat lk-users">
       <div className="lk-participants">
         <h3>Participants</h3>
-        {/* <button onClick={muteAllMircophone}>Mute All</button> */}
         {participants?.length ? (
           <ParticipantLoop participants={participants}>
             <ParticipantList />
