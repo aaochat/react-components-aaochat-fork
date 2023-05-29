@@ -73,7 +73,7 @@ export function useTrackToggle<T extends ToggleSource>({
       'aria-pressed': enabled,
       'data-lk-source': source,
       'data-lk-enabled': enabled,
-      disabled: pending,
+      disabled: pending || rest.disabled,
       onClick: clickHandler,
     } as React.ButtonHTMLAttributes<HTMLButtonElement>,
   };
@@ -94,6 +94,7 @@ export function useTrackToggle<T extends ToggleSource>({
  */
 export function TrackToggle<T extends ToggleSource>({ showIcon, ...props }: TrackToggleProps<T>) {
   const { buttonProps, enabled } = useTrackToggle(props);
+  
   return (
     <button {...buttonProps}>
       {(showIcon ?? true) && getSourceIcon(props.source, enabled)}

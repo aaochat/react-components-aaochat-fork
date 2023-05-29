@@ -32,6 +32,7 @@ export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
   variation?: 'minimal' | 'verbose' | 'textOnly';
   controls?: ControlBarControls;
   waitingRoomCount: number;
+  screenShareTracks?: number;
 };
 
 /**
@@ -50,7 +51,13 @@ export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
  * ```
  * @public
  */
-export function ControlBar({ variation, controls, waitingRoomCount, ...props }: ControlBarProps) {
+export function ControlBar({
+  variation,
+  controls,
+  waitingRoomCount,
+  screenShareTracks,
+  ...props
+}: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
 
   const [isChatOpen, setIsChatOpen] = React.useState(false);
@@ -138,6 +145,14 @@ export function ControlBar({ variation, controls, waitingRoomCount, ...props }: 
           captureOptions={{ audio: true, selfBrowserSurface: 'include' }}
           showIcon={showIcon}
           onChange={onScreenShareChange}
+          disabled={!isScreenShareEnabled && screenShareTracks !== 0}
+          title={
+            !isScreenShareEnabled && screenShareTracks !== 0
+              ? 'Someone has shared screen'
+              : isScreenShareEnabled
+              ? "You're sharing your scrren"
+              : 'You can share your screen'
+          }
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>

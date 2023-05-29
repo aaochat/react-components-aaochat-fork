@@ -75,7 +75,7 @@ export function VideoConference({
     log.debug('count ', count);
     setWaitingRoomCount(count);
   };
-  
+
   const setWaitingMessage = (message: string) => {
     if (showParticipantButton) {
       setWaiting(message);
@@ -90,6 +90,12 @@ export function VideoConference({
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
+  // Get list of participant without sharescreen track
+  // carouselTracks = carouselTracks
+  //   .filter(isTrackReference)
+  //   .filter((track) => track.publication.source !== Track.Source.ScreenShare);
+  // console.log(carouselTracks);
+  
   React.useEffect(() => {
     if (waiting) {
       // Remove toast message after 2 second
@@ -148,6 +154,7 @@ export function VideoConference({
               leaveButton: leaveButton,
             }}
             waitingRoomCount={waitingRoomCount}
+            screenShareTracks={screenShareTracks.length}
           />
         </div>
         <ShareLink style={{ display: widgetState.showChat == 'show_invite' ? 'flex' : 'none' }} />
