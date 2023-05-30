@@ -4,7 +4,6 @@ import type { Participant, TrackPublication } from 'livekit-client';
 import type { ParticipantClickEvent } from '@livekit/components-core';
 import { ConnectionQualityIndicator } from './ConnectionQualityIndicator';
 import { ParticipantName } from './ParticipantName';
-// import { TrackMutedIndicator } from './TrackMutedIndicator';
 import { useEnsureParticipant } from '../../context';
 import { useParticipantTile, ParticipantContextIfNeeded } from './ParticipantTile';
 
@@ -54,8 +53,6 @@ export const ParticipantList = ({
           <>
             <div className="lk-participant-metadata">
               <div className="lk-participant-metadata-item">
-                {/* <TrackMutedIndicator source={Track.Source.Camera}></TrackMutedIndicator>
-                <TrackMutedIndicator source={Track.Source.Microphone}></TrackMutedIndicator> */}
                 <ParticipantName />
               </div>
               <ConnectionQualityIndicator className="lk-participant-metadata-item" />
