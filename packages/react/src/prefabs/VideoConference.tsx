@@ -90,17 +90,10 @@ export function VideoConference({
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
-  // Get list of participant without sharescreen track
-  // carouselTracks = carouselTracks
-  //   .filter(isTrackReference)
-  //   .filter((track) => track.publication.source !== Track.Source.ScreenShare);
-  // console.log(carouselTracks);
-  
   React.useEffect(() => {
     if (waiting) {
       // Remove toast message after 2 second
       setTimeout(() => {
-        console.log('Waiting room interval stop');
         setWaiting(null);
       }, 3000);
     }
