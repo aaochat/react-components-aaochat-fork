@@ -64,7 +64,6 @@ export function ControlBar({
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
   
-  
   React.useEffect(() => {
     if (layoutContext?.widget.state?.showChat == 'show_chat') {
       setIsChatOpen(layoutContext?.widget.state?.showChat == 'show_chat');
