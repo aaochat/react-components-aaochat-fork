@@ -87,15 +87,16 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
    * @param username Username
    * @param type Accept or Reject
    */
-  async function admitUser(username: string, type: string) {
+  async function admitUser(identity: string, type: string) {
     const postData = {
       method: 'POST',
-      body: JSON.stringify({ room: room.name, username: username, type: type }),
+      body: JSON.stringify({ room: room.name, identity: identity, type: type }),
     };
+    
     fetch(`/api/accept-request`, postData).then(async (res) => {
       if (res.status) {
         const remaining = waitingRoom.filter(
-          (item: LocalUserChoices) => item.username !== username,
+          (item: any) => item.identity !== identity,
         );
         setWaitingRoom(remaining);
       } else {
@@ -159,20 +160,20 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
           const lastTime = new Date(item.lastRequestTime)
           return lastTime.valueOf() > currentTime;  */}
 
-        {waitingRoom.map((item: LocalUserChoices) => (
+        {waitingRoom.map((item: any) => (
           <div style={{ position: 'relative' }} key={item.username}>
             <div className="lk-participant-metadata">
               <div className="lk-pa rticipant-metadata-item">{item.username}</div>
               <div>
                 <button
                   className="lk-button lk-waiting-room lk-success"
-                  onClick={() => admitUser(item.username, 'accepted')}
+                  onClick={() => admitUser(item.identity, 'accepted')}
                 >
                   Approve
                 </button>
                 <button
                   className="lk-button lk-waiting-room lk-danger"
-                  onClick={() => admitUser(item.username, 'rejected')}
+                  onClick={() => admitUser(item.identity, 'rejected')}
                 >
                   Reject
                 </button>
