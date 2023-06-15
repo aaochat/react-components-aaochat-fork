@@ -106,6 +106,25 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   }
 
   /**
+   * Approve all participant from waiting room
+   *
+   */
+  async function approveAll() {
+    const postData = {
+      method: 'POST',
+      body: JSON.stringify({ meeting_id: room.name }),
+    };
+    
+    fetch(`/api/approve-all-participant`, postData).then(async (res) => {
+      if (res.status) {
+        setWaitingRoom([]);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
+
+  /**
    * Toggle waiting room to enable or disable
    *
    * @param checked
@@ -143,6 +162,19 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       <div className="lk-waitinroom">
         <div>
           <h3>Waiting Room</h3>
+
+          {toggleWaiting 
+            ? 
+              <button
+                className="lk-button lk-success tl-approve"
+                onClick={() => approveAll()}
+              >
+                Approve All
+              </button> 
+            :
+            ""
+          }
+          
           <div>
             <ToggleSwitch
               id="toggleSwitch"
@@ -155,10 +187,6 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
             />
           </div>
         </div>
-
-        {/* {waitingRoom.filter((item) => {
-          const lastTime = new Date(item.lastRequestTime)
-          return lastTime.valueOf() > currentTime;  */}
 
         {waitingRoom.map((item: any) => (
           <div style={{ position: 'relative' }} key={item.username}>

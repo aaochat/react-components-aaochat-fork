@@ -15,10 +15,10 @@ import {
 import { useIsMuted, useIsSpeaking } from '../../hooks';
 import { mergeProps } from '../../utils';
 import { FocusToggle } from '../controls/FocusToggle';
-import { ParticipantPlaceholder } from '../../assets/images';
 import { ScreenShareIcon } from '../../assets/icons';
 import { VideoTrack } from './VideoTrack';
 import { AudioTrack } from './AudioTrack';
+import { ParticipantNamePlaceholder } from './ParticipantNamePlaceholder';
 
 /** @public */
 export type ParticipantTileProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -164,7 +164,7 @@ export const ParticipantTile = ({
               />
             )}
             <div className="lk-participant-placeholder">
-              <ParticipantPlaceholder />
+              {p && <ParticipantNamePlaceholder name={p.name} />}
             </div>
             <div className="lk-participant-metadata">
               <div className="lk-participant-metadata-item">
