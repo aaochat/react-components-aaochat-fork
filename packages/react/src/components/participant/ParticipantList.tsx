@@ -2,10 +2,11 @@ import * as React from 'react';
 import { Track } from 'livekit-client';
 import type { Participant, TrackPublication } from 'livekit-client';
 import type { ParticipantClickEvent } from '@livekit/components-core';
-import { ConnectionQualityIndicator } from './ConnectionQualityIndicator';
+// import { ConnectionQualityIndicator } from './ConnectionQualityIndicator';
 import { ParticipantName } from './ParticipantName';
 import { useEnsureParticipant } from '../../context';
 import { useParticipantTile, ParticipantContextIfNeeded } from './ParticipantTile';
+import { TrackMutedIndicator } from './TrackMutedIndicator';
 
 /** @public */
 export type ParticipantListProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -55,7 +56,17 @@ export const ParticipantList = ({
               <div className="lk-participant-metadata-item">
                 <ParticipantName />
               </div>
-              <ConnectionQualityIndicator className="lk-participant-metadata-item" />
+              <div className="display-flex">
+                <TrackMutedIndicator
+                  source={Track.Source.Microphone}
+                  show={'always'}
+                ></TrackMutedIndicator>
+                <TrackMutedIndicator
+                  source={Track.Source.Camera}
+                  show={'always'}
+                ></TrackMutedIndicator>
+              </div>
+              {/* <ConnectionQualityIndicator className="lk-participant-metadata-item" /> */}
             </div>
           </>
         )}
