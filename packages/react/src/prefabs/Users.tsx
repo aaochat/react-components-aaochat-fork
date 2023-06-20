@@ -164,7 +164,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
             />
           </div>
 
-          {toggleWaiting 
+          {toggleWaiting && waitingRoom.length
             ? 
               <button
                 className="lk-button tl-info tl-approve"
