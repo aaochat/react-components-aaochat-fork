@@ -52,7 +52,7 @@ export function ShareLink({ ...props }: any) {
   async function searchUsers(key: string) {
     if (key) {
       const filteredData = users.filter(function (item) {
-        return (item.user_name).startsWith(key);
+        return (item.user_name.toLocaleLowerCase()).startsWith(key.toLocaleLowerCase());
       });
       setSearched(filteredData)
     } else {
