@@ -4,7 +4,6 @@ import { useParticipants } from '../hooks';
 import { ParticipantLoop } from '../components';
 import { ParticipantList } from '../components/participant/ParticipantList';
 import { useRoomContext } from '../context';
-// import { RoomEvent } from 'livekit-client';
 import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 /** @public */
