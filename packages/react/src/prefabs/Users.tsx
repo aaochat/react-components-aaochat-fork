@@ -6,6 +6,8 @@ import { ParticipantList } from '../components/participant/ParticipantList';
 import { useRoomContext } from '../context';
 import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
+import SvgApproveIcon from '../assets/icons/ApproveIcon';
+import SvgRejectIcon from '../assets/icons/RejectIcon';
 
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -107,6 +109,25 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   }
 
   /**
+   * Approve all participant from waiting room
+   *
+   */
+  async function approveAll() {
+    const postData = {
+      method: 'POST',
+      body: JSON.stringify({ meeting_id: room.name }),
+    };
+    
+    fetch(`/api/approve-all-participant`, postData).then(async (res) => {
+      if (res.status) {
+        setWaitingRoom([]);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
+
+  /**
    * Toggle waiting room to enable or disable
    *
    * @param checked
@@ -128,24 +149,11 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
 
   return (
     <div {...props} className="lk-chat lk-users">
-      <div className="lk-participants">
-        <h3>Participants</h3>
-        {participants?.length ? (
-          <ParticipantLoop participants={participants}>
-            <ParticipantList />
-          </ParticipantLoop>
-        ) : (
-          <div>
-            <h5>No Participants</h5>
-          </div>
-        )}
-      </div>
-
       <div className="lk-waitinroom">
-        <div>
+        <div className="tl-waitingroom-heading">
           <h3>Waiting Room</h3>
-          
-          <div>
+
+          <div className="tl-toggle-switch">
             <ToggleSwitch
               id="toggleSwitch"
               checked={toggleWaiting}
@@ -156,30 +164,57 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
               disabled={false}
             />
           </div>
+
+          {toggleWaiting && waitingRoom.length
+            ? 
+              <button
+                className="lk-button tl-info tl-approve"
+                onClick={() => approveAll()}
+              >
+                Approve All
+              </button> 
+            :
+            ""
+          }
         </div>
 
         {waitingRoom.map((item: any) => (
-          <div style={{ position: 'relative' }} key={item.username}>
+          <div className="tl-participant-li" key={item.username}>
             <div className="lk-participant-metadata">
-              <div className="lk-pa rticipant-metadata-item">{item.username}</div>
-              <div>
-                <button
+              <div className="lk-participant-metadata-item">{item.username}</div>
+              <div className="display-flex">
+                <button 
                   className="lk-button lk-waiting-room lk-success"
                   onClick={() => admitUser(item.identity, 'accepted')}
                 >
-                  Approve
+                  <SvgApproveIcon />
                 </button>
                 <button
                   className="lk-button lk-waiting-room lk-danger"
                   onClick={() => admitUser(item.identity, 'rejected')}
                 >
-                  Reject
+                  <SvgRejectIcon />
                 </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <div className="lk-participants">
+        <div className="tl-participants-heading">
+          <h3>Participants  <span>({participants.length})</span></h3>
+        </div>
+        {participants?.length ? (
+          <ParticipantLoop participants={participants}>
+            <ParticipantList />
+          </ParticipantLoop>
+        ) : (
+          <div>
+            <h5>No Participants</h5>
+          </div>
+        )}
+      </div>      
     </div>
   );
 }

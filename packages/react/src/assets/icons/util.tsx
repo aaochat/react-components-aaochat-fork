@@ -2,10 +2,6 @@ import * as React from 'react';
 import { ConnectionQuality, Track } from 'livekit-client';
 
 import {
-  MicIcon,
-  MicDisabledIcon,
-  CameraIcon,
-  CameraDisabledIcon,
   QualityUnknownIcon,
   QualityExcellentIcon,
   QualityGoodIcon,
@@ -13,6 +9,8 @@ import {
   ScreenShareIcon,
   ScreenShareStopIcon,
 } from './index';
+
+import { MicIcon, MicDisabledIcon, CameraIcon, CameraDisabledIcon } from './tl';
 
 /**
  * @internal
