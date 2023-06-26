@@ -15,8 +15,10 @@ import { ConnectionState as ConnectionState_2 } from 'livekit-client';
 import { DataSendOptions } from '@livekit/components-core';
 import type { GridLayout as GridLayout_2 } from '@livekit/components-core/dist/helper/grid-layouts';
 import { HTMLAttributes } from 'react';
+import type { LocalAudioTrack } from 'livekit-client';
 import { LocalParticipant } from 'livekit-client';
 import { LocalTrackPublication } from 'livekit-client';
+import type { LocalVideoTrack } from 'livekit-client';
 import { MediaDeviceFailure } from 'livekit-client';
 import { Participant } from 'livekit-client';
 import type { ParticipantClickEvent } from '@livekit/components-core';
@@ -32,6 +34,7 @@ import type { RoomConnectOptions } from 'livekit-client';
 import type { RoomEvent } from 'livekit-client';
 import type { RoomOptions } from 'livekit-client';
 import type { ScreenShareCaptureOptions } from 'livekit-client';
+import { SetMediaDeviceOptions } from '@livekit/components-core';
 import type { SourcesArray } from '@livekit/components-core';
 import type { ToggleSource } from '@livekit/components-core';
 import { Track } from 'livekit-client';
@@ -50,13 +53,13 @@ export interface AllowAudioPlaybackProps extends React_2.ButtonHTMLAttributes<HT
 }
 
 // @public
-export function AudioConference({ ...props }: AudioConferenceProps): JSX.Element;
+export function AudioConference({ ...props }: AudioConferenceProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type AudioConferenceProps = React_2.HTMLAttributes<HTMLDivElement>;
 
 // @public
-export function AudioTrack({ onSubscriptionStatusChanged, volume, ...props }: AudioTrackProps): JSX.Element;
+export function AudioTrack({ onSubscriptionStatusChanged, volume, ...props }: AudioTrackProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type AudioTrackProps<T extends HTMLMediaElement = HTMLMediaElement> = React_2.HTMLAttributes<T> & {
@@ -69,7 +72,7 @@ export type AudioTrackProps<T extends HTMLMediaElement = HTMLMediaElement> = Rea
 };
 
 // @public (undocumented)
-export function AudioVisualizer({ participant, ...props }: AudioVisualizerProps): JSX.Element;
+export function AudioVisualizer({ participant, ...props }: AudioVisualizerProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface AudioVisualizerProps extends React_2.HTMLAttributes<SVGElement> {
@@ -78,7 +81,7 @@ export interface AudioVisualizerProps extends React_2.HTMLAttributes<SVGElement>
 }
 
 // @public
-export function CarouselView({ tracks, orientation, ...props }: CarouselViewProps): JSX.Element;
+export function CarouselView({ tracks, orientation, ...props }: CarouselViewProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface CarouselViewProps extends React_2.HTMLAttributes<HTMLMediaElement> {
@@ -90,10 +93,10 @@ export interface CarouselViewProps extends React_2.HTMLAttributes<HTMLMediaEleme
 }
 
 // @public
-export function Chat({ messageFormatter, ...props }: ChatProps): JSX.Element;
+export function Chat({ messageFormatter, ...props }: ChatProps): React_2.JSX.Element;
 
 // @public
-export function ChatEntry({ entry, hideName, hideTimestamp, messageFormatter, ...props }: ChatEntryProps): JSX.Element;
+export function ChatEntry({ entry, hideName, hideTimestamp, messageFormatter, ...props }: ChatEntryProps): React_2.JSX.Element;
 
 // @public
 export interface ChatEntryProps extends React_2.HTMLAttributes<HTMLLIElement> {
@@ -112,19 +115,19 @@ export interface ChatProps extends React_2.HTMLAttributes<HTMLDivElement> {
 }
 
 // @public
-export function ChatToggle(props: ChatToggleProps): JSX.Element;
+export function ChatToggle(props: ChatToggleProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type ChatToggleProps = React_2.ButtonHTMLAttributes<HTMLButtonElement>;
 
 // @public
-export function ClearPinButton(props: ClearPinButtonProps): JSX.Element;
+export function ClearPinButton(props: ClearPinButtonProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type ClearPinButtonProps = React_2.ButtonHTMLAttributes<HTMLButtonElement>;
 
 // @public
-export function ConnectionQualityIndicator(props: ConnectionQualityIndicatorProps): JSX.Element;
+export function ConnectionQualityIndicator(props: ConnectionQualityIndicatorProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface ConnectionQualityIndicatorOptions {
@@ -136,10 +139,10 @@ export interface ConnectionQualityIndicatorOptions {
 export type ConnectionQualityIndicatorProps = React_2.HTMLAttributes<HTMLDivElement> & ConnectionQualityIndicatorOptions;
 
 // @public
-export function ConnectionState({ room, ...props }: ConnectionStatusProps): JSX.Element;
+export function ConnectionState({ room, ...props }: ConnectionStatusProps): React_2.JSX.Element;
 
 // @public (undocumented)
-export function ConnectionStateToast(props: ConnectionStateToastProps): JSX.Element;
+export function ConnectionStateToast(props: ConnectionStateToastProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface ConnectionStateToastProps extends React_2.HTMLAttributes<HTMLDivElement> {
@@ -153,7 +156,7 @@ export interface ConnectionStatusProps extends React_2.HTMLAttributes<HTMLDivEle
 }
 
 // @public
-export function ControlBar({ variation, controls, ...props }: ControlBarProps): JSX.Element;
+export function ControlBar({ variation, controls, ...props }: ControlBarProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type ControlBarControls = {
@@ -171,7 +174,7 @@ export type ControlBarProps = React_2.HTMLAttributes<HTMLDivElement> & {
 };
 
 // @public
-export function DisconnectButton(props: DisconnectButtonProps): JSX.Element;
+export function DisconnectButton(props: DisconnectButtonProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type DisconnectButtonProps = React_2.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -179,10 +182,10 @@ export type DisconnectButtonProps = React_2.ButtonHTMLAttributes<HTMLButtonEleme
 };
 
 // @public (undocumented)
-export function FocusLayout({ track, ...htmlProps }: FocusLayoutProps): JSX.Element;
+export function FocusLayout({ track, ...htmlProps }: FocusLayoutProps): React_2.JSX.Element;
 
 // @public (undocumented)
-export function FocusLayoutContainer(props: FocusLayoutContainerProps): JSX.Element;
+export function FocusLayoutContainer(props: FocusLayoutContainerProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface FocusLayoutContainerProps extends React_2.HTMLAttributes<HTMLDivElement> {
@@ -201,7 +204,7 @@ export interface FocusLayoutProps extends React_2.HTMLAttributes<HTMLElement> {
 }
 
 // @public
-export function FocusToggle({ trackSource, participant, ...props }: FocusToggleProps): JSX.Element;
+export function FocusToggle({ trackSource, participant, ...props }: FocusToggleProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface FocusToggleProps extends React_2.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -215,7 +218,7 @@ export interface FocusToggleProps extends React_2.ButtonHTMLAttributes<HTMLButto
 export function formatChatMessageLinks(message: string): React_2.ReactNode;
 
 // @public
-export function GridLayout({ tracks, ...props }: GridLayoutProps): JSX.Element;
+export function GridLayout({ tracks, ...props }: GridLayoutProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface GridLayoutProps extends React_2.HTMLAttributes<HTMLDivElement>, Pick<UseParticipantsOptions, 'updateOnlyOn'> {
@@ -229,7 +232,7 @@ export interface GridLayoutProps extends React_2.HTMLAttributes<HTMLDivElement>,
 export const LayoutContext: React_2.Context<LayoutContextType | undefined>;
 
 // @alpha (undocumented)
-export function LayoutContextProvider({ value, onPinChange, onWidgetChange, children, }: React_2.PropsWithChildren<LayoutContextProviderProps>): JSX.Element;
+export function LayoutContextProvider({ value, onPinChange, onWidgetChange, children, }: React_2.PropsWithChildren<LayoutContextProviderProps>): React_2.JSX.Element;
 
 // @alpha (undocumented)
 export type LayoutContextProviderProps = {
@@ -245,7 +248,7 @@ export type LayoutContextType = {
 };
 
 // @public
-export function LiveKitRoom(props: React_2.PropsWithChildren<LiveKitRoomProps>): JSX.Element;
+export function LiveKitRoom(props: React_2.PropsWithChildren<LiveKitRoomProps>): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface LiveKitRoomProps extends Omit<React_2.HTMLAttributes<HTMLDivElement>, 'onError'> {
@@ -280,7 +283,7 @@ export type LocalUserChoices = {
 };
 
 // @public
-export const MediaDeviceMenu: ({ kind, initialSelection, onActiveDeviceChange, ...props }: MediaDeviceMenuProps) => JSX.Element;
+export const MediaDeviceMenu: ({ kind, initialSelection, onActiveDeviceChange, ...props }: MediaDeviceMenuProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export interface MediaDeviceMenuProps extends React_2.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -293,7 +296,7 @@ export interface MediaDeviceMenuProps extends React_2.ButtonHTMLAttributes<HTMLB
 }
 
 // @public
-export function MediaDeviceSelect({ kind, initialSelection, onActiveDeviceChange, onDeviceListChange, ...props }: MediaDeviceSelectProps): JSX.Element;
+export function MediaDeviceSelect({ kind, initialSelection, onActiveDeviceChange, onDeviceListChange, ...props }: MediaDeviceSelectProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface MediaDeviceSelectProps extends React_2.HTMLAttributes<HTMLUListElement> {
@@ -311,7 +314,7 @@ export interface MediaDeviceSelectProps extends React_2.HTMLAttributes<HTMLUList
 export type MessageFormatter = (message: string) => React_2.ReactNode;
 
 // @public
-export const ParticipantAudioTile: ({ participant, children, source, publication, disableSpeakingIndicator, onParticipantClick, ...htmlProps }: ParticipantTileProps) => JSX.Element;
+export const ParticipantAudioTile: ({ participant, children, source, publication, disableSpeakingIndicator, onParticipantClick, ...htmlProps }: ParticipantTileProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export const ParticipantContext: React_2.Context<Participant | undefined>;
@@ -319,10 +322,10 @@ export const ParticipantContext: React_2.Context<Participant | undefined>;
 // @public (undocumented)
 export function ParticipantContextIfNeeded(props: React_2.PropsWithChildren<{
     participant?: Participant;
-}>): JSX.Element;
+}>): React_2.JSX.Element;
 
 // @public
-export const ParticipantLoop: ({ participants, ...props }: ParticipantLoopProps) => JSX.Element;
+export const ParticipantLoop: ({ participants, ...props }: ParticipantLoopProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export type ParticipantLoopProps = {
@@ -331,13 +334,13 @@ export type ParticipantLoopProps = {
 };
 
 // @public
-export function ParticipantName({ participant, ...props }: ParticipantNameProps): JSX.Element;
+export function ParticipantName({ participant, ...props }: ParticipantNameProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type ParticipantNameProps = React_2.HTMLAttributes<HTMLSpanElement> & UseParticipantInfoOptions;
 
 // @public
-export const ParticipantTile: ({ participant, children, source, onParticipantClick, publication, disableSpeakingIndicator, ...htmlProps }: ParticipantTileProps) => JSX.Element;
+export const ParticipantTile: ({ participant, children, source, onParticipantClick, publication, disableSpeakingIndicator, ...htmlProps }: ParticipantTileProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export type ParticipantTileProps = React_2.HTMLAttributes<HTMLDivElement> & {
@@ -349,7 +352,7 @@ export type ParticipantTileProps = React_2.HTMLAttributes<HTMLDivElement> & {
 };
 
 // @public
-export const PreJoin: ({ defaults, onValidate, onSubmit, onError, debug, joinLabel, micLabel, camLabel, userLabel, ...htmlProps }: PreJoinProps) => JSX.Element;
+export const PreJoin: ({ defaults, onValidate, onSubmit, onError, debug, joinLabel, micLabel, camLabel, userLabel, ...htmlProps }: PreJoinProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export type PreJoinProps = Omit<React_2.HTMLAttributes<HTMLDivElement>, 'onSubmit'> & {
@@ -367,13 +370,13 @@ export type PreJoinProps = Omit<React_2.HTMLAttributes<HTMLDivElement>, 'onSubmi
 export { ReceivedChatMessage }
 
 // @public
-export const RoomAudioRenderer: () => JSX.Element;
+export const RoomAudioRenderer: () => React_2.JSX.Element;
 
 // @public (undocumented)
 export const RoomContext: React_2.Context<Room | undefined>;
 
 // @public
-export const RoomName: ({ childrenPosition, children, ...htmlAttributes }: RoomNameProps) => JSX.Element;
+export const RoomName: ({ childrenPosition, children, ...htmlAttributes }: RoomNameProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export interface RoomNameProps extends React_2.HTMLAttributes<HTMLSpanElement> {
@@ -382,16 +385,16 @@ export interface RoomNameProps extends React_2.HTMLAttributes<HTMLSpanElement> {
 }
 
 // @public
-export function StartAudio({ label, ...props }: AllowAudioPlaybackProps): JSX.Element;
+export function StartAudio({ label, ...props }: AllowAudioPlaybackProps): React_2.JSX.Element;
 
 // @public (undocumented)
-export function Toast(props: React_2.HTMLAttributes<HTMLDivElement>): JSX.Element;
+export function Toast(props: React_2.HTMLAttributes<HTMLDivElement>): React_2.JSX.Element;
 
 // @public (undocumented)
 export const TrackContext: React_2.Context<TrackReferenceOrPlaceholder | undefined>;
 
 // @public
-export const TrackLoop: ({ tracks, ...props }: TrackLoopProps) => JSX.Element;
+export const TrackLoop: ({ tracks, ...props }: TrackLoopProps) => React_2.JSX.Element;
 
 // @public (undocumented)
 export type TrackLoopProps = {
@@ -400,7 +403,7 @@ export type TrackLoopProps = {
 };
 
 // @public
-export const TrackMutedIndicator: ({ source, participant, show, ...props }: TrackMutedIndicatorProps) => JSX.Element | null;
+export const TrackMutedIndicator: ({ source, participant, show, ...props }: TrackMutedIndicatorProps) => React_2.JSX.Element | null;
 
 // @public (undocumented)
 export interface TrackMutedIndicatorProps extends React_2.HTMLAttributes<HTMLDivElement> {
@@ -413,7 +416,7 @@ export interface TrackMutedIndicatorProps extends React_2.HTMLAttributes<HTMLDiv
 }
 
 // @public
-export function TrackToggle<T extends ToggleSource>({ showIcon, ...props }: TrackToggleProps<T>): JSX.Element;
+export function TrackToggle<T extends ToggleSource>({ showIcon, ...props }: TrackToggleProps<T>): React_2.JSX.Element;
 
 // @public (undocumented)
 export type TrackToggleProps<T extends ToggleSource> = Omit<React_2.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> & {
@@ -422,6 +425,12 @@ export type TrackToggleProps<T extends ToggleSource> = Omit<React_2.ButtonHTMLAt
     initialState?: boolean;
     onChange?: (enabled: boolean) => void;
     captureOptions?: CaptureOptionsBySource<T>;
+};
+
+// @alpha
+export function useAudioPlayback(room?: Room): {
+    canPlayAudio: boolean;
+    startAudio: () => Promise<void>;
 };
 
 // @public (undocumented)
@@ -547,7 +556,7 @@ export function useMediaDeviceSelect({ kind, room }: UseMediaDeviceSelectProps):
     devices: MediaDeviceInfo[];
     className: string;
     activeDeviceId: string;
-    setActiveMediaDevice: (id: string) => Promise<void>;
+    setActiveMediaDevice: (id: string, options?: SetMediaDeviceOptions | undefined) => Promise<void>;
 };
 
 // @public (undocumented)
@@ -646,6 +655,13 @@ export type UseParticipantTileProps<T extends HTMLElement> = TrackReferenceOrPla
 export function usePinnedTracks(layoutContext?: LayoutContextType): TrackReferenceOrPlaceholder[];
 
 // @public (undocumented)
+export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(enabled: boolean, deviceId: string, kind: 'videoinput' | 'audioinput'): {
+    selectedDevice: MediaDeviceInfo | undefined;
+    localTrack: T | undefined;
+    deviceError: Error | null;
+};
+
+// @public (undocumented)
 export const useRemoteParticipant: (identity: string, options?: UseRemoteParticipantOptions) => RemoteParticipant | undefined;
 
 // @public (undocumented)
@@ -693,6 +709,20 @@ export function useSortedParticipants(participants: Array<Participant>): Partici
 
 // @public
 export const useSpeakingParticipants: () => Participant[];
+
+// @alpha
+export function useStartAudio({ room, props }: UseStartAudioProps): {
+    mergedProps: React_2.HTMLAttributes<HTMLElement>;
+    canPlayAudio: boolean;
+};
+
+// @alpha (undocumented)
+export interface UseStartAudioProps {
+    // (undocumented)
+    props: React_2.ButtonHTMLAttributes<HTMLButtonElement>;
+    // (undocumented)
+    room?: Room;
+}
 
 // @alpha
 export function useSwipe(element: React_2.RefObject<HTMLElement>, options?: UseSwipeOptions): void;
@@ -763,7 +793,7 @@ export interface UseVisualStableUpdateOptions {
 }
 
 // @public
-export function VideoConference({ chatMessageFormatter, ...props }: VideoConferenceProps): JSX.Element;
+export function VideoConference({ chatMessageFormatter, ...props }: VideoConferenceProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export interface VideoConferenceProps extends React_2.HTMLAttributes<HTMLDivElement> {
@@ -772,7 +802,7 @@ export interface VideoConferenceProps extends React_2.HTMLAttributes<HTMLDivElem
 }
 
 // @public
-export function VideoTrack({ onTrackClick, onClick, onSubscriptionStatusChanged, name, publication, source, ...props }: VideoTrackProps): JSX.Element;
+export function VideoTrack({ onTrackClick, onClick, onSubscriptionStatusChanged, name, publication, source, ...props }: VideoTrackProps): React_2.JSX.Element;
 
 // @public (undocumented)
 export type VideoTrackProps = React_2.HTMLAttributes<HTMLVideoElement> & {
