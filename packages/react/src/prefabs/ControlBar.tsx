@@ -7,13 +7,13 @@ import { StartAudio } from '../components/controls/StartAudio';
 import { ChatIcon, LeaveIcon } from '../assets/icons';
 import { ChatToggle } from '../components/controls/ChatToggle';
 import { ShareLinkToggle } from '../components/controls/ShareLinkToggle';
-import { isMobileBrowser } from '@livekit/components-core';
-import { useLocalParticipantPermissions } from '../hooks';
-import { useMediaQuery } from '../hooks/internal';
-import { useMaybeLayoutContext } from '../context';
 import { UserToggle } from '../components/controls/UserToggle';
 import SvgInviteIcon from '../assets/icons/InviteIcon';
 import SvgUserIcon from '../assets/icons/UsersIcon';
+import { useLocalParticipantPermissions } from '../hooks';
+import { useMediaQuery } from '../hooks/internal';
+import { useMaybeLayoutContext } from '../context';
+import { supportsScreenSharing } from '@livekit/components-core';
 
 /** @public */
 export type ControlBarControls = {
@@ -110,7 +110,7 @@ export function ControlBar({
     [variation],
   );
 
-  const isMobile = React.useMemo(() => isMobileBrowser(), []);
+  const browserSupportsScreenSharing = supportsScreenSharing();
 
   const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
 
@@ -140,7 +140,7 @@ export function ControlBar({
           </div>
         </div>
       )}
-      {visibleControls.screenShare && !isMobile && (
+      {visibleControls.screenShare && browserSupportsScreenSharing && (
         <TrackToggle
           source={Track.Source.ScreenShare}
           captureOptions={{ audio: true, selfBrowserSurface: 'include' }}

@@ -8,11 +8,13 @@ import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 import SvgApproveIcon from '../assets/icons/ApproveIcon';
 import SvgRejectIcon from '../assets/icons/RejectIcon';
+
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
   onWaitingRoomChange: (state: number) => void;
   setWaiting: (state: string) => void;
 }
+
 export type UserDataProps = {
   /** The participants to loop over.
    * If not provided, the participants from the current room context are used.

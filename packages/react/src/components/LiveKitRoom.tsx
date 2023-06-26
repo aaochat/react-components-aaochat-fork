@@ -28,26 +28,26 @@ export interface LiveKitRoomProps extends Omit<React.HTMLAttributes<HTMLDivEleme
    */
   token: string | undefined;
   /**
-   * Enable audio capabilities in your LiveKit room.
-   * @defaultValue `true`
+   * Publish audio immediately after connecting to your LiveKit room.
+   * @defaultValue `false`
    * @see https://docs.livekit.io/client-sdk-js/interfaces/AudioCaptureOptions.html
    */
   audio?: AudioCaptureOptions | boolean;
   /**
-   * Enable video capabilities in your LiveKit room.
-   * @defaultValue `true`
+   * Publish video immediately after connecting to your LiveKit room.
+   * @defaultValue `false`
    * @see https://docs.livekit.io/client-sdk-js/interfaces/VideoCaptureOptions.html
    */
   video?: VideoCaptureOptions | boolean;
   /**
-   * Enable screen share capabilities in your LiveKit room.
-   * @defaultValue `true`
+   * Publish screen share immediately after connecting to your LiveKit room.
+   * @defaultValue `false`
    * @see https://docs.livekit.io/client-sdk-js/interfaces/ScreenShareCaptureOptions.html
    */
   screen?: ScreenShareCaptureOptions | boolean;
   /**
    * If set to true a connection to LiveKit room is initiated.
-   * @defaultValue `true`
+   * @defaultValue `false`
    */
   connect?: boolean;
   /**
@@ -120,7 +120,7 @@ export function useLiveKitRoom(props: LiveKitRoomProps) {
 
   React.useEffect(() => {
     setRoom(passedRoom ?? new Room(options));
-  }, [options, passedRoom]);
+  }, [JSON.stringify(options), passedRoom]);
 
   const htmlProps = React.useMemo(() => mergeProps(rest, setupLiveKitRoom()), [rest]);
 
@@ -128,15 +128,16 @@ export function useLiveKitRoom(props: LiveKitRoomProps) {
     if (!room) return;
     const onSignalConnected = () => {
       const localP = room.localParticipant;
-      try {
-        log.debug('trying to publish local tracks');
-        localP.setMicrophoneEnabled(!!audio, typeof audio !== 'boolean' ? audio : undefined);
-        localP.setCameraEnabled(!!video, typeof video !== 'boolean' ? video : undefined);
-        localP.setScreenShareEnabled(!!screen, typeof screen !== 'boolean' ? screen : undefined);
-      } catch (e) {
+
+      log.debug('trying to publish local tracks');
+      Promise.all([
+        localP.setMicrophoneEnabled(!!audio, typeof audio !== 'boolean' ? audio : undefined),
+        localP.setCameraEnabled(!!video, typeof video !== 'boolean' ? video : undefined),
+        localP.setScreenShareEnabled(!!screen, typeof screen !== 'boolean' ? screen : undefined),
+      ]).catch((e) => {
         log.warn(e);
         onError?.(e as Error);
-      }
+      });
     };
 
     const onMediaDeviceError = (e: Error) => {
@@ -186,7 +187,15 @@ export function useLiveKitRoom(props: LiveKitRoomProps) {
       log.debug('disconnecting because connect is false');
       room.disconnect();
     }
-  }, [connect, token, connectOptions, room, onError, serverUrl, simulateParticipants]);
+  }, [
+    connect,
+    token,
+    JSON.stringify(connectOptions),
+    room,
+    onError,
+    serverUrl,
+    simulateParticipants,
+  ]);
 
   React.useEffect(() => {
     if (!room) return;

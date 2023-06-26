@@ -1,5 +1,67 @@
 # @livekit/components-react
 
+## 1.0.6
+
+### Patch Changes
+
+- Fix autofocus logic in the `VideoConference` component that prevented screen sharing from being removed from focus. Fix `usePinnedTracks` not returning `undefined` state. - [#519](https://github.com/livekit/components-js/pull/519) ([@Ocupe](https://github.com/Ocupe))
+
+- Update active device selection. Require `"livekit-client": "1.11.2"` - [#529](https://github.com/livekit/components-js/pull/529) ([@Ocupe](https://github.com/Ocupe))
+
+- Add screen share feature detection to hide screen share button in control bar. - [#525](https://github.com/livekit/components-js/pull/525) ([@Ocupe](https://github.com/Ocupe))
+
+- Updated dependencies [[`7c7cc55`](https://github.com/livekit/components-js/commit/7c7cc552b58bdfcc1ba15a4724e652bf188f1ea8), [`fdab2db`](https://github.com/livekit/components-js/commit/fdab2db9326db93024b0c3002956806d57164055), [`28ac866`](https://github.com/livekit/components-js/commit/28ac86691c5ff489833b5f02e88e9ef40e33acc0)]:
+  - @livekit/components-core@0.6.9
+
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`d71f8fa`](https://github.com/livekit/components-js/commit/d71f8fa401e4345359e49ee2a9947f80941fe65b)]:
+  - @livekit/components-core@0.6.8
+
+## 1.0.4
+
+### Patch Changes
+
+- Improve carousel view stability on overflow - [#499](https://github.com/livekit/components-js/pull/499) ([@lukasIO](https://github.com/lukasIO))
+
+- Set correct starting value for useAudioPlayback hook - [#514](https://github.com/livekit/components-js/pull/514) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix participant tile always rendering camera track - [#498](https://github.com/livekit/components-js/pull/498) ([@lukasIO](https://github.com/lukasIO))
+
+- Catch publish promises when first connecting room - [#501](https://github.com/livekit/components-js/pull/501) ([@lukasIO](https://github.com/lukasIO))
+
+- Correct export of LayoutContextType #491 - [#495](https://github.com/livekit/components-js/pull/495) ([@Ocupe](https://github.com/Ocupe))
+
+- Stringify room options - [#489](https://github.com/livekit/components-js/pull/489) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix default values in docs - [#502](https://github.com/livekit/components-js/pull/502) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.0.3
+
+### Patch Changes
+
+- Remove unneeded console.log - [#485](https://github.com/livekit/components-js/pull/485) ([@davidzhao](https://github.com/davidzhao))
+
+- Add `usePreviewDevice`, `useStartAudio` and newly created `useAudioPlayback` hooks to public API. - [#487](https://github.com/livekit/components-js/pull/487) ([@Ocupe](https://github.com/Ocupe))
+
+- Updated dependencies [[`a63d293`](https://github.com/livekit/components-js/commit/a63d293cbfb939d6633163e203b70fa0ba5399e5)]:
+  - @livekit/components-core@0.6.7
+
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`73df060`](https://github.com/livekit/components-js/commit/73df060a5e72fe3526c7dec0dfc0355f25ef42a9)]:
+  - @livekit/components-core@0.6.6
+
+## 1.0.1
+
+### Patch Changes
+
+- Fix audio volume set to 0 and prevent false warning when setting volume on AudioTrack. - [#471](https://github.com/livekit/components-js/pull/471) ([@Ocupe](https://github.com/Ocupe))
+
 ## 1.0.0
 
 ### Major Changes
