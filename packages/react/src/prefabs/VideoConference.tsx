@@ -19,6 +19,7 @@ import { ParticipantTile } from '../components';
 import { Toast } from '../components';
 import { UserToggle } from '../components/controls/UserToggle';
 import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
+import { WhiteBoard } from '../components/WhiteBoard';
 
 /**
  * @public
@@ -144,6 +145,7 @@ export function VideoConference({
                 <CarouselLayout tracks={carouselTracks}>
                   <ParticipantTile />
                 </CarouselLayout>
+                {/* {focusWhiteboard && <WhiteBoard participant={focusTrack} />} */}
                 {focusTrack && <FocusLayout track={focusTrack} />}
               </FocusLayoutContainer>
             </div>
