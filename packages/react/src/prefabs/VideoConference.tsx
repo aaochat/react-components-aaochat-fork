@@ -91,6 +91,7 @@ export function VideoConference({
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
 
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
+  const focusWhiteboard = false;
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
   React.useEffect(() => {
@@ -145,7 +146,7 @@ export function VideoConference({
                 <CarouselLayout tracks={carouselTracks}>
                   <ParticipantTile />
                 </CarouselLayout>
-                {/* {focusWhiteboard && <WhiteBoard participant={focusTrack} />} */}
+                {focusWhiteboard && <WhiteBoard participant={focusTrack} />}
                 {focusTrack && <FocusLayout track={focusTrack} />}
               </FocusLayoutContainer>
             </div>

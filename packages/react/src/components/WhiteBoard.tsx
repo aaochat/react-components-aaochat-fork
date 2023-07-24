@@ -1,5 +1,5 @@
 import { roomInfoObserver } from '@livekit/components-core';
-import type { Participant, Room } from 'livekit-client';
+import type { Participant } from 'livekit-client';
 import * as React from 'react';
 
 import { useEnsureParticipant, useEnsureRoom } from '../context';
@@ -34,10 +34,10 @@ export const WhiteBoard = (participant: Participant) => {
   const p = useEnsureParticipant(participant);
 
   return (
-    <iframe 
-        src={`http://localhost:8080/?whiteboardid=${name}&username=${p.name}`} 
-        width={100} 
-        height={100} 
+    <iframe
+      src={`http://localhost:8080/?whiteboardid=${name}&username=${p.name}`}
+      width={100}
+      height={100}
     />
   );
 };
