@@ -91,6 +91,8 @@ export function ShareLink({ ...props }: any) {
     event.preventDefault();
     if (inputRef.current && inputRef.current.value.trim() !== '') {
       searchUsers(inputRef.current.value);
+    } else {
+      setSearched(users);
     }
   }
 
@@ -175,7 +177,7 @@ export function ShareLink({ ...props }: any) {
           ref={inputRef}
           type="text"
           placeholder="Search User..."
-          onKeyUp={handleSubmit}
+          onChange={handleSubmit}
         />
       </form>
 

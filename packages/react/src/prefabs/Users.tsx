@@ -44,6 +44,10 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   async function usersList() {
     const postData = {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         meeting_id: room.name,
       }),
@@ -64,7 +68,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       usersList();
     }
   }, [room.name]);
-  
+
   React.useEffect(() => {
     const interval = setInterval(() => {
       usersList();
@@ -72,7 +76,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
     }, 2000)
     return () => clearInterval(interval);
   }, []);
-  
+
   React.useEffect(() => {
     // Updating list user count in waiting room to parent component
     onWaitingRoomChange(waitingRoom.length);
@@ -93,9 +97,13 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   async function admitUser(identity: string, type: string) {
     const postData = {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ room: room.name, identity: identity, type: type }),
     };
-    
+
     fetch(`/api/accept-request`, postData).then(async (res) => {
       if (res.status) {
         const remaining = waitingRoom.filter(
@@ -115,9 +123,13 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   async function approveAll() {
     const postData = {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ meeting_id: room.name }),
     };
-    
+
     fetch(`/api/approve-all-participant`, postData).then(async (res) => {
       if (res.status) {
         setWaitingRoom([]);
@@ -135,6 +147,10 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   const onToggleWaitingChange = (checked: any) => {
     const postData = {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ room: room.name, waiting_room: checked }),
     };
 
@@ -166,13 +182,13 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
           </div>
 
           {toggleWaiting && waitingRoom.length
-            ? 
-              <button
-                className="lk-button tl-info tl-approve"
-                onClick={() => approveAll()}
-              >
-                Approve All
-              </button> 
+            ?
+            <button
+              className="lk-button tl-info tl-approve"
+              onClick={() => approveAll()}
+            >
+              Approve All
+            </button>
             :
             ""
           }
@@ -183,7 +199,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
             <div className="lk-participant-metadata">
               <div className="lk-participant-metadata-item">{item.username}</div>
               <div className="display-flex">
-                <button 
+                <button
                   className="lk-button lk-waiting-room lk-success"
                   onClick={() => admitUser(item.identity, 'accepted')}
                 >
@@ -214,7 +230,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
             <h5>No Participants</h5>
           </div>
         )}
-      </div>      
+      </div>
     </div>
   );
 }

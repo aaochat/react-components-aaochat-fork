@@ -18,6 +18,7 @@ import { useCreateLayoutContext } from '../context/layout-context';
 import { ParticipantTile } from '../components';
 import { Toast } from '../components';
 import { UserToggle } from '../components/controls/UserToggle';
+import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
 
 /**
  * @public
@@ -54,6 +55,7 @@ export function VideoConference({
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
   });
+  const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
 
   const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
@@ -100,18 +102,25 @@ export function VideoConference({
   }, [waiting]);
 
   React.useEffect(() => {
-    // if screen share tracks are published, and no pin is set explicitly, auto set the screen share
-    if (screenShareTracks.length > 0 && focusTrack === undefined) {
+    // If screen share tracks are published, and no pin is set explicitly, auto set the screen share.
+    if (screenShareTracks.length > 0 && lastAutoFocusedScreenShareTrack.current === null) {
+      log.debug('Auto set screen share focus:', { newScreenShareTrack: screenShareTracks[0] });
       layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: screenShareTracks[0] });
+      lastAutoFocusedScreenShareTrack.current = screenShareTracks[0];
     } else if (
-      (screenShareTracks.length === 0 && focusTrack?.source === Track.Source.ScreenShare) ||
-      tracks.length <= 1
+      lastAutoFocusedScreenShareTrack.current &&
+      !screenShareTracks.some(
+        (track) =>
+          track.publication.trackSid ===
+          lastAutoFocusedScreenShareTrack.current?.publication?.trackSid,
+      )
     ) {
+      log.debug('Auto clearing screen share focus.');
       layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+      lastAutoFocusedScreenShareTrack.current = null;
     }
   }, [
-    JSON.stringify(screenShareTracks.map((ref) => ref.publication.trackSid)),
-    tracks.length,
+    screenShareTracks.map((ref) => ref.publication.trackSid).join(),
     focusTrack?.publication?.trackSid,
   ]);
 
