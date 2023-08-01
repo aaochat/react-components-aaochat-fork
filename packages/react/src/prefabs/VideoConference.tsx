@@ -159,22 +159,38 @@ export function VideoConference({
             screenShareTracks={screenShareTracks.length}
           />
         </div>
-        <ShareLink style={{ display: widgetState.showChat == 'show_invite' ? 'flex' : 'none' }} />
-        <Users
-          style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
-          onWaitingRoomChange={updateCount}
-          setWaiting={setWaitingMessage}
-        />
-        {waiting ? (
-          <Toast className="lk-toast-connection-state">
-            <UserToggle>{waiting}</UserToggle>
-          </Toast>
-        ) : (
-          <></>
-        )}
-      </LayoutContextProvider>
+
+        {
+          showShareButton ?
+            (
+              <ShareLink style={{ display: widgetState.showChat == 'show_invite' ? 'flex' : 'none' }} />
+            ) : (
+              <></>
+            )
+        }
+
+        {
+          showParticipantButton ? (
+            <Users
+              style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
+              onWaitingRoomChange={updateCount}
+              setWaiting={setWaitingMessage}
+            />
+          ) : (<></>)
+        }
+
+        {
+          waiting ? (
+            <Toast className="lk-toast-connection-state">
+              <UserToggle>{waiting}</UserToggle>
+            </Toast>
+          ) : (
+            <></>
+          )
+        }
+      </LayoutContextProvider >
       <RoomAudioRenderer />
       <ConnectionStateToast />
-    </div>
+    </div >
   );
 }
