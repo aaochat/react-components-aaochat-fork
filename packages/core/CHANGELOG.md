@@ -1,5 +1,25 @@
 # @livekit/components-core
 
+## 0.6.11
+
+### Patch Changes
+
+- Fix initial population of device select - [#554](https://github.com/livekit/components-js/pull/554) ([@lukasIO](https://github.com/lukasIO))
+
+- Make mouse event listener passive - [#551](https://github.com/livekit/components-js/pull/551) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix: Handle track reference type changes in the `updatePages` function by returning the new track reference instead of the old one. - [#560](https://github.com/livekit/components-js/pull/560) ([@Ocupe](https://github.com/Ocupe))
+
+## 0.6.10
+
+### Patch Changes
+
+- Improve PreJoin component by requesting combined permissions when possible - [#537](https://github.com/livekit/components-js/pull/537) ([@lukasIO](https://github.com/lukasIO))
+
+- Improve media device selection - [#535](https://github.com/livekit/components-js/pull/535) ([@lukasIO](https://github.com/lukasIO))
+
+- Update devDependencies (non-major) - [#540](https://github.com/livekit/components-js/pull/540) ([@renovate](https://github.com/apps/renovate))
+
 ## 0.6.9
 
 ### Patch Changes

@@ -5,7 +5,10 @@ import type * as React from 'react';
 export type ChatContextAction =
   | { msg: 'show_chat' }
   | { msg: 'show_invite' }
-  | { msg: 'show_users' };
+  | { msg: 'show_users' }
+  | { msg: 'hide_chat' }
+  | { msg: 'toggle_chat' }
+  | { msg: 'unread_msg'; count: number };
 
 /** @internal */
 export type ChatContextType = {
@@ -22,6 +25,10 @@ export function chatReducer(state: WidgetState, action: ChatContextAction): Widg
       return { ...state, showChat: 'show_invite' };
     } else if (action.msg === 'show_users') {
       return { ...state, showChat: 'show_users' };
+    } else if (action.msg === 'unread_msg') {
+      return { ...state, unreadMessages: action.count };
+    } else if (action.msg === 'hide_chat') {
+      return { ...state, showChat: null };
     } else {
       return { ...state, showChat: null };
     }

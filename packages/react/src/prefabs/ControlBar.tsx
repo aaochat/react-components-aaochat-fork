@@ -28,7 +28,7 @@ export type ControlBarControls = {
 };
 
 /** @public */
-export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
+export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   variation?: 'minimal' | 'verbose' | 'textOnly';
   controls?: ControlBarControls;
   waitingRoomCount: number;
@@ -151,8 +151,8 @@ export function ControlBar({
             !isScreenShareEnabled && screenShareTracks !== 0
               ? 'Someone has shared screen'
               : isScreenShareEnabled
-              ? "You're sharing your scrren"
-              : 'You can share your screen'
+                ? "You're sharing your scrren"
+                : 'You can share your screen'
           }
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}

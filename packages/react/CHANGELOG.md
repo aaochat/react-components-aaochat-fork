@@ -1,5 +1,35 @@
 # @livekit/components-react
 
+## 1.0.8
+
+### Patch Changes
+
+- Added facingMode detection to minimize unwanted local participant video track mirroring. - [#527](https://github.com/livekit/components-js/pull/527) ([@Ocupe](https://github.com/Ocupe))
+
+- Add overload for defaulting to undefined topic - [#552](https://github.com/livekit/components-js/pull/552) ([@lukasIO](https://github.com/lukasIO))
+
+- Add data-lk-orientation for all video tracks - [#559](https://github.com/livekit/components-js/pull/559) ([@nwang92](https://github.com/nwang92))
+
+- Only render layout components in browser (no SSR) in order to avoid useLayoutEffect warnings - [#553](https://github.com/livekit/components-js/pull/553) ([@lukasIO](https://github.com/lukasIO))
+
+- Display active state of chat toggle - [#549](https://github.com/livekit/components-js/pull/549) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`64a95f0`](https://github.com/livekit/components-js/commit/64a95f0c957df0fbbc24a01ce41be390de0332bd), [`e82e88b`](https://github.com/livekit/components-js/commit/e82e88bcf70b6e2185cf6d0b596083557c3fc4bc), [`05c7a70`](https://github.com/livekit/components-js/commit/05c7a70981ac5ece1a6011e335ef6a86252bc243)]:
+  - @livekit/components-core@0.6.11
+
+## 1.0.7
+
+### Patch Changes
+
+- Improve PreJoin component by requesting combined permissions when possible - [#537](https://github.com/livekit/components-js/pull/537) ([@lukasIO](https://github.com/lukasIO))
+
+- Improve media device selection - [#535](https://github.com/livekit/components-js/pull/535) ([@lukasIO](https://github.com/lukasIO))
+
+- Update devDependencies (non-major) - [#540](https://github.com/livekit/components-js/pull/540) ([@renovate](https://github.com/apps/renovate))
+
+- Updated dependencies [[`9829600`](https://github.com/livekit/components-js/commit/98296009c5e228ce440f0285d84a3fe49ad20801), [`99878de`](https://github.com/livekit/components-js/commit/99878de51a59dedcf8758b912541123a64a66d3d), [`f7fdbc5`](https://github.com/livekit/components-js/commit/f7fdbc5adacbf05f7e7e33b131777db08cd727aa)]:
+  - @livekit/components-core@0.6.10
+
 ## 1.0.6
 
 ### Patch Changes

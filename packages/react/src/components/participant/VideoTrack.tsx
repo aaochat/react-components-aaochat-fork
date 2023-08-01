@@ -5,14 +5,14 @@ import type { ParticipantClickEvent } from '@livekit/components-core';
 import { useEnsureParticipant } from '../../context';
 
 /** @public */
-export type VideoTrackProps = React.HTMLAttributes<HTMLVideoElement> & {
+export interface VideoTrackProps extends React.HTMLAttributes<HTMLVideoElement> {
   source: Track.Source;
   name?: string;
   participant?: Participant;
   publication?: TrackPublication;
   onTrackClick?: (evt: ParticipantClickEvent) => void;
   onSubscriptionStatusChanged?: (subscribed: boolean) => void;
-};
+}
 
 /**
  * The VideoTrack component is responsible for rendering participant video tracks like `camera` and `screen_share`.
@@ -32,10 +32,11 @@ export function VideoTrack({
   name,
   publication,
   source,
+  participant: p,
   ...props
 }: VideoTrackProps) {
   const mediaEl = React.useRef<HTMLVideoElement>(null);
-  const participant = useEnsureParticipant(props.participant);
+  const participant = useEnsureParticipant(p);
   const {
     elementProps,
     publication: pub,

@@ -18,7 +18,8 @@
     "start:next": "turbo run start --filter=@livekit/component-example-next...",
     "test": "turbo run test",
     "tooling:update-readme-nav": "node tooling/readme-manager/update-nav-in-readmes.js",
-    "api:check": "turbo run api-check"
+    "api:check": "turbo run api-check",
+    "api:update": "turbo run api-check:update"
   },
   "workspaces": [
     "packages/*"
@@ -29,7 +30,7 @@
     "react-dom": ">=18"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "5.0.4"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
@@ -37,6 +38,6 @@
     "glob": "^8.1.0",
     "prettier": "^2.8.3",
     "turbo": "^1.9.3",
-    "typescript": "^5.0.0"
+    "typescript": "5.0.4"
   }
 }

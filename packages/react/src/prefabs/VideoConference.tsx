@@ -5,9 +5,10 @@ import { ControlBar } from './ControlBar';
 import { FocusLayout, FocusLayoutContainer } from '../components/layout/FocusLayout';
 import { GridLayout } from '../components/layout/GridLayout';
 import type { WidgetState } from '@livekit/components-core';
-import { isEqualTrackRef, isTrackReference, log } from '@livekit/components-core';
 import { ShareLink } from './ShareLink';
 import { Users } from './Users';
+import { isEqualTrackRef, isTrackReference, log, isWeb } from '@livekit/components-core';
+// import { Chat } from './Chat';
 import { ConnectionStateToast } from '../components/Toast';
 // import type { MessageFormatter } from '../components/ChatEntry';
 import { RoomEvent, Track } from 'livekit-client';
@@ -54,6 +55,7 @@ export function VideoConference({
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
+    unreadMessages: 0,
   });
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
 
@@ -126,69 +128,80 @@ export function VideoConference({
 
   return (
     <div className="lk-video-conference" {...props}>
-      <LayoutContextProvider
-        value={layoutContext}
-        // onPinChange={handleFocusStateChange}
-        onWidgetChange={widgetUpdate}
-      >
-        <div className="lk-video-conference-inner">
-          {!focusTrack ? (
-            <div className="lk-grid-layout-wrapper">
-              <GridLayout tracks={tracks}>
-                <ParticipantTile />
-              </GridLayout>
-            </div>
-          ) : (
-            <div className="lk-focus-layout-wrapper">
-              <FocusLayoutContainer>
-                <CarouselLayout tracks={carouselTracks}>
+      {isWeb() && (
+        <LayoutContextProvider
+          value={layoutContext}
+          // onPinChange={handleFocusStateChange}
+          onWidgetChange={widgetUpdate}
+        >
+          <div className="lk-video-conference-inner">
+            {!focusTrack ? (
+              <div className="lk-grid-layout-wrapper">
+                <GridLayout tracks={tracks}>
                   <ParticipantTile />
-                </CarouselLayout>
-                {focusTrack && <FocusLayout track={focusTrack} />}
-              </FocusLayoutContainer>
-            </div>
-          )}
-          <ControlBar
-            controls={{
-              chat: false,
-              sharelink: showShareButton,
-              users: showParticipantButton,
-              leaveButton: leaveButton,
-            }}
-            waitingRoomCount={waitingRoomCount}
-            screenShareTracks={screenShareTracks.length}
-          />
-        </div>
+                </GridLayout>
+              </div>
+            ) : (
+              <div className="lk-focus-layout-wrapper">
+                <FocusLayoutContainer>
+                  <CarouselLayout tracks={carouselTracks}>
+                    <ParticipantTile />
+                  </CarouselLayout>
+                  {focusTrack && <FocusLayout track={focusTrack} />}
+                </FocusLayoutContainer>
+              </div>
+            )}
+            <ControlBar
+              controls={{
+                chat: false,
+                sharelink: showShareButton,
+                users: showParticipantButton,
+                leaveButton: leaveButton,
+              }}
+              waitingRoomCount={waitingRoomCount}
+              screenShareTracks={screenShareTracks.length}
+            />
+          </div >
 
-        {
-          showShareButton ?
-            (
-              <ShareLink style={{ display: widgetState.showChat == 'show_invite' ? 'flex' : 'none' }} />
+
+
+          {
+            showShareButton ?
+              (
+                <ShareLink style={{
+                  display: widgetState.showChat == 'show_invite' ? 'flex' : 'none'
+                }} />
+              ) : (
+                <></>
+              )
+          }
+
+          {
+            showParticipantButton ? (
+              <Users
+                style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
+                onWaitingRoomChange={updateCount}
+                setWaiting={setWaitingMessage}
+              />
+            ) : (<></>)
+          }
+
+          {
+            waiting ? (
+              <Toast className="lk-toast-connection-state">
+                <UserToggle>{waiting}</UserToggle>
+              </Toast>
             ) : (
               <></>
             )
-        }
-
-        {
-          showParticipantButton ? (
-            <Users
-              style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
-              onWaitingRoomChange={updateCount}
-              setWaiting={setWaitingMessage}
-            />
-          ) : (<></>)
-        }
-
-        {
-          waiting ? (
-            <Toast className="lk-toast-connection-state">
-              <UserToggle>{waiting}</UserToggle>
-            </Toast>
-          ) : (
-            <></>
-          )
-        }
-      </LayoutContextProvider >
+          }
+          {/* // <Chat
+          //   style={{ display: widgetState.showChat ? 'flex' : 'none' }}
+          //   messageFormatter={chatMessageFormatter}
+          // /> */}
+        </LayoutContextProvider>
+      )
+      }
       <RoomAudioRenderer />
       <ConnectionStateToast />
     </div >
