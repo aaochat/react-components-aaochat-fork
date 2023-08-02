@@ -5,7 +5,7 @@ import { Toast } from '../components';
 
 export function useGetLink() {
   const host = getHostUrl();
-  const link = `${host}/join/${useGetRoom().name}`;
+  const link = `${host}/meeting/${useGetRoom().name}`;
   return { link: link };
 }
 
@@ -22,8 +22,6 @@ export type User = {
   user_id: string;
   user_name: string;
   full_name: string;
-  designation: string;
-  ext_no: string;
   invited: boolean
 };
 
@@ -52,7 +50,7 @@ export function ShareLink({ ...props }: any) {
   async function searchUsers(key: string) {
     if (key) {
       const filteredData = users.filter(function (item) {
-        return (item.user_name.toLocaleLowerCase()).startsWith(key.toLocaleLowerCase());
+        return (item.full_name.toLocaleLowerCase()).startsWith(key.toLocaleLowerCase());
       });
       setSearched(filteredData)
     } else {
@@ -104,7 +102,7 @@ export function ShareLink({ ...props }: any) {
       },
       body: JSON.stringify({
         "users": JSON.stringify([user]), // body data type must match "Content-Type" header
-        "message": link,
+        "message": `${link}?dispname${user.full_name}`,
         "meeting_id": room.name,
       })
     };
