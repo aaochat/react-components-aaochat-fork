@@ -102,7 +102,7 @@ export function ShareLink({ ...props }: any) {
       },
       body: JSON.stringify({
         "users": JSON.stringify([user]), // body data type must match "Content-Type" header
-        "message": `${link}?dispname${user.full_name}`,
+        "message": link,
         "meeting_id": room.name,
       })
     };
