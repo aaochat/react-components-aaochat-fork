@@ -18,6 +18,11 @@ export function getHostUrl() {
   return typeof window ? window.location.origin : '';
 }
 
+export function getToken() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('token');
+}
+
 export type User = {
   user_id: string;
   user_name: string;
@@ -66,6 +71,7 @@ export function ShareLink({ ...props }: any) {
       },
       body: JSON.stringify({
         meeting_id: room.name,
+        token: getToken(),
       })
     };
     fetch(`${getHostUrl()}/api/get-users`, data).then(async (res) => {
@@ -104,6 +110,7 @@ export function ShareLink({ ...props }: any) {
         "users": JSON.stringify([user]), // body data type must match "Content-Type" header
         "message": link,
         "meeting_id": room.name,
+        "token": getToken(),
       })
     };
 
@@ -185,8 +192,8 @@ export function ShareLink({ ...props }: any) {
             return (
               <li key={index} className="lk-chat-entry">
                 <div>
-                  <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
-                  <span className="lk-message-body lk-message-text">{user.designation}</span>
+                  <span className="lk-message-body">{user.full_name}</span>
+                  <span className="lk-message-body lk-message-text">{user.user_name}</span>
                 </div>
 
                 <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
