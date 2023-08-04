@@ -25,6 +25,7 @@ export function getToken() {
 
 export type User = {
   user_id: string;
+  contact_id: string;
   user_name: string;
   full_name: string;
   invited: boolean
@@ -107,7 +108,8 @@ export function ShareLink({ ...props }: any) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "users": JSON.stringify([user]), // body data type must match "Content-Type" header
+        "userId": user.contact_id, // body data type must match "Content-Type" header
+        "userName": user.full_name, // body data type must match "Content-Type" header
         "message": link,
         "meeting_id": room.name,
         "token": getToken(),
