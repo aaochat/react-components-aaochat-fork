@@ -120,7 +120,7 @@ export function ShareLink({ ...props }: any) {
       if (res.ok) {
         user.invited = true;
         // 1. Find the user with the provided id
-        const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
+        const currentUserIndex = users.findIndex((item) => item.contact_id === user.contact_id);
         // 2. Mark the user as invited
         const updatedUser = { ...users[currentUserIndex], invited: true };
         // 3. Update the todo list with the updated todo
@@ -132,7 +132,7 @@ export function ShareLink({ ...props }: any) {
         setUsers(newUsers);
 
         // 1. Find the user with the provided id
-        const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
+        const currentSearchedIndex = searched.findIndex((item) => item.contact_id === user.contact_id);
         // 2. Mark the todo as complete
         const updatedSearched = { ...searched[currentSearchedIndex], invited: true };
         // 3. Update the todo list with the updated todo
