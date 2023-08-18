@@ -5,7 +5,8 @@ import type { ParticipantClickEvent } from '@livekit/components-core';
 // import { ConnectionQualityIndicator } from './ConnectionQualityIndicator';
 import { ParticipantName } from './ParticipantName';
 import { useEnsureParticipant } from '../../context';
-import { useParticipantTile, ParticipantContextIfNeeded } from './ParticipantTile';
+import { ParticipantContextIfNeeded } from './ParticipantTile';
+import { useParticipantTile } from '../../hooks';
 import { TrackMutedIndicator } from './TrackMutedIndicator';
 
 /** @public */

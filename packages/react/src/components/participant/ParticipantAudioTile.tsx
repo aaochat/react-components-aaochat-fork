@@ -8,8 +8,9 @@ import { useEnsureParticipant } from '../../context';
 
 import { AudioVisualizer } from './AudioVisualizer';
 import type { ParticipantTileProps } from './ParticipantTile';
-import { useParticipantTile, ParticipantContextIfNeeded } from './ParticipantTile';
+import { ParticipantContextIfNeeded } from './ParticipantTile';
 import { AudioTrack } from './AudioTrack';
+import { useParticipantTile } from '../../hooks';
 
 /**
  * The ParticipantAudioTile component is the base utility wrapper for displaying a visual representation of a participant.
@@ -22,7 +23,7 @@ import { AudioTrack } from './AudioTrack';
  * @see `ParticipantLoop` component
  * @public
  */
-export const ParticipantAudioTile = ({
+export function ParticipantAudioTile({
   participant,
   children,
   source,
@@ -30,7 +31,7 @@ export const ParticipantAudioTile = ({
   disableSpeakingIndicator,
   onParticipantClick,
   ...htmlProps
-}: ParticipantTileProps) => {
+}: ParticipantTileProps) {
   const p = useEnsureParticipant(participant);
   const { elementProps } = useParticipantTile({
     participant: p,
@@ -60,4 +61,4 @@ export const ParticipantAudioTile = ({
       </ParticipantContextIfNeeded>
     </div>
   );
-};
+}

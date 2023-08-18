@@ -1,8 +1,9 @@
 import type { Subscriber, Subscription } from 'rxjs';
-import { Subject, map, Observable, startWith, finalize, filter } from 'rxjs';
+import { Subject, map, Observable, startWith, finalize, filter, concat } from 'rxjs';
 import type { Participant, TrackPublication } from 'livekit-client';
 import { Room, RoomEvent, Track } from 'livekit-client';
 import type { RoomEventCallbacks } from 'livekit-client/dist/src/room/Room';
+import { log } from '../logger';
 export function observeRoomEvents(room: Room, ...events: RoomEvent[]): Observable<Room> {
   const observable = new Observable<Room>((subscribe) => {
     const onRoomUpdate = () => {
@@ -29,12 +30,10 @@ export function roomEventSelector<T extends RoomEvent>(room: Room, event: T) {
     const update = (...params: Parameters<RoomEventCallbacks[T]>) => {
       subscribe.next(params);
     };
-    // @ts-ignore
-    room.on(event, update);
+    room.on(event as keyof RoomEventCallbacks, update);
 
     const unsubscribe = () => {
-      // @ts-ignore
-      room.off(event, update);
+      room.off(event as keyof RoomEventCallbacks, update);
     };
     return unsubscribe;
   });
@@ -197,10 +196,9 @@ export function createMediaDeviceObserver(kind?: MediaDeviceKind, requestPermiss
       );
     }
     navigator?.mediaDevices?.addEventListener('devicechange', onDeviceChange);
-    // because we rely on an async function, trigger the first update instead of using startWith
-    onDeviceChange();
   }
-  return observable;
+  // because we rely on an async function, concat the promise to retrieve the initial values with the observable
+  return concat(Room.getLocalDevices(kind, requestPermissions), observable);
 }
 
 export function createDataObserver(room: Room) {
@@ -220,7 +218,7 @@ export function createActiveDeviceObservable(room: Room, kind: MediaDeviceKind) 
   return roomEventSelector(room, RoomEvent.ActiveDeviceChanged).pipe(
     filter(([kindOfDevice]) => kindOfDevice === kind),
     map(([kind, deviceId]) => {
-      console.log('activeDeviceObservable | RoomEvent.ActiveDeviceChanged', { kind, deviceId });
+      log.debug('activeDeviceObservable | RoomEvent.ActiveDeviceChanged', { kind, deviceId });
       return deviceId;
     }),
     startWith(room.getActiveDevice(kind)),

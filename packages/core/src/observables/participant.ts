@@ -18,12 +18,12 @@ export function observeParticipantEvents<T extends Participant>(
     };
 
     events.forEach((evt) => {
-      participant.on(evt, onParticipantUpdate);
+      participant.on(evt as keyof ParticipantEventCallbacks, onParticipantUpdate);
     });
 
     const unsubscribe = () => {
       events.forEach((evt) => {
-        participant.off(evt, onParticipantUpdate);
+        participant.off(evt as keyof ParticipantEventCallbacks, onParticipantUpdate);
       });
     };
     return unsubscribe;
@@ -54,6 +54,7 @@ export function observeParticipantMedia<T extends Participant>(participant: T) {
     ParticipantEvent.TrackUnsubscribed,
     ParticipantEvent.LocalTrackPublished,
     ParticipantEvent.LocalTrackUnpublished,
+    ParticipantEvent.MediaDevicesError,
     // ParticipantEvent.ConnectionQualityChanged,
   ).pipe(
     map((p) => {
@@ -120,15 +121,19 @@ export function participantEventSelector<T extends ParticipantEvent>(
   participant: Participant,
   event: T,
 ) {
-  const observable = new Observable<Parameters<ParticipantEventCallbacks[T]>>((subscribe) => {
-    const update = (...params: Parameters<ParticipantEventCallbacks[T]>) => {
+  const observable = new Observable<
+    Parameters<ParticipantEventCallbacks[Extract<T, keyof ParticipantEventCallbacks>]>
+  >((subscribe) => {
+    const update = (
+      ...params: Parameters<ParticipantEventCallbacks[Extract<T, keyof ParticipantEventCallbacks>]>
+    ) => {
       subscribe.next(params);
     };
-    // @ts-ignore
+    // @ts-expect-error not a perfect overlap between ParticipantEvent and keyof ParticipantEventCallbacks
     participant.on(event, update);
 
     const unsubscribe = () => {
-      // @ts-ignore
+      // @ts-expect-error not a perfect overlap between ParticipantEvent and keyof ParticipantEventCallbacks
       participant.off(event, update);
     };
     return unsubscribe;

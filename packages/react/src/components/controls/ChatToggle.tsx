@@ -1,32 +1,8 @@
-import { setupChatToggle } from '@livekit/components-core';
 import * as React from 'react';
-import { useLayoutContext } from '../../context';
-import { mergeProps } from '../../utils';
-
-interface UseToggleChatProps {
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>;
-}
-
-function useToggleChat({ props }: UseToggleChatProps) {
-  const { dispatch } = useLayoutContext().widget;
-  const { className } = React.useMemo(() => setupChatToggle(), []);
-
-  const mergedProps = React.useMemo(
-    () =>
-      mergeProps(props, {
-        className,
-        onClick: () => {
-          if (dispatch) dispatch({ msg: 'show_chat' });
-        },
-      }),
-    [props, className, dispatch],
-  );
-
-  return { mergedProps };
-}
+import { useChatToggle } from '../../hooks';
 
 /** @public */
-export type ChatToggleProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+export interface ChatToggleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { }
 
 /**
  * The ChatToggle component toggles the visibility of the chat component.
@@ -40,7 +16,7 @@ export type ChatToggleProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
  * @public
  */
 export function ChatToggle(props: ChatToggleProps) {
-  const { mergedProps } = useToggleChat({ props });
+  const { mergedProps } = useChatToggle({ props });
 
   return <button {...mergedProps}>{props.children}</button>;
 }

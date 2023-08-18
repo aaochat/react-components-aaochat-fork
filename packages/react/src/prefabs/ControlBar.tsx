@@ -14,6 +14,7 @@ import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
 import { useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
+import { mergeProps } from '../utils';
 
 /** @public */
 export type ControlBarControls = {
@@ -28,7 +29,7 @@ export type ControlBarControls = {
 };
 
 /** @public */
-export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
+export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   variation?: 'minimal' | 'verbose' | 'textOnly';
   controls?: ControlBarControls;
   waitingRoomCount: number;
@@ -118,8 +119,10 @@ export function ControlBar({
     setIsScreenShareEnabled(enabled);
   };
 
+  const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+
   return (
-    <div className="lk-control-bar" {...props}>
+    <div {...htmlProps}>
       {visibleControls.microphone && (
         <div className="lk-button-group">
           <TrackToggle source={Track.Source.Microphone} showIcon={showIcon}>
@@ -151,8 +154,8 @@ export function ControlBar({
             !isScreenShareEnabled && screenShareTracks !== 0
               ? 'Someone has shared screen'
               : isScreenShareEnabled
-              ? "You're sharing your scrren"
-              : 'You can share your screen'
+                ? "You're sharing your scrren"
+                : 'You can share your screen'
           }
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}

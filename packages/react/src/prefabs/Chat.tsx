@@ -1,10 +1,10 @@
 import type { ChatMessage, ReceivedChatMessage } from '@livekit/components-core';
 import { setupChat } from '@livekit/components-core';
 import * as React from 'react';
-import { useRoomContext } from '../context';
+import { useMaybeLayoutContext, useRoomContext } from '../context';
 import { useObservableState } from '../hooks/internal/useObservableState';
 import { cloneSingleChild } from '../utils';
-import type { MessageFormatter } from '../components/ChatEntry';
+import type { MessageDecoder, MessageEncoder, MessageFormatter } from '../components/ChatEntry';
 import { ChatEntry } from '../components/ChatEntry';
 
 export type { ChatMessage, ReceivedChatMessage };
@@ -12,20 +12,25 @@ export type { ChatMessage, ReceivedChatMessage };
 /** @public */
 export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
   messageFormatter?: MessageFormatter;
+  messageEncoder?: MessageEncoder;
+  messageDecoder?: MessageDecoder;
 }
 
 /** @public */
-export function useChat() {
+export function useChat(options?: {
+  messageEncoder?: MessageEncoder;
+  messageDecoder?: MessageDecoder;
+}) {
   const room = useRoomContext();
   const [setup, setSetup] = React.useState<ReturnType<typeof setupChat>>();
   const isSending = useObservableState(setup?.isSendingObservable, false);
   const chatMessages = useObservableState(setup?.messageObservable, []);
 
   React.useEffect(() => {
-    const setupChatReturn = setupChat(room);
+    const setupChatReturn = setupChat(room, options);
     setSetup(setupChatReturn);
     return setupChatReturn.destroy;
-  }, [room]);
+  }, [room, options]);
 
   return { send: setup?.send, chatMessages, isSending };
 }
@@ -42,10 +47,18 @@ export function useChat() {
  * ```
  * @public
  */
-export function Chat({ messageFormatter, ...props }: ChatProps) {
+export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...props }: ChatProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
-  const { send, chatMessages, isSending } = useChat();
+
+  const chatOptions = React.useMemo(() => {
+    return { messageDecoder, messageEncoder };
+  }, [messageDecoder, messageEncoder]);
+
+  const { send, chatMessages, isSending } = useChat(chatOptions);
+
+  const layoutContext = useMaybeLayoutContext();
+  const lastReadMsgAt = React.useRef<ChatMessage['timestamp']>(0);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -63,6 +76,30 @@ export function Chat({ messageFormatter, ...props }: ChatProps) {
       ulRef.current?.scrollTo({ top: ulRef.current.scrollHeight });
     }
   }, [ulRef, chatMessages]);
+
+  React.useEffect(() => {
+    if (!layoutContext || chatMessages.length === 0) {
+      return;
+    }
+
+    if (
+      layoutContext.widget.state?.showChat &&
+      chatMessages.length > 0 &&
+      lastReadMsgAt.current !== chatMessages[chatMessages.length - 1]?.timestamp
+    ) {
+      lastReadMsgAt.current = chatMessages[chatMessages.length - 1]?.timestamp;
+      return;
+    }
+
+    const unreadMessageCount = chatMessages.filter(
+      (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
+    ).length;
+
+    const { widget } = layoutContext;
+    if (unreadMessageCount > 0 && widget.state?.unreadMessages !== unreadMessageCount) {
+      widget.dispatch?.({ msg: 'unread_msg', count: unreadMessageCount });
+    }
+  }, [chatMessages, layoutContext?.widget]);
 
   return (
     <div {...props} className="lk-chat">

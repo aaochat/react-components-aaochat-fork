@@ -1,18 +1,25 @@
-import type { Participant, Track, TrackPublication } from 'livekit-client';
+import {
+  RemoteTrackPublication,
+  type Participant,
+  type Track,
+  type TrackPublication,
+} from 'livekit-client';
 import * as React from 'react';
 import { useMediaTrackBySourceOrName } from '../../hooks/useMediaTrackBySourceOrName';
 import type { ParticipantClickEvent } from '@livekit/components-core';
 import { useEnsureParticipant } from '../../context';
+import * as useHooks from 'usehooks-ts';
 
 /** @public */
-export type VideoTrackProps = React.HTMLAttributes<HTMLVideoElement> & {
+export interface VideoTrackProps extends React.HTMLAttributes<HTMLVideoElement> {
   source: Track.Source;
   name?: string;
   participant?: Participant;
   publication?: TrackPublication;
   onTrackClick?: (evt: ParticipantClickEvent) => void;
   onSubscriptionStatusChanged?: (subscribed: boolean) => void;
-};
+  manageSubscription?: boolean;
+}
 
 /**
  * The VideoTrack component is responsible for rendering participant video tracks like `camera` and `screen_share`.
@@ -32,10 +39,37 @@ export function VideoTrack({
   name,
   publication,
   source,
+  participant: p,
+  manageSubscription,
   ...props
 }: VideoTrackProps) {
   const mediaEl = React.useRef<HTMLVideoElement>(null);
-  const participant = useEnsureParticipant(props.participant);
+
+  const intersectionEntry = useHooks.useIntersectionObserver(mediaEl, {});
+
+  const debouncedIntersectionEntry = useHooks.useDebounce(intersectionEntry, 3000);
+
+  React.useEffect(() => {
+    if (
+      manageSubscription &&
+      publication instanceof RemoteTrackPublication &&
+      debouncedIntersectionEntry?.isIntersecting === false
+    ) {
+      publication.setSubscribed(false);
+    }
+  }, [debouncedIntersectionEntry, publication, manageSubscription]);
+
+  React.useEffect(() => {
+    if (
+      manageSubscription &&
+      publication instanceof RemoteTrackPublication &&
+      intersectionEntry?.isIntersecting === true
+    ) {
+      publication.setSubscribed(true);
+    }
+  }, [intersectionEntry, publication, manageSubscription]);
+
+  const participant = useEnsureParticipant(p);
   const {
     elementProps,
     publication: pub,
