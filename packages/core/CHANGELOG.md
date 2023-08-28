@@ -1,5 +1,30 @@
 # @livekit/components-core
 
+## 0.6.14
+
+### Patch Changes
+
+- Make sure dependencies arent bundled for esm builds - [#594](https://github.com/livekit/components-js/pull/594) ([@lukasIO](https://github.com/lukasIO))
+
+## 0.6.13
+
+### Patch Changes
+
+- Expose custom message encoder/decoder from video conference - [#581](https://github.com/livekit/components-js/pull/581) ([@jmoguilevsky](https://github.com/jmoguilevsky))
+
+## 0.6.12
+
+### Patch Changes
+
+- Remove unnecessary props from audio and video elements - [#569](https://github.com/livekit/components-js/pull/569) ([@mpnri](https://github.com/mpnri))
+
+- Add unread chat message badge - [#563](https://github.com/livekit/components-js/pull/563) ([@lukasIO](https://github.com/lukasIO))
+
+- Add MediaDevicesError event for use local participant - [#566](https://github.com/livekit/components-js/pull/566) ([@mpnri](https://github.com/mpnri))
+
+- Rename GridLayout to GridLayoutDefinition in core to resolve name overlap. - [#567](https://github.com/livekit/components-js/pull/567) ([@Ocupe](https://github.com/Ocupe))
+  Switch to the vertical 2x1 layout a bit earlier if reducing the width of the viewport.
+
 ## 0.6.11
 
 ### Patch Changes

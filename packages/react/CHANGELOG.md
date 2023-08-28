@@ -1,5 +1,59 @@
 # @livekit/components-react
 
+## 1.1.3
+
+### Patch Changes
+
+- Use different import scheme for usehooks - [#595](https://github.com/livekit/components-js/pull/595) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.2
+
+### Patch Changes
+
+- Make sure dependencies arent bundled for esm builds - [#594](https://github.com/livekit/components-js/pull/594) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`ca225fa`](https://github.com/livekit/components-js/commit/ca225fa76ed24f7488d41439692dbc0d35e2dd0c)]:
+  - @livekit/components-core@0.6.14
+
+## 1.1.1
+
+### Patch Changes
+
+- Expose custom message encoder/decoder from video conference - [#581](https://github.com/livekit/components-js/pull/581) ([@jmoguilevsky](https://github.com/jmoguilevsky))
+
+- Fix loop component docs - [#584](https://github.com/livekit/components-js/pull/584) ([@lukasIO](https://github.com/lukasIO))
+
+- Enable auto managed subscriptions for ParticipantTile - [#590](https://github.com/livekit/components-js/pull/590) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`f1ed9cf`](https://github.com/livekit/components-js/commit/f1ed9cf4ec0ecc0a321380a163e90f03e8b32158)]:
+  - @livekit/components-core@0.6.13
+
+## 1.1.0
+
+### Minor Changes
+
+- Codebase consistency: Consistently use named functions instead of arrow functions for exported top-level elements. Consistently use `interface` instead of `type` for component properties. - [#564](https://github.com/livekit/components-js/pull/564) ([@Ocupe](https://github.com/Ocupe))
+
+### Patch Changes
+
+- Remove unnecessary props from audio and video elements - [#569](https://github.com/livekit/components-js/pull/569) ([@mpnri](https://github.com/mpnri))
+
+- Move Hooks into hook dir. Expose `useFocusToggle` and `useToggleChat` hooks. - [#565](https://github.com/livekit/components-js/pull/565) ([@Ocupe](https://github.com/Ocupe))
+
+- Merge control bar classname with passed props - [#582](https://github.com/livekit/components-js/pull/582) ([@lukasIO](https://github.com/lukasIO))
+
+- Add unread chat message badge - [#563](https://github.com/livekit/components-js/pull/563) ([@lukasIO](https://github.com/lukasIO))
+
+- Add MediaDevicesError event for use local participant - [#566](https://github.com/livekit/components-js/pull/566) ([@mpnri](https://github.com/mpnri))
+
+- Rename GridLayout to GridLayoutDefinition in core to resolve name overlap. - [#567](https://github.com/livekit/components-js/pull/567) ([@Ocupe](https://github.com/Ocupe))
+  Switch to the vertical 2x1 layout a bit earlier if reducing the width of the viewport.
+
+- Make touch events passive - [#561](https://github.com/livekit/components-js/pull/561) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`5f018d5`](https://github.com/livekit/components-js/commit/5f018d5773f31a756e83b76152627cab991b4d3b), [`8a1964a`](https://github.com/livekit/components-js/commit/8a1964a821a568b24856186bdd118768cc24e78c), [`95f48c0`](https://github.com/livekit/components-js/commit/95f48c0ab2768f2f4a3cc5f399e7100d8db9a21a), [`1a9851b`](https://github.com/livekit/components-js/commit/1a9851b9ecdd48e22ef3c4e17a3795086f06e979)]:
+  - @livekit/components-core@0.6.12
+
 ## 1.0.8
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@livekit/components-react",
-  "version": "1.0.8",
+  "version": "1.1.3",
   "license": "Apache-2.0",
   "author": "LiveKit",
   "repository": {
@@ -43,13 +43,14 @@
     "test:watch": "vitest",
     "size": "size-limit --json",
     "api-check": "api-extractor run --typescript-compiler-folder ../../node_modules/typescript",
-    "api-check:update": "api-extractor run --local --typescript-compiler-folder ../../node_modules/typescript --verbose"
+    "api-extractor": "api-extractor run --local --typescript-compiler-folder ../../node_modules/typescript --verbose"
   },
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@livekit/components-core": "0.6.11",
+    "@livekit/components-core": "0.6.14",
     "@react-hook/latest": "^1.0.3",
-    "clsx": "^1.2.1"
+    "clsx": "^2.0.0",
+    "usehooks-ts": "^2.9.1"
   },
   "peerDependencies": {
     "livekit-client": "^1.12.0",
@@ -57,7 +58,6 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.21.7",
     "@microsoft/api-extractor": "^7.35.0",
     "@size-limit/file": "^8.2.4",
     "@size-limit/webpack": "^8.2.4",
@@ -71,9 +71,9 @@
     "react-dom": "^18.2.0",
     "size-limit": "^8.2.4",
     "tsup": "^7.0.0",
-    "typescript": "5.0.4",
+    "typescript": "5.1.6",
     "vite": "^4.1.4",
-    "vitest": "^0.32.0"
+    "vitest": "^0.34.0"
   },
   "engines": {
     "node": ">=14"

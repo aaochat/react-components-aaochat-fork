@@ -67,7 +67,7 @@ export function VideoConference({
       { source: Track.Source.Camera, withPlaceholder: true },
       { source: Track.Source.ScreenShare, withPlaceholder: false },
     ],
-    { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged] },
+    { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
 
   const widgetUpdate = (state: WidgetState) => {
@@ -170,7 +170,8 @@ export function VideoConference({
               (
                 <ShareLink style={{
                   display: widgetState.showChat == 'show_invite' ? 'flex' : 'none'
-                }} />
+                }
+                } />
               ) : (
                 <></>
               )
@@ -199,7 +200,7 @@ export function VideoConference({
           //   style={{ display: widgetState.showChat ? 'flex' : 'none' }}
           //   messageFormatter={chatMessageFormatter}
           // /> */}
-        </LayoutContextProvider>
+        </LayoutContextProvider >
       )
       }
       <RoomAudioRenderer />
