@@ -29,6 +29,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   showShareButton: boolean;
   showParticipantButton: boolean;
   leaveButton: string;
+  endForAll: string | false;
 }
 
 /**
@@ -51,6 +52,7 @@ export function VideoConference({
   showShareButton,
   showParticipantButton,
   leaveButton,
+  endForAll,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
@@ -157,13 +159,12 @@ export function VideoConference({
                 sharelink: showShareButton,
                 users: showParticipantButton,
                 leaveButton: leaveButton,
+                endForAll: endForAll,
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
             />
           </div >
-
-
 
           {
             showShareButton ?

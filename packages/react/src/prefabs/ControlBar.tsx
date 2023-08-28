@@ -12,7 +12,7 @@ import SvgInviteIcon from '../assets/icons/InviteIcon';
 import SvgUserIcon from '../assets/icons/UsersIcon';
 import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
-import { useMaybeLayoutContext } from '../context';
+import { useMaybeLayoutContext, useRoomContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
 
@@ -26,6 +26,7 @@ export type ControlBarControls = {
   sharelink?: boolean;
   users?: boolean;
   leaveButton?: string;
+  endForAll?: string | false;
 };
 
 /** @public */
@@ -60,7 +61,7 @@ export function ControlBar({
   ...props
 }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
-
+  const room = useRoomContext();
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
@@ -120,6 +121,30 @@ export function ControlBar({
   };
 
   const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+
+  /**
+   * Get list of users in waiting room
+   */
+  async function endMeeting() {
+    const postData = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        room: room.name,
+      }),
+    };
+    fetch(`/api/end-meeting`, postData).then(async (res) => {
+      if (res.ok) {
+        console.log("Meeting ended");
+
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
 
   return (
     <div {...htmlProps}>
@@ -184,6 +209,12 @@ export function ControlBar({
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
           {showText && visibleControls.leaveButton}
+        </DisconnectButton>
+      )}
+      {visibleControls.endForAll && (
+        <DisconnectButton onClick={endMeeting}>
+          {showIcon && <LeaveIcon />}
+          {showText && visibleControls.endForAll}
         </DisconnectButton>
       )}
       <StartAudio label="Start Audio" />
