@@ -182,22 +182,20 @@ export function ControlBar({
         </UserToggle>
       )}
       {visibleControls.endForAll ? (
-        <div className='tl-leave'>
-          <div className="lk-button-group">
-            <button className="lk-disconnect-button">
-              {showIcon && <LeaveIcon />}
-              {showText && "Leave Meeting"}
-            </button>
+        <div className="tl-leave lk-button-group">
+          <button className="lk-disconnect-button">
+            {showIcon && <LeaveIcon />}
+            {showText && "Leave Meeting"}
+          </button>
 
-            <div className="tl-leave-btn lk-button-group-menu">
-              <HostEndMeetingMenu
-                leave={visibleControls.leave}
-                leaveButton={visibleControls.leaveButton}
-                endForAll={visibleControls.endForAll}
-                showIcon={showIcon}
-                showText={showText}
-              />
-            </div>
+          <div className="tl-leave-btn lk-button-group-menu">
+            <HostEndMeetingMenu
+              leave={visibleControls.leave}
+              leaveButton={visibleControls.leaveButton}
+              endForAll={visibleControls.endForAll}
+              showIcon={showIcon}
+              showText={showText}
+            />
           </div>
         </div>
       ) : (
@@ -205,8 +203,9 @@ export function ControlBar({
           {showIcon && <LeaveIcon />}
           {showText && visibleControls.leaveButton}
         </DisconnectButton>
-      )}
+      )
+      }
       <StartAudio label="Start Audio" />
-    </div>
+    </div >
   );
 }

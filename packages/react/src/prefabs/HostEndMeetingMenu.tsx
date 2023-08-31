@@ -14,8 +14,7 @@ export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTML
 }
 
 /**
- * The MediaDeviceMenu prefab component is a button that opens a menu that lists
- * all media devices and allows the user to select them.
+ * The HostEndMeetingMenu prefab component is a button that opens a menu lists that use to leave or end meeting for host
  *
  * @example
  * ```tsx
@@ -34,20 +33,24 @@ export function HostEndMeetingMenu({
   ...props
 }: any) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const room = useRoomContext();
+  const [updateRequired, setUpdateRequired] = React.useState<boolean>(true);
 
+  const room = useRoomContext();
   const button = React.useRef<HTMLButtonElement>(null);
   const tooltip = React.useRef<HTMLDivElement>(null);
 
   React.useLayoutEffect(() => {
-    if (button.current && tooltip.current) {
+    if (button.current && tooltip.current && updateRequired) {
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
+        console.log(x, y);
+
         if (tooltip.current) {
           Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y}px` });
         }
       });
+      setUpdateRequired(false);
     }
-  }, [button, tooltip]);
+  }, [button, tooltip, updateRequired]);
 
   const handleClickOutside = React.useCallback(
     (event: MouseEvent) => {
@@ -66,10 +69,10 @@ export function HostEndMeetingMenu({
 
   React.useEffect(() => {
     document.addEventListener<'click'>('click', handleClickOutside);
-    // window.addEventListener<'resize'>('resize', () => setUpdateRequired(true));
+    window.addEventListener<'resize'>('resize', () => setUpdateRequired(true));
     return () => {
       document.removeEventListener<'click'>('click', handleClickOutside);
-      // window.removeEventListener<'resize'>('resize', () => setUpdateRequired(true));
+      window.removeEventListener<'resize'>('resize', () => setUpdateRequired(true));
     };
   }, [handleClickOutside]);
 
@@ -109,32 +112,30 @@ export function HostEndMeetingMenu({
         {props.children}
       </button>
       {/** only render when enabled in order to make sure that the permissions are requested only if the menu is enabled */}
-      {!props.disabled && (
-        <div
-          className="lk-device-menu"
-          ref={tooltip}
-          style={{ visibility: isOpen ? 'visible' : 'hidden' }}
-        >
-          <ul className="lk-media-device-select lk-list">
-            {leave && (
-              <li id="" data-lk-active="true" aria-selected="true" role="option">
-                <DisconnectButton>
-                  {showIcon && <LeaveIcon />}
-                  {showText && leaveButton}
-                </DisconnectButton>
-              </li>
-            )}
-            {endForAll && (
-              <li id="" data-lk-active="true" aria-selected="true" role="option">
-                <DisconnectButton onClick={endMeeting}>
-                  {showIcon && <LeaveIcon />}
-                  {showText && endForAll}
-                </DisconnectButton>
-              </li>
-            )}
-          </ul>
-        </div>
-      )}
+      <div
+        className="lk-device-menu"
+        ref={tooltip}
+        style={{ visibility: isOpen ? 'visible' : 'hidden' }}
+      >
+        <ul className="lk-media-device-select lk-list">
+          {leave && (
+            <li data-lk-active="true" aria-selected="true" role="option">
+              <DisconnectButton>
+                <LeaveIcon />
+                {leaveButton}
+              </DisconnectButton>
+            </li>
+          )}
+          {endForAll && (
+            <li data-lk-active="true" aria-selected="true" role="option">
+              <DisconnectButton onClick={endMeeting}>
+                <LeaveIcon />
+                {endForAll}
+              </DisconnectButton>
+            </li>
+          )}
+        </ul>
+      </div>
     </>
   );
 }
