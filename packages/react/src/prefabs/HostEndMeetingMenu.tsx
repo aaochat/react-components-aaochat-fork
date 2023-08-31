@@ -1,8 +1,9 @@
-import { computeMenuPosition, wasClickOutside } from '@livekit/components-core';
+import { computeMenuPosition, setupDisconnectButton, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
 import { DisconnectButton } from '../components';
 // import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
+import { useParticipants, useRoomInfo } from '../hooks';
 
 /** @public */
 export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -38,6 +39,10 @@ export function HostEndMeetingMenu({
   const room = useRoomContext();
   const button = React.useRef<HTMLButtonElement>(null);
   const tooltip = React.useRef<HTMLDivElement>(null);
+  const { metadata } = useRoomInfo();
+  const [host, setHost] = React.useState<any | undefined>([]);
+
+  const participants = useParticipants(); // List of joined participant
 
   React.useLayoutEffect(() => {
     if (button.current && tooltip.current && updateRequired) {
@@ -100,6 +105,67 @@ export function HostEndMeetingMenu({
     });
   }
 
+  /**
+   * Set new host from participant list
+   */
+  async function makeNewHost(identity: any) {
+    let hostId = host.hostId;
+    console.log(hostId);
+
+    hostId.push(identity);
+
+    const postData = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        hosts: hostId,
+      }),
+    };
+    fetch(`/api/make-host`, postData).then(async (res) => {
+      if (res.ok) {
+        console.log("Meeting ended");
+        disconnect(true);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
+
+  const getInitialState = () => {
+    const value = host;
+    return value;
+  };
+
+  const { disconnect } = setupDisconnectButton(room);
+  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [value, setValue] = React.useState(getInitialState);
+
+  const handleChange = (e: { target: { value: any; }; }) => {
+    setValue(e.target.value);
+    makeNewHost(e.target.value);
+  };
+
+  const handleLeave = () => {
+    if (host) {
+      setShowDropdown(true);
+    } else {
+      console.log("Host data");
+      console.log(host);
+    }
+  }
+  const handleCancel = () => {
+    setShowDropdown(false);
+  }
+
+  React.useEffect(() => {
+    if (metadata) {
+      setHost(JSON.parse(metadata));
+    }
+  }, [metadata]);
+
   return (
     <>
       <button
@@ -117,24 +183,39 @@ export function HostEndMeetingMenu({
         ref={tooltip}
         style={{ visibility: isOpen ? 'visible' : 'hidden' }}
       >
-        <ul className="lk-media-device-select lk-list">
-          {endForAll && (
-            <li data-lk-active="true" aria-selected="true" role="option">
-              <DisconnectButton onClick={endMeeting}>
-                {/* <LeaveIcon /> */}
-                {endForAll}
-              </DisconnectButton>
-            </li>
-          )}
-          {leave && (
-            <li data-lk-active="true" aria-selected="true" role="option">
-              <DisconnectButton>
-                {/* <LeaveIcon /> */}
-                {leaveButton}
-              </DisconnectButton>
-            </li>
-          )}
-        </ul>
+        {!showDropdown && (
+          <ul className="lk-media-device-select lk-list">
+            {endForAll && (
+              <li data-lk-active="true" aria-selected="true" role="option">
+                <DisconnectButton onClick={endMeeting}>
+                  {/* <LeaveIcon /> */}
+                  {endForAll}
+                </DisconnectButton>
+              </li>
+            )}
+            {leave && (
+              <li data-lk-active="true" aria-selected="true" role="option">
+                <button className="lk-disconnect-button" onClick={handleLeave}>
+                  Leave Meeting
+                </button>
+              </li>
+            )}
+          </ul>
+        )}
+
+        {showDropdown && (
+          <div>
+            <select value={value} onChange={handleChange}>
+              {participants.map((participant) => (
+                <option value={participant.identity} key={participant.identity}>
+                  {participant.name}
+                </option>
+              ))}
+            </select>
+
+            <button className='lk-button' onClick={handleCancel}>Cancel</button>
+          </div>
+        )}
         <div className="arrow">
           <div className="arrow-shape"></div>
         </div>

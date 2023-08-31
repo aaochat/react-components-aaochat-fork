@@ -20,6 +20,7 @@ import { ParticipantTile } from '../components';
 import { Toast } from '../components';
 import { UserToggle } from '../components/controls/UserToggle';
 import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
+import { useRoomInfo } from '../hooks';
 
 /**
  * @public
@@ -60,6 +61,8 @@ export function VideoConference({
     unreadMessages: 0,
   });
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
+  const { metadata } = useRoomInfo();
+
 
   const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
@@ -104,6 +107,10 @@ export function VideoConference({
       }, 3000);
     }
   }, [waiting]);
+
+  React.useEffect(() => {
+    console.log(metadata);
+  }, [metadata]);
 
   React.useEffect(() => {
     // If screen share tracks are published, and no pin is set explicitly, auto set the screen share.
