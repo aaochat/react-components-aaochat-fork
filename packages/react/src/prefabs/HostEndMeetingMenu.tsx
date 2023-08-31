@@ -1,7 +1,7 @@
 import { computeMenuPosition, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
 import { DisconnectButton } from '../components';
-import { LeaveIcon } from '../assets/icons';
+// import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
 
 /** @public */
@@ -118,23 +118,26 @@ export function HostEndMeetingMenu({
         style={{ visibility: isOpen ? 'visible' : 'hidden' }}
       >
         <ul className="lk-media-device-select lk-list">
-          {leave && (
-            <li data-lk-active="true" aria-selected="true" role="option">
-              <DisconnectButton>
-                <LeaveIcon />
-                {leaveButton}
-              </DisconnectButton>
-            </li>
-          )}
           {endForAll && (
             <li data-lk-active="true" aria-selected="true" role="option">
               <DisconnectButton onClick={endMeeting}>
-                <LeaveIcon />
+                {/* <LeaveIcon /> */}
                 {endForAll}
               </DisconnectButton>
             </li>
           )}
+          {leave && (
+            <li data-lk-active="true" aria-selected="true" role="option">
+              <DisconnectButton>
+                {/* <LeaveIcon /> */}
+                {leaveButton}
+              </DisconnectButton>
+            </li>
+          )}
         </ul>
+        <div className="arrow">
+          <div className="arrow-shape"></div>
+        </div>
       </div>
     </>
   );
