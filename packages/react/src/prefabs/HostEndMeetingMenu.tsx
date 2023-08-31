@@ -1,7 +1,5 @@
 import { computeMenuPosition, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
-import { MediaDeviceSelect } from '../components/controls/MediaDeviceSelect';
-import { log } from '@livekit/components-core';
 import { DisconnectButton } from '../components';
 import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
@@ -18,9 +16,6 @@ export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTML
 /**
  * The MediaDeviceMenu prefab component is a button that opens a menu that lists
  * all media devices and allows the user to select them.
- *
- * @remarks
- * This component is implemented with the `MediaDeviceSelect` LiveKit components.
  *
  * @example
  * ```tsx
