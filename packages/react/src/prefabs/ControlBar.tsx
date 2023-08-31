@@ -1,6 +1,7 @@
 import { Track } from 'livekit-client';
 import * as React from 'react';
 import { MediaDeviceMenu } from './MediaDeviceMenu';
+import { HostEndMeetingMenu } from './HostEndMeetingMenu';
 import { DisconnectButton } from '../components/controls/DisconnectButton';
 import { TrackToggle } from '../components/controls/TrackToggle';
 import { StartAudio } from '../components/controls/StartAudio';
@@ -12,7 +13,7 @@ import SvgInviteIcon from '../assets/icons/InviteIcon';
 import SvgUserIcon from '../assets/icons/UsersIcon';
 import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
-import { useMaybeLayoutContext, useRoomContext } from '../context';
+import { useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
 
@@ -61,7 +62,6 @@ export function ControlBar({
   ...props
 }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
-  const room = useRoomContext();
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
@@ -121,30 +121,6 @@ export function ControlBar({
   };
 
   const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
-
-  /**
-   * Get list of users in waiting room
-   */
-  async function endMeeting() {
-    const postData = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        room: room.name,
-      }),
-    };
-    fetch(`/api/end-meeting`, postData).then(async (res) => {
-      if (res.ok) {
-        console.log("Meeting ended");
-
-      } else {
-        throw Error('Error fetching server url, check server logs');
-      }
-    });
-  }
 
   return (
     <div {...htmlProps}>
@@ -207,33 +183,23 @@ export function ControlBar({
       )}
       {visibleControls.endForAll ? (
         <div className='tl-leave'>
-          <button className="lk-disconnect-button">
-            {showIcon && <LeaveIcon />}
-            {showText && visibleControls.leaveButton}
-          </button>
+          <div className="lk-button-group">
+            <button className="lk-disconnect-button">
+              {showIcon && <LeaveIcon />}
+              {showText && "Leave Meeting"}
+            </button>
 
-          <div className='tl-leave-btn'>
-            <ul className='lk-list'>
-              {visibleControls.leave && (
-                <li id="" data-lk-active="true" aria-selected="true" role="option">
-                  <DisconnectButton>
-                    {showIcon && <LeaveIcon />}
-                    {showText && visibleControls.leaveButton}
-                  </DisconnectButton>
-                </li>
-              )}
-              {visibleControls.endForAll && (
-                <li id="" data-lk-active="true" aria-selected="true" role="option">
-                  <DisconnectButton onClick={endMeeting}>
-                    {showIcon && <LeaveIcon />}
-                    {showText && visibleControls.endForAll}
-                  </DisconnectButton>
-                </li>
-              )}
-            </ul>
+            <div className="tl-leave-btn lk-button-group-menu">
+              <HostEndMeetingMenu
+                leave={visibleControls.leave}
+                leaveButton={visibleControls.leaveButton}
+                endForAll={visibleControls.endForAll}
+                showIcon={showIcon}
+                showText={showText}
+              />
+            </div>
           </div>
         </div>
-
       ) : (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
