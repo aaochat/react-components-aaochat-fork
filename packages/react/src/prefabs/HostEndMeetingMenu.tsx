@@ -45,7 +45,7 @@ export function HostEndMeetingMenu({
         console.log(x, y);
 
         if (tooltip.current) {
-          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y}px` });
+          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y + 5}px` });
         }
       });
       setUpdateRequired(false);
