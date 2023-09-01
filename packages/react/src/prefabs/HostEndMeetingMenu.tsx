@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DisconnectButton } from '../components';
 // import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
-import { useParticipants, useRoomInfo } from '../hooks';
+import { useLocalParticipant, useParticipants } from '../hooks';
 
 /** @public */
 export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -39,11 +39,9 @@ export function HostEndMeetingMenu({
   const room = useRoomContext();
   const button = React.useRef<HTMLButtonElement>(null);
   const tooltip = React.useRef<HTMLDivElement>(null);
-  const { metadata } = useRoomInfo();
-  const [host, setHost] = React.useState<any | undefined>([]);
-
   const participants = useParticipants(); // List of joined participant
-
+  const { localParticipant } = useLocalParticipant();
+  const meta = localParticipant.metadata ? JSON.parse(localParticipant.metadata) : {};
   React.useLayoutEffect(() => {
     if (button.current && tooltip.current && updateRequired) {
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
@@ -66,7 +64,8 @@ export function HostEndMeetingMenu({
         return;
       }
       if (isOpen && wasClickOutside(tooltip.current, event)) {
-        setIsOpen(false);
+        // setIsOpen(false);
+        // setShowDropdown(false);
       }
     },
     [isOpen, tooltip, button],
@@ -109,11 +108,6 @@ export function HostEndMeetingMenu({
    * Set new host from participant list
    */
   async function makeNewHost(identity: any) {
-    let hostId = host.hostId;
-    console.log(hostId);
-
-    hostId.push(identity);
-
     const postData = {
       method: 'POST',
       headers: {
@@ -121,50 +115,47 @@ export function HostEndMeetingMenu({
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        hosts: hostId,
+        room: room.name,
+        identity: identity,
+        token: meta.host
       }),
     };
-    fetch(`/api/make-host`, postData).then(async (res) => {
+    await fetch(`/api/make-host`, postData).then(async (res) => {
+      console.log(res);
       if (res.ok) {
-        console.log("Meeting ended");
-        disconnect(true);
+        console.log("Host leave and new host assigned");
+        disconnect(false); // Will do true
+        setIsOpen(false);
+        setShowDropdown(false);
       } else {
         throw Error('Error fetching server url, check server logs');
       }
     });
   }
 
-  const getInitialState = () => {
-    const value = host;
-    return value;
-  };
-
   const { disconnect } = setupDisconnectButton(room);
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const [value, setValue] = React.useState(getInitialState);
+  const [value, setValue] = React.useState("");
 
-  const handleChange = (e: { target: { value: any; }; }) => {
-    setValue(e.target.value);
-    makeNewHost(e.target.value);
+  const handleChange = () => {
+    setValue(value);
+    makeNewHost(value);
   };
 
   const handleLeave = () => {
-    if (host) {
-      setShowDropdown(true);
-    } else {
-      console.log("Host data");
-      console.log(host);
-    }
+    console.log("Openning dropdown");
+
+    setShowDropdown(true);
+    setIsOpen(true);
   }
+
   const handleCancel = () => {
     setShowDropdown(false);
   }
 
-  React.useEffect(() => {
-    if (metadata) {
-      setHost(JSON.parse(metadata));
-    }
-  }, [metadata]);
+  const handleChangeValue = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+    setValue(e.target.value);
+  }
 
   return (
     <>
@@ -188,7 +179,6 @@ export function HostEndMeetingMenu({
             {endForAll && (
               <li data-lk-active="true" aria-selected="true" role="option">
                 <DisconnectButton onClick={endMeeting}>
-                  {/* <LeaveIcon /> */}
                   {endForAll}
                 </DisconnectButton>
               </li>
@@ -204,8 +194,8 @@ export function HostEndMeetingMenu({
         )}
 
         {showDropdown && (
-          <div>
-            <select value={value} onChange={handleChange}>
+          <div className='assign-menu'>
+            <select value={value} onChange={handleChangeValue}>
               {participants.map((participant) => (
                 <option value={participant.identity} key={participant.identity}>
                   {participant.name}
@@ -213,7 +203,10 @@ export function HostEndMeetingMenu({
               ))}
             </select>
 
-            <button className='lk-button' onClick={handleCancel}>Cancel</button>
+            <div className='button-container'>
+              <button className='lk-button' onClick={handleCancel}>Cancel</button>
+              <button className='lk-button' onClick={handleChange}>Ok</button>
+            </div>
           </div>
         )}
         <div className="arrow">

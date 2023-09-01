@@ -7,11 +7,11 @@ import { GridLayout } from '../components/layout/GridLayout';
 import type { WidgetState } from '@livekit/components-core';
 import { ShareLink } from './ShareLink';
 import { Users } from './Users';
-import { isEqualTrackRef, isTrackReference, log, isWeb } from '@livekit/components-core';
+import { isEqualTrackRef, isTrackReference, log, isWeb, setupParticipantName } from '@livekit/components-core';
 // import { Chat } from './Chat';
 import { ConnectionStateToast } from '../components/Toast';
 // import type { MessageFormatter } from '../components/ChatEntry';
-import { RoomEvent, Track } from 'livekit-client';
+import { RoomEvent, ParticipantEvent, Track } from 'livekit-client';
 import { useTracks } from '../hooks/useTracks';
 import { usePinnedTracks } from '../hooks/usePinnedTracks';
 import { CarouselLayout } from '../components/layout/CarouselLayout';
@@ -20,17 +20,20 @@ import { ParticipantTile } from '../components';
 import { Toast } from '../components';
 import { UserToggle } from '../components/controls/UserToggle';
 import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
-import { useRoomInfo } from '../hooks';
+import { useLocalParticipant } from '../hooks';
+import { MessageFormatter } from '../components/ChatEntry';
+import { useEnsureParticipant, useRoomContext } from '../context';
+import { useObservableState } from '../hooks/internal';
 
 /**
  * @public
  */
 export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElement> {
-  // chatMessageFormatter?: MessageFormatter;
-  showShareButton: boolean;
-  showParticipantButton: boolean;
-  leaveButton: string;
-  endForAll: string | false;
+  chatMessageFormatter?: MessageFormatter;
+  // showShareButton: boolean;
+  // showParticipantButton: boolean;
+  // leaveButton: string;
+  // endForAll: string | false;
 }
 
 /**
@@ -50,10 +53,6 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  * @public
  */
 export function VideoConference({
-  showShareButton,
-  showParticipantButton,
-  leaveButton,
-  endForAll,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
@@ -61,8 +60,25 @@ export function VideoConference({
     unreadMessages: 0,
   });
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
-  const { metadata } = useRoomInfo();
+  const { localParticipant } = useLocalParticipant();
+  const p = useEnsureParticipant(localParticipant);
 
+  const { infoObserver } = React.useMemo(() => {
+    return setupParticipantName(p);
+  }, [p]);
+
+  const { metadata } = useObservableState(infoObserver, {
+    name: p.name,
+    identity: p.identity,
+    metadata: p.metadata,
+  });
+
+  const [showShareButton, setShowShareButton] = React.useState<boolean>(false);
+  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(false);
+  const [leaveButton, setLeaveButton] = React.useState<string>("Leave");
+  const [endForAll, setEndForAll] = React.useState<string | false>(false);
+
+  const meta = metadata ? JSON.parse(metadata) : {};
 
   const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
@@ -74,6 +90,13 @@ export function VideoConference({
     ],
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
+
+  const room = useRoomContext();
+  room.on(ParticipantEvent.ParticipantMetadataChanged, (data) => {
+    // console.log("track", track);
+
+    console.log("data", data);
+  });
 
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
@@ -90,6 +113,8 @@ export function VideoConference({
       setWaiting(message);
     }
   };
+
+  // RoomEvent.ParticipantMetadataChanged
 
   const layoutContext = useCreateLayoutContext();
   const screenShareTracks = tracks
@@ -109,8 +134,28 @@ export function VideoConference({
   }, [waiting]);
 
   React.useEffect(() => {
-    console.log(metadata);
-  }, [metadata]);
+    console.log("Initial meta update", new Date());
+    console.log(meta);
+
+    if (meta && meta.host) {
+      setShowShareButton(true);
+      setShowParticipantButton(true);
+      setLeaveButton("Leave Meeting");
+      setEndForAll("End Meeting for All");
+    }
+  }, [meta]);
+
+  React.useEffect(() => {
+    console.log("P data update", new Date());
+    const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
+    if (pmeta && pmeta.host) {
+      setShowShareButton(true);
+      setShowParticipantButton(true);
+      setLeaveButton("Leave Meeting");
+      setEndForAll("End Meeting for All");
+    }
+  }, [p]);
+
 
   React.useEffect(() => {
     // If screen share tracks are published, and no pin is set explicitly, auto set the screen share.
