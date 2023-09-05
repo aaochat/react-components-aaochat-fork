@@ -24,6 +24,7 @@ import { useLocalParticipant } from '../hooks';
 import { MessageFormatter } from '../components/ChatEntry';
 import { useEnsureParticipant, useRoomContext } from '../context';
 import { useObservableState } from '../hooks/internal';
+import { Chat } from './Chat';
 
 /**
  * @public
@@ -53,6 +54,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  * @public
  */
 export function VideoConference({
+  chatMessageFormatter,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
@@ -100,6 +102,8 @@ export function VideoConference({
 
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
+    console.log(state);
+
     setWidgetState(state);
   };
 
@@ -207,7 +211,7 @@ export function VideoConference({
             )}
             <ControlBar
               controls={{
-                chat: false,
+                chat: true,
                 sharelink: showShareButton,
                 users: showParticipantButton,
                 leaveButton: leaveButton,
@@ -249,10 +253,10 @@ export function VideoConference({
               <></>
             )
           }
-          {/* // <Chat
-          //   style={{ display: widgetState.showChat ? 'flex' : 'none' }}
-          //   messageFormatter={chatMessageFormatter}
-          // /> */}
+          <Chat
+            style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
+            messageFormatter={chatMessageFormatter}
+          />
         </LayoutContextProvider >
       )
       }
