@@ -1,5 +1,46 @@
 # @livekit/components-react
 
+## 1.1.8
+
+### Patch Changes
+
+- Add e2ee user choices to PreJoin component - [#624](https://github.com/livekit/components-js/pull/624) ([@lukasIO](https://github.com/lukasIO))
+
+- Apply default passphrase in PreJoin - [#625](https://github.com/livekit/components-js/pull/625) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix: media tracks were memoized on participant identity - [#620](https://github.com/livekit/components-js/pull/620) ([@dbkr](https://github.com/dbkr))
+
+## 1.1.7
+
+### Patch Changes
+
+- Fix occasional black tiles, unsusbscribe if intersection entry is still not intersecting - [#619](https://github.com/livekit/components-js/pull/619) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.6
+
+### Patch Changes
+
+- Pass participant explicitly to useIsEncrypted - [#607](https://github.com/livekit/components-js/pull/607) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.5
+
+### Patch Changes
+
+- Update dependency livekit-client to v1.13.1 - [#606](https://github.com/livekit/components-js/pull/606) ([@renovate](https://github.com/apps/renovate))
+
+- Add useIsEncrypted hooks and display to tile - [#600](https://github.com/livekit/components-js/pull/600) ([@lukasIO](https://github.com/lukasIO))
+
+- Make sure pinning is only attempted when screen share track is subscribed - [#604](https://github.com/livekit/components-js/pull/604) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`d5dadd2`](https://github.com/livekit/components-js/commit/d5dadd2991a415545ff0b6d392197c5be01cb43d), [`49de8d7`](https://github.com/livekit/components-js/commit/49de8d7755fc408d02c94afdb2e94d8ca75af6c3), [`915b371`](https://github.com/livekit/components-js/commit/915b371b9c9195a09173a3ff73c6d772fe71e248)]:
+  - @livekit/components-core@0.6.15
+
+## 1.1.4
+
+### Patch Changes
+
+- Automatically generate doc meta-data.json file - [#601](https://github.com/livekit/components-js/pull/601) ([@Ocupe](https://github.com/Ocupe))
+
 ## 1.1.3
 
 ### Patch Changes

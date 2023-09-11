@@ -144,6 +144,9 @@ export const DataTopic: {
     readonly CHAT: "lk-chat-topic";
 };
 
+// @public (undocumented)
+export function encryptionStatusObservable(room: Room, participant: Participant): Observable<boolean>;
+
 // Warning: (ae-internal-missing-underscore) The name "getScrollBarWidth" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -181,8 +184,16 @@ export function isLocal(p: Participant): boolean;
 // @public
 export function isMobileBrowser(): boolean;
 
-// @public
+// @public @deprecated
 export function isParticipantSourcePinned(participant: Participant, source: Track.Source, pinState: PinState | undefined): boolean;
+
+// @public
+export function isParticipantTrackReferencePinned(trackRef: TrackReference, pinState: PinState | undefined): boolean;
+
+// Warning: (ae-internal-missing-underscore) The name "isPlaceholderReplacement" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function isPlaceholderReplacement(currentTrackRef: TrackReferenceOrPlaceholder, nextTrackRef: TrackReferenceOrPlaceholder): boolean;
 
 // @public (undocumented)
 export function isRemote(p: Participant): boolean;
@@ -219,7 +230,7 @@ export type MediaToggleType<T extends ToggleSource> = {
 };
 
 // @public (undocumented)
-export function mutedObserver(participant: Participant, source: Track.Source): Observable<boolean>;
+export function mutedObserver(trackRef: TrackReferenceOrPlaceholder): Observable<boolean>;
 
 // @public (undocumented)
 export function observeParticipantEvents<T extends Participant>(participant: T, ...events: ParticipantEvent[]): Observable<T>;
@@ -451,7 +462,7 @@ export function setupStartAudio(): {
 };
 
 // @public (undocumented)
-export function setupTrackMutedIndicator(participant: Participant, source: Track.Source): {
+export function setupTrackMutedIndicator(trackRef: TrackReferenceOrPlaceholder): {
     className: string;
     mediaMutedObserver: Observable<boolean>;
 };
@@ -497,6 +508,9 @@ export type TrackReference = {
 
 // @public (undocumented)
 export type TrackReferenceFilter = Parameters<TrackReferenceOrPlaceholder[]['filter']>['0'];
+
+// @public (undocumented)
+export type TrackReferenceId = ReturnType<typeof getTrackReferenceId>;
 
 // @public (undocumented)
 export type TrackReferenceOrPlaceholder = TrackReference | TrackReferencePlaceholder;

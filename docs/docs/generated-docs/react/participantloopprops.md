@@ -8,11 +8,11 @@
 export interface ParticipantLoopProps
 ```
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
 
 ## Properties
 
-| Property                                                     | Type            | Description                                                                                              |
-| ------------------------------------------------------------ | --------------- | -------------------------------------------------------------------------------------------------------- |
-| [children](./react/participantloopprops.children.md)         | React.ReactNode | The template component to be used in the loop.                                                           |
-| [participants](./react/participantloopprops.participants.md) | Participant\[\] | The participants to loop over. If not provided, the participants from the current room context are used. |
+| Property                                                     | Type            | Description                                                                                 |
+| ------------------------------------------------------------ | --------------- | ------------------------------------------------------------------------------------------- |
+| [children](./react/participantloopprops.children.md)         | React.ReactNode | The template component to be used in the loop.                                              |
+| [participants](./react/participantloopprops.participants.md) | Participant\[\] | The participants to loop over. Use <code>useParticipants()</code> hook to get participants. |

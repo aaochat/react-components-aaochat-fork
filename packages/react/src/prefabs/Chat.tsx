@@ -5,7 +5,7 @@ import { useMaybeLayoutContext, useRoomContext } from '../context';
 import { useObservableState } from '../hooks/internal/useObservableState';
 import { cloneSingleChild } from '../utils';
 import type { MessageDecoder, MessageEncoder, MessageFormatter } from '../components/ChatEntry';
-import { ChatEntry } from '../components/ChatEntry';
+import { UserChat } from './UserChat';
 
 export type { ChatMessage, ReceivedChatMessage };
 
@@ -103,7 +103,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
 
   return (
     <div {...props} className="lk-chat">
-      <ul className="lk-list lk-chat-messages" ref={ulRef}>
+      <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
           ? chatMessages.map((msg, idx) =>
             cloneSingleChild(props.children, {
@@ -118,7 +118,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
             const hideTimestamp = idx >= 1 && msg.timestamp - allMsg[idx - 1].timestamp < 60_000;
 
             return (
-              <ChatEntry
+              <UserChat
                 key={idx}
                 hideName={hideName}
                 hideTimestamp={hideName === false ? false : hideTimestamp} // If we show the name always show the timestamp as well.

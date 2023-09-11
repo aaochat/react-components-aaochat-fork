@@ -10,12 +10,13 @@ export interface VideoTrackProps extends React.HTMLAttributes<HTMLVideoElement>
 
 **Extends:** React.HTMLAttributes&lt;HTMLVideoElement&gt;
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
 
 ## Properties
 
 | Property                                                                               | Type                                                                               | Description  |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------ |
+| [manageSubscription?](./react/videotrackprops.managesubscription.md)                   | boolean                                                                            | _(Optional)_ |
 | [name?](./react/videotrackprops.name.md)                                               | string                                                                             | _(Optional)_ |
 | [onSubscriptionStatusChanged?](./react/videotrackprops.onsubscriptionstatuschanged.md) | (subscribed: boolean) =&gt; void                                                   | _(Optional)_ |
 | [onTrackClick?](./react/videotrackprops.ontrackclick.md)                               | (evt: [ParticipantClickEvent](./core/participantclickevent.md)<!-- -->) =&gt; void | _(Optional)_ |
