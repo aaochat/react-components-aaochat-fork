@@ -13,7 +13,7 @@ import SvgInviteIcon from '../assets/icons/InviteIcon';
 import SvgUserIcon from '../assets/icons/UsersIcon';
 import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
-import { useMaybeLayoutContext } from '../context';
+import { useLayoutContext, useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
 
@@ -65,6 +65,7 @@ export function ControlBar({
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
+  const { state } = useLayoutContext().widget;
 
   React.useEffect(() => {
     if (layoutContext?.widget.state?.showChat == 'show_chat') {
@@ -166,6 +167,12 @@ export function ControlBar({
         <ChatToggle>
           {showIcon && <ChatIcon />}
           {showText && 'Chat'}
+          {state && state.unreadMessages !== 0 && (
+            <span className="waiting-count">
+              {state.unreadMessages < 10
+                ? (state.unreadMessages.toFixed(0))
+                : ('9+')}
+            </span>)}
         </ChatToggle>
       )}
       {visibleControls.sharelink && (

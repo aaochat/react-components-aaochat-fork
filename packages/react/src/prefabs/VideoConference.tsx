@@ -61,6 +61,8 @@ export function VideoConference({
     showChat: null,
     unreadMessages: 0,
   });
+  console.log(widgetState);
+
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
   const { localParticipant } = useLocalParticipant();
   const p = useEnsureParticipant(localParticipant);
@@ -96,7 +98,6 @@ export function VideoConference({
   const room = useRoomContext();
   room.on(ParticipantEvent.ParticipantMetadataChanged, (data) => {
     // console.log("track", track);
-
     console.log("data", data);
   });
 
