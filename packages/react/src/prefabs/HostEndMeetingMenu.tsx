@@ -70,8 +70,6 @@ export function HostEndMeetingMenu({
         return;
       }
 
-
-      console.log(event.target, button.current, leaveButtonRef.current);
       if (event.target === leaveButtonRef.current) {
         return;
       }
