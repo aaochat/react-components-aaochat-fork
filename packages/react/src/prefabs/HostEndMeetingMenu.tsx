@@ -108,12 +108,12 @@ export function HostEndMeetingMenu({
       },
       body: JSON.stringify({
         room: room.name,
+        token: meta.host,
       }),
     };
     fetch(`/api/end-meeting`, postData).then(async (res) => {
       if (res.ok) {
         console.log("Meeting ended");
-
       } else {
         throw Error('Error fetching server url, check server logs');
       }
