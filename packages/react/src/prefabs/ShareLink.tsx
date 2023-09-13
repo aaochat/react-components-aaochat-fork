@@ -5,7 +5,7 @@ import { Toast } from '../components';
 
 export function useGetLink() {
   const host = getHostUrl();
-  const link = `${host}/meeting/${useGetRoom().name}`;
+  const link = `${host}/${getDomainIdentifier()}/meeting/${useGetRoom().name}`;
   return { link: link };
 }
 
@@ -16,6 +16,10 @@ export function useGetRoom() {
 
 export function getHostUrl() {
   return typeof window ? window.location.origin : '';
+}
+
+export function getDomainIdentifier() {
+  return typeof window ? ((window.location.href).split("/"))[3] : '';
 }
 
 export function getToken() {
