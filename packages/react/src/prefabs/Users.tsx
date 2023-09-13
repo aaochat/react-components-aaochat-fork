@@ -8,7 +8,7 @@ import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 import SvgApproveIcon from '../assets/icons/ApproveIcon';
 import SvgRejectIcon from '../assets/icons/RejectIcon';
-import { getToken } from './ShareLink';
+import { getDomainIdentifier, getToken } from './ShareLink';
 
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -52,6 +52,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       body: JSON.stringify({
         meeting_id: room.name,
         token: getToken(),
+        domain: getDomainIdentifier()
       }),
     };
     fetch(`/api/get-waiting-room-users`, postData).then(async (res) => {
@@ -108,6 +109,7 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
         identity: identity,
         type: type,
         token: getToken(),
+        domain: getDomainIdentifier()
       }),
     };
 
@@ -136,7 +138,8 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       },
       body: JSON.stringify({
         meeting_id: room.name,
-        token: getToken()
+        token: getToken(),
+        domain: getDomainIdentifier()
       }),
     };
 
@@ -164,7 +167,8 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       body: JSON.stringify({
         room: room.name,
         waiting_room: checked,
-        token: getToken()
+        token: getToken(),
+        domain: getDomainIdentifier()
       }),
     };
 
