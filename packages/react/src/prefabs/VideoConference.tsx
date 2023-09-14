@@ -61,7 +61,6 @@ export function VideoConference({
     showChat: null,
     unreadMessages: 0,
   });
-  console.log(widgetState);
 
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
   const { localParticipant } = useLocalParticipant();
