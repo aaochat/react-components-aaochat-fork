@@ -94,12 +94,6 @@ export function VideoConference({
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
 
-  // const room = useRoomContext();
-  // room.on(ParticipantEvent.ParticipantMetadataChanged, (data) => {
-  //   // console.log("track", track);
-  //   console.log("data", data);
-  // });
-
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
     console.log(state);
@@ -118,10 +112,7 @@ export function VideoConference({
     }
   };
 
-  // RoomEvent.ParticipantMetadataChanged
-
   const layoutContext = useCreateLayoutContext();
-
   const screenShareTracks = tracks
     .filter(isTrackReference)
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
@@ -140,9 +131,6 @@ export function VideoConference({
   }, [waiting]);
 
   React.useEffect(() => {
-    console.log("Initial meta update", new Date());
-    console.log(meta);
-
     if (meta && meta.host) {
       setShowShareButton(true);
       setShowParticipantButton(true);
@@ -152,7 +140,6 @@ export function VideoConference({
   }, [meta]);
 
   React.useEffect(() => {
-    console.log("P data update", new Date());
     const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
     if (pmeta && pmeta.host) {
       setShowShareButton(true);
@@ -161,7 +148,6 @@ export function VideoConference({
       setEndForAll("End Meeting for All");
     }
   }, [p]);
-
 
   React.useEffect(() => {
     // If screen share tracks are published, and no pin is set explicitly, auto set the screen share.

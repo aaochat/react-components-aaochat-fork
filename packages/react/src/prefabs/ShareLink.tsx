@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
 import * as React from 'react';
-import { useRoomContext } from '../context';
+import { useEnsureParticipant, useRoomContext } from '../context';
 import { Toast } from '../components';
+import { useLocalParticipant } from '../hooks';
+import { setupParticipantName } from '@livekit/components-core';
+import { useObservableState } from '../hooks/internal';
 
 export function useGetLink() {
   const host = getHostUrl();
@@ -97,6 +100,34 @@ export function ShareLink({ ...props }: any) {
     }
   }, [room.name]);
 
+  const { localParticipant } = useLocalParticipant();
+  const p = useEnsureParticipant(localParticipant);
+
+  const { infoObserver } = React.useMemo(() => {
+    return setupParticipantName(p);
+  }, [p]);
+
+  const { metadata } = useObservableState(infoObserver, {
+    name: p.name,
+    identity: p.identity,
+    metadata: p.metadata,
+  });
+
+  const meta = metadata ? JSON.parse(metadata) : {};
+  const [showInviteUser, setShowInviteUser] = React.useState<boolean>(true);
+  React.useEffect(() => {
+    if (meta && meta.host && meta.limited) {
+      setShowInviteUser(false);
+    }
+  }, [meta]);
+
+  React.useEffect(() => {
+    const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
+    if (pmeta && pmeta.host && meta.limited) {
+      setShowInviteUser(false);
+    }
+  }, [p]);
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (inputRef.current && inputRef.current.value.trim() !== '') {
@@ -184,17 +215,20 @@ export function ShareLink({ ...props }: any) {
 
       {showToast ? <Toast className="lk-toast-connection-state">Copied</Toast> : <></>}
 
-      <form className="lk-chat-form" onSubmit={handleSubmit}>
-        <input
-          className="lk-form-control lk-chat-form-input"
-          ref={inputRef}
-          type="text"
-          placeholder="Search User..."
-          onChange={handleSubmit}
-        />
-      </form>
+      {showInviteUser ? (
+        <form className="lk-chat-form" onSubmit={handleSubmit}>
+          <input
+            className="lk-form-control lk-chat-form-input"
+            ref={inputRef}
+            type="text"
+            placeholder="Search User..."
+            onChange={handleSubmit}
+          />
+        </form>
+      ) : (<></>)}
 
-      {searched.length > 0 ? (
+
+      {showInviteUser && searched.length > 0 ? (
         <ul className="lk-list lk-chat-messages" ref={ulRef}>
           {searched.map((user, index) => {
             return (
