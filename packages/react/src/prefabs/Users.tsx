@@ -12,7 +12,7 @@ import SvgRejectIcon from '../assets/icons/RejectIcon';
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
   onWaitingRoomChange: (state: number) => void;
-  setWaiting: (state: string) => void;
+  // setWaiting: (state: string) => void;
 }
 
 export type UserDataProps = {

@@ -192,7 +192,7 @@ export function ControlBar({
         <div className="tl-leave lk-button-group">
           <button className="lk-disconnect-button">
             {showIcon && <LeaveIcon />}
-            {showText && "Leave Meeting"}
+            {showText && "Leave"}
           </button>
 
           <div className="tl-leave-btn lk-button-group-menu">
