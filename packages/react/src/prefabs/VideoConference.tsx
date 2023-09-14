@@ -106,11 +106,11 @@ export function VideoConference({
     setWaitingRoomCount(count);
   };
 
-  const setWaitingMessage = (message: string) => {
-    if (showParticipantButton) {
-      setWaiting(message);
-    }
-  };
+  // const setWaitingMessage = (message: string) => {
+  //   if (showParticipantButton) {
+  //     setWaiting(message);
+  //   }
+  // };
 
   const layoutContext = useCreateLayoutContext();
   const screenShareTracks = tracks
@@ -232,8 +232,8 @@ export function VideoConference({
               <Users
                 style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
                 onWaitingRoomChange={updateCount}
-                setWaiting={setWaitingMessage}
               />
+              // setWaiting={setWaitingMessage}
             ) : (<></>)
           }
 
