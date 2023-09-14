@@ -212,7 +212,9 @@ export function HostEndMeetingMenu({
           <div className='assign-menu'>
             <select value={value} onChange={handleChangeValue}>
               {remoteParticipants.map((participant) => (
-                <option value={participant.identity} key={participant.identity}>{(participant?.name)?.substring(0, 10)}</option>
+                <option value={participant.identity} key={participant.identity}>
+                  {participant?.name}
+                </option>
               ))}
             </select>
 
