@@ -11,7 +11,7 @@ import { isEqualTrackRef, isTrackReference, log, isWeb, setupParticipantName } f
 // import { Chat } from './Chat';
 import { ConnectionStateToast } from '../components/Toast';
 // import type { MessageFormatter } from '../components/ChatEntry';
-import { RoomEvent, ParticipantEvent, Track } from 'livekit-client';
+import { RoomEvent, Track } from 'livekit-client';
 import { useTracks } from '../hooks/useTracks';
 import { usePinnedTracks } from '../hooks/usePinnedTracks';
 import { CarouselLayout } from '../components/layout/CarouselLayout';
@@ -22,7 +22,7 @@ import { UserToggle } from '../components/controls/UserToggle';
 import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
 import { useLocalParticipant } from '../hooks';
 import { MessageFormatter } from '../components/ChatEntry';
-import { useEnsureParticipant, useRoomContext } from '../context';
+import { useEnsureParticipant } from '../context';
 import { useObservableState } from '../hooks/internal';
 import { Chat } from './Chat';
 
@@ -94,11 +94,11 @@ export function VideoConference({
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
 
-  const room = useRoomContext();
-  room.on(ParticipantEvent.ParticipantMetadataChanged, (data) => {
-    // console.log("track", track);
-    console.log("data", data);
-  });
+  // const room = useRoomContext();
+  // room.on(ParticipantEvent.ParticipantMetadataChanged, (data) => {
+  //   // console.log("track", track);
+  //   console.log("data", data);
+  // });
 
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
