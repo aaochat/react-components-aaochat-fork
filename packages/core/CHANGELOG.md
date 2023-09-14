@@ -1,5 +1,60 @@
 # @livekit/components-core
 
+## 0.6.15
+
+### Patch Changes
+
+- Update dependency livekit-client to v1.13.1 - [#606](https://github.com/livekit/components-js/pull/606) ([@renovate](https://github.com/apps/renovate))
+
+- Add useIsEncrypted hooks and display to tile - [#600](https://github.com/livekit/components-js/pull/600) ([@lukasIO](https://github.com/lukasIO))
+
+- Make sure pinning is only attempted when screen share track is subscribed - [#604](https://github.com/livekit/components-js/pull/604) ([@lukasIO](https://github.com/lukasIO))
+
+## 0.6.14
+
+### Patch Changes
+
+- Make sure dependencies arent bundled for esm builds - [#594](https://github.com/livekit/components-js/pull/594) ([@lukasIO](https://github.com/lukasIO))
+
+## 0.6.13
+
+### Patch Changes
+
+- Expose custom message encoder/decoder from video conference - [#581](https://github.com/livekit/components-js/pull/581) ([@jmoguilevsky](https://github.com/jmoguilevsky))
+
+## 0.6.12
+
+### Patch Changes
+
+- Remove unnecessary props from audio and video elements - [#569](https://github.com/livekit/components-js/pull/569) ([@mpnri](https://github.com/mpnri))
+
+- Add unread chat message badge - [#563](https://github.com/livekit/components-js/pull/563) ([@lukasIO](https://github.com/lukasIO))
+
+- Add MediaDevicesError event for use local participant - [#566](https://github.com/livekit/components-js/pull/566) ([@mpnri](https://github.com/mpnri))
+
+- Rename GridLayout to GridLayoutDefinition in core to resolve name overlap. - [#567](https://github.com/livekit/components-js/pull/567) ([@Ocupe](https://github.com/Ocupe))
+  Switch to the vertical 2x1 layout a bit earlier if reducing the width of the viewport.
+
+## 0.6.11
+
+### Patch Changes
+
+- Fix initial population of device select - [#554](https://github.com/livekit/components-js/pull/554) ([@lukasIO](https://github.com/lukasIO))
+
+- Make mouse event listener passive - [#551](https://github.com/livekit/components-js/pull/551) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix: Handle track reference type changes in the `updatePages` function by returning the new track reference instead of the old one. - [#560](https://github.com/livekit/components-js/pull/560) ([@Ocupe](https://github.com/Ocupe))
+
+## 0.6.10
+
+### Patch Changes
+
+- Improve PreJoin component by requesting combined permissions when possible - [#537](https://github.com/livekit/components-js/pull/537) ([@lukasIO](https://github.com/lukasIO))
+
+- Improve media device selection - [#535](https://github.com/livekit/components-js/pull/535) ([@lukasIO](https://github.com/lukasIO))
+
+- Update devDependencies (non-major) - [#540](https://github.com/livekit/components-js/pull/540) ([@renovate](https://github.com/apps/renovate))
+
 ## 0.6.9
 
 ### Patch Changes

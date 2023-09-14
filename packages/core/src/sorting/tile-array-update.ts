@@ -1,7 +1,12 @@
 import { differenceBy, chunk, zip } from '../helper/array-helper';
 import { log } from '../logger';
 import type { TrackReferenceOrPlaceholder } from '../track-reference';
-import { getTrackReferenceId } from '../track-reference';
+import {
+  getTrackReferenceId,
+  isPlaceholderReplacement,
+  isTrackReference,
+  isTrackReferencePlaceholder,
+} from '../track-reference';
 import { flatTrackReferenceArray } from '../track-reference/test-utils';
 
 type VisualChanges<T> = {
@@ -11,7 +16,7 @@ type VisualChanges<T> = {
 
 export type UpdatableItem = TrackReferenceOrPlaceholder | number;
 
-/** Check if something visually change on the page. */
+/** Check to see if anything visually changes on the page. */
 export function visualPageChange<T extends UpdatableItem>(state: T[], next: T[]): VisualChanges<T> {
   return {
     dropped: differenceBy(state, next, getTrackReferenceId),
@@ -78,14 +83,14 @@ export function updatePages<T extends UpdatableItem>(
   nextList: T[],
   maxItemsOnPage: number,
 ): T[] {
-  let updatedList: T[] = [...currentList];
+  let updatedList: T[] = refreshList(currentList, nextList);
 
-  if (currentList.length < nextList.length) {
+  if (updatedList.length < nextList.length) {
     // Items got added: Find newly added items and add them to the end of the list.
-    const addedItems = differenceBy(nextList, currentList, getTrackReferenceId);
+    const addedItems = differenceBy(nextList, updatedList, getTrackReferenceId);
     updatedList = [...updatedList, ...addedItems];
   }
-  const currentPages = divideIntoPages(currentList, maxItemsOnPage);
+  const currentPages = divideIntoPages(updatedList, maxItemsOnPage);
   const nextPages = divideIntoPages(nextList, maxItemsOnPage);
 
   zip(currentPages, nextPages).forEach(([currentPage, nextPage], pageIndex) => {
@@ -131,11 +136,34 @@ export function updatePages<T extends UpdatableItem>(
 
   if (updatedList.length > nextList.length) {
     // Items got removed: Find items that got completely removed from the list.
-    const missingItems = differenceBy(currentList, nextList, getTrackReferenceId);
+    const missingItems = differenceBy(updatedList, nextList, getTrackReferenceId);
     updatedList = updatedList.filter(
       (item) => !missingItems.map(getTrackReferenceId).includes(getTrackReferenceId(item)),
     );
   }
 
   return updatedList;
+}
+
+/**
+ * Update the current list with the items from the next list whenever the item ids are the same
+ * or the current item is a placeholder and we find a track reference in the next list
+ * to replace the placeholder with.
+ * @remarks
+ * This is needed because `TrackReference`s can change their internal state while keeping the same id.
+ */
+function refreshList<T extends UpdatableItem>(currentList: T[], nextList: T[]): T[] {
+  return currentList.map((currentItem) => {
+    const updateForCurrentItem = nextList.find(
+      (newItem_) =>
+        // If the IDs match or ..
+        getTrackReferenceId(currentItem) === getTrackReferenceId(newItem_) ||
+        // ... if the current item is a placeholder and the new item is the track reference can replace it.
+        (typeof currentItem !== 'number' &&
+          isTrackReferencePlaceholder(currentItem) &&
+          isTrackReference(newItem_) &&
+          isPlaceholderReplacement(currentItem, newItem_)),
+    );
+    return updateForCurrentItem ?? currentItem;
+  });
 }
