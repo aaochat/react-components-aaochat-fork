@@ -148,12 +148,35 @@ export function HostEndMeetingMenu({
     });
   }
 
-
+  const [hostError, setHostError] = React.useState(false);
   const handleChange = () => {
-    setIsOpen(false);
-    setValue(value);
-    makeNewHost(value);
+    if (value !== '') {
+      setIsOpen(false);
+      setValue(value);
+      makeNewHost(value);
+    } else {
+      console.log("Must have to select participant");
+      setHostError(true);
+    }
   };
+
+  React.useEffect(() => {
+    let timer: string | number | NodeJS.Timeout | undefined;
+
+    // If hostError is true, set a timer to change it to false after 5 seconds
+    if (hostError) {
+      timer = setTimeout(() => {
+        setHostError(false);
+      }, 5000);
+    }
+
+    // Cleanup the timer if the component unmounts or hostError changes
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [hostError]);
 
   const handleLeave = () => {
     if (remoteParticipants.length) {
@@ -210,7 +233,9 @@ export function HostEndMeetingMenu({
 
         {showDropdown && (
           <div className='assign-menu'>
+            {hostError && (<span className="text-invalid">Must have to select participant</span>)}
             <select value={value} onChange={handleChangeValue}>
+              <option value="">Select meeting host</option>
               {remoteParticipants.map((participant) => (
                 <option value={participant.identity} key={participant.identity}>
                   {participant?.name}
@@ -219,8 +244,8 @@ export function HostEndMeetingMenu({
             </select>
 
             <div className='button-container'>
-              <button className='lk-button' onClick={handleCancel}>Cancel</button>
-              <button className='lk-button' onClick={handleChange}>Ok</button>
+              <button className='lk-button tl-cancel' onClick={handleCancel}>Cancel</button>
+              <button className='lk-button tl-ok' onClick={handleChange}>Ok</button>
             </div>
           </div>
         )}
