@@ -11,18 +11,16 @@ import { isEqualTrackRef, isTrackReference, log, isWeb, setupParticipantName } f
 // import { Chat } from './Chat';
 import { ConnectionStateToast } from '../components/Toast';
 // import type { MessageFormatter } from '../components/ChatEntry';
-import { RoomEvent, ParticipantEvent, Track } from 'livekit-client';
+import { RoomEvent, Track } from 'livekit-client';
 import { useTracks } from '../hooks/useTracks';
 import { usePinnedTracks } from '../hooks/usePinnedTracks';
 import { CarouselLayout } from '../components/layout/CarouselLayout';
 import { useCreateLayoutContext } from '../context/layout-context';
 import { ParticipantTile } from '../components';
-import { Toast } from '../components';
-import { UserToggle } from '../components/controls/UserToggle';
 import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
 import { useLocalParticipant } from '../hooks';
 import { MessageFormatter } from '../components/ChatEntry';
-import { useEnsureParticipant, useRoomContext } from '../context';
+import { useEnsureParticipant } from '../context';
 import { useObservableState } from '../hooks/internal';
 import { Chat } from './Chat';
 
@@ -61,7 +59,6 @@ export function VideoConference({
     showChat: null,
     unreadMessages: 0,
   });
-  console.log(widgetState);
 
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
   const { localParticipant } = useLocalParticipant();
@@ -84,7 +81,7 @@ export function VideoConference({
 
   const meta = metadata ? JSON.parse(metadata) : {};
 
-  const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
+  // const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
 
   const tracks = useTracks(
@@ -95,11 +92,7 @@ export function VideoConference({
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
 
-  const room = useRoomContext();
-  room.on(ParticipantEvent.ParticipantMetadataChanged, (data) => {
-    // console.log("track", track);
-    console.log("data", data);
-  });
+  console.log(tracks);
 
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
@@ -127,14 +120,14 @@ export function VideoConference({
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
-  React.useEffect(() => {
-    if (waiting) {
-      // Remove toast message after 2 second
-      setTimeout(() => {
-        setWaiting(null);
-      }, 3000);
-    }
-  }, [waiting]);
+  // React.useEffect(() => {
+  //   if (waiting) {
+  //     // Remove toast message after 2 second
+  //     setTimeout(() => {
+  //       setWaiting(null);
+  //     }, 3000);
+  //   }
+  // }, [waiting]);
 
   React.useEffect(() => {
     console.log("Initial meta update", new Date());
@@ -158,7 +151,6 @@ export function VideoConference({
       setEndForAll("End Meeting for All");
     }
   }, [p]);
-
 
   React.useEffect(() => {
     // If screen share tracks are published, and no pin is set explicitly, auto set the screen share.
@@ -247,7 +239,7 @@ export function VideoConference({
             ) : (<></>)
           }
 
-          {
+          {/* {
             waiting ? (
               <Toast className="lk-toast-connection-state">
                 <UserToggle>{waiting}</UserToggle>
@@ -255,7 +247,7 @@ export function VideoConference({
             ) : (
               <></>
             )
-          }
+          } */}
           <Chat
             style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
             messageFormatter={chatMessageFormatter}

@@ -80,8 +80,7 @@ export function usePreviewTracks(
           } else {
             setTracks(tracks);
           }
-        })
-        .catch(onError);
+        }).catch(onError);
     }
 
     return () => {
@@ -123,9 +122,9 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
       const track =
         kind === 'videoinput'
           ? await createLocalVideoTrack({
-              deviceId: deviceId,
-              resolution: VideoPresets.h720.resolution,
-            })
+            deviceId: deviceId,
+            resolution: VideoPresets.h720.resolution,
+          })
           : await createLocalAudioTrack({ deviceId });
 
       const newDeviceId = await track.getDeviceId();
