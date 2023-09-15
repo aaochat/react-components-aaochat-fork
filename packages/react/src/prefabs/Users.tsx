@@ -12,7 +12,7 @@ import SvgRejectIcon from '../assets/icons/RejectIcon';
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
   onWaitingRoomChange: (state: number) => void;
-  setWaiting: (state: string) => void;
+  // setWaiting: (state: string) => void;
 }
 
 export type UserDataProps = {
@@ -38,6 +38,31 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   // await p.setCameraEnabled(false);
   // }
 
+  /**
+   * Get list of users in waiting room
+   */
+  async function getWaitingRoomState() {
+    const postData = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        meeting_id: room.name,
+      }),
+    };
+    fetch(`/api/get-waitingroom-state`, postData).then(async (res) => {
+      if (res.ok) {
+        const body = await res.json();
+        console.log(body);
+
+        setToggleWaiting(body.waiting_room);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
   /**
    * Get list of users in waiting room
    */
@@ -75,6 +100,10 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       // setWaiting(`Users are in waiting room`)
     }, 2000)
     return () => clearInterval(interval);
+  }, []);
+
+  React.useEffect(() => {
+    getWaitingRoomState();
   }, []);
 
   React.useEffect(() => {

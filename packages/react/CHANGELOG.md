@@ -1,5 +1,155 @@
 # @livekit/components-react
 
+## 1.2.0
+
+### Minor Changes
+
+- fix handling of multiple tracks of the same source from the same participant - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Update more hooks and components to use `trackRef` and deprecate participant/source property pairs - [#629](https://github.com/livekit/components-js/pull/629) ([@lukasIO](https://github.com/lukasIO))
+
+- refactor `ParticipantTile` and `useParticipantTile` to trackRef and rename `TrackContext` to `TrackRefContext`. - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Update AudioTrack and VideoTrack components to accept track references. - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- Make `source` and `participant` props optional for `UseParticipantTileProps`. - [#632](https://github.com/livekit/components-js/pull/632) ([@Ocupe](https://github.com/Ocupe))
+
+- Add internal feature flag support - [#637](https://github.com/livekit/components-js/pull/637) ([@lukasIO](https://github.com/lukasIO))
+
+- fix handling of multiple tracks of the same source from the same participant - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Update and add doc strings for all components. - [#633](https://github.com/livekit/components-js/pull/633) ([@Ocupe](https://github.com/Ocupe))
+
+- Updated dependencies [[`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`71690916`](https://github.com/livekit/components-js/commit/71690916a80d053fe6457c66f3fa3b584b69c5fe), [`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`d5b2093b`](https://github.com/livekit/components-js/commit/d5b2093b1999df891cdd6fbe7b350c488b330cf7)]:
+  - @livekit/components-core@0.7.0
+
+## 1.1.8
+
+### Patch Changes
+
+- Add e2ee user choices to PreJoin component - [#624](https://github.com/livekit/components-js/pull/624) ([@lukasIO](https://github.com/lukasIO))
+
+- Apply default passphrase in PreJoin - [#625](https://github.com/livekit/components-js/pull/625) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix: media tracks were memoized on participant identity - [#620](https://github.com/livekit/components-js/pull/620) ([@dbkr](https://github.com/dbkr))
+
+## 1.1.7
+
+### Patch Changes
+
+- Fix occasional black tiles, unsusbscribe if intersection entry is still not intersecting - [#619](https://github.com/livekit/components-js/pull/619) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.6
+
+### Patch Changes
+
+- Pass participant explicitly to useIsEncrypted - [#607](https://github.com/livekit/components-js/pull/607) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.5
+
+### Patch Changes
+
+- Update dependency livekit-client to v1.13.1 - [#606](https://github.com/livekit/components-js/pull/606) ([@renovate](https://github.com/apps/renovate))
+
+- Add useIsEncrypted hooks and display to tile - [#600](https://github.com/livekit/components-js/pull/600) ([@lukasIO](https://github.com/lukasIO))
+
+- Make sure pinning is only attempted when screen share track is subscribed - [#604](https://github.com/livekit/components-js/pull/604) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`d5dadd2`](https://github.com/livekit/components-js/commit/d5dadd2991a415545ff0b6d392197c5be01cb43d), [`49de8d7`](https://github.com/livekit/components-js/commit/49de8d7755fc408d02c94afdb2e94d8ca75af6c3), [`915b371`](https://github.com/livekit/components-js/commit/915b371b9c9195a09173a3ff73c6d772fe71e248)]:
+  - @livekit/components-core@0.6.15
+
+## 1.1.4
+
+### Patch Changes
+
+- Automatically generate doc meta-data.json file - [#601](https://github.com/livekit/components-js/pull/601) ([@Ocupe](https://github.com/Ocupe))
+
+## 1.1.3
+
+### Patch Changes
+
+- Use different import scheme for usehooks - [#595](https://github.com/livekit/components-js/pull/595) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.2
+
+### Patch Changes
+
+- Make sure dependencies arent bundled for esm builds - [#594](https://github.com/livekit/components-js/pull/594) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`ca225fa`](https://github.com/livekit/components-js/commit/ca225fa76ed24f7488d41439692dbc0d35e2dd0c)]:
+  - @livekit/components-core@0.6.14
+
+## 1.1.1
+
+### Patch Changes
+
+- Expose custom message encoder/decoder from video conference - [#581](https://github.com/livekit/components-js/pull/581) ([@jmoguilevsky](https://github.com/jmoguilevsky))
+
+- Fix loop component docs - [#584](https://github.com/livekit/components-js/pull/584) ([@lukasIO](https://github.com/lukasIO))
+
+- Enable auto managed subscriptions for ParticipantTile - [#590](https://github.com/livekit/components-js/pull/590) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`f1ed9cf`](https://github.com/livekit/components-js/commit/f1ed9cf4ec0ecc0a321380a163e90f03e8b32158)]:
+  - @livekit/components-core@0.6.13
+
+## 1.1.0
+
+### Minor Changes
+
+- Codebase consistency: Consistently use named functions instead of arrow functions for exported top-level elements. Consistently use `interface` instead of `type` for component properties. - [#564](https://github.com/livekit/components-js/pull/564) ([@Ocupe](https://github.com/Ocupe))
+
+### Patch Changes
+
+- Remove unnecessary props from audio and video elements - [#569](https://github.com/livekit/components-js/pull/569) ([@mpnri](https://github.com/mpnri))
+
+- Move Hooks into hook dir. Expose `useFocusToggle` and `useToggleChat` hooks. - [#565](https://github.com/livekit/components-js/pull/565) ([@Ocupe](https://github.com/Ocupe))
+
+- Merge control bar classname with passed props - [#582](https://github.com/livekit/components-js/pull/582) ([@lukasIO](https://github.com/lukasIO))
+
+- Add unread chat message badge - [#563](https://github.com/livekit/components-js/pull/563) ([@lukasIO](https://github.com/lukasIO))
+
+- Add MediaDevicesError event for use local participant - [#566](https://github.com/livekit/components-js/pull/566) ([@mpnri](https://github.com/mpnri))
+
+- Rename GridLayout to GridLayoutDefinition in core to resolve name overlap. - [#567](https://github.com/livekit/components-js/pull/567) ([@Ocupe](https://github.com/Ocupe))
+  Switch to the vertical 2x1 layout a bit earlier if reducing the width of the viewport.
+
+- Make touch events passive - [#561](https://github.com/livekit/components-js/pull/561) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`5f018d5`](https://github.com/livekit/components-js/commit/5f018d5773f31a756e83b76152627cab991b4d3b), [`8a1964a`](https://github.com/livekit/components-js/commit/8a1964a821a568b24856186bdd118768cc24e78c), [`95f48c0`](https://github.com/livekit/components-js/commit/95f48c0ab2768f2f4a3cc5f399e7100d8db9a21a), [`1a9851b`](https://github.com/livekit/components-js/commit/1a9851b9ecdd48e22ef3c4e17a3795086f06e979)]:
+  - @livekit/components-core@0.6.12
+
+## 1.0.8
+
+### Patch Changes
+
+- Added facingMode detection to minimize unwanted local participant video track mirroring. - [#527](https://github.com/livekit/components-js/pull/527) ([@Ocupe](https://github.com/Ocupe))
+
+- Add overload for defaulting to undefined topic - [#552](https://github.com/livekit/components-js/pull/552) ([@lukasIO](https://github.com/lukasIO))
+
+- Add data-lk-orientation for all video tracks - [#559](https://github.com/livekit/components-js/pull/559) ([@nwang92](https://github.com/nwang92))
+
+- Only render layout components in browser (no SSR) in order to avoid useLayoutEffect warnings - [#553](https://github.com/livekit/components-js/pull/553) ([@lukasIO](https://github.com/lukasIO))
+
+- Display active state of chat toggle - [#549](https://github.com/livekit/components-js/pull/549) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`64a95f0`](https://github.com/livekit/components-js/commit/64a95f0c957df0fbbc24a01ce41be390de0332bd), [`e82e88b`](https://github.com/livekit/components-js/commit/e82e88bcf70b6e2185cf6d0b596083557c3fc4bc), [`05c7a70`](https://github.com/livekit/components-js/commit/05c7a70981ac5ece1a6011e335ef6a86252bc243)]:
+  - @livekit/components-core@0.6.11
+
+## 1.0.7
+
+### Patch Changes
+
+- Improve PreJoin component by requesting combined permissions when possible - [#537](https://github.com/livekit/components-js/pull/537) ([@lukasIO](https://github.com/lukasIO))
+
+- Improve media device selection - [#535](https://github.com/livekit/components-js/pull/535) ([@lukasIO](https://github.com/lukasIO))
+
+- Update devDependencies (non-major) - [#540](https://github.com/livekit/components-js/pull/540) ([@renovate](https://github.com/apps/renovate))
+
+- Updated dependencies [[`9829600`](https://github.com/livekit/components-js/commit/98296009c5e228ce440f0285d84a3fe49ad20801), [`99878de`](https://github.com/livekit/components-js/commit/99878de51a59dedcf8758b912541123a64a66d3d), [`f7fdbc5`](https://github.com/livekit/components-js/commit/f7fdbc5adacbf05f7e7e33b131777db08cd727aa)]:
+  - @livekit/components-core@0.6.10
+
 ## 1.0.6
 
 ### Patch Changes

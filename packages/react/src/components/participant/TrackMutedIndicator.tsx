@@ -1,41 +1,23 @@
 import * as React from 'react';
 import { mergeProps } from '../../utils';
-import { setupTrackMutedIndicator } from '@livekit/components-core';
 import type { Participant, Track } from 'livekit-client';
-import { useEnsureParticipant } from '../../context';
 import { getSourceIcon } from '../../assets/icons/util';
-import { useObservableState } from '../../hooks/internal/useObservableState';
+import { useTrackMutedIndicator } from '../../hooks';
+import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
 
 /** @public */
 export interface TrackMutedIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
-  source: Track.Source;
+  /** @deprecated This parameter will be removed in a future version use `trackRef` instead. */
+  source?: Track.Source;
+  /** @deprecated This parameter will be removed in a future version use `trackRef` instead. */
   participant?: Participant;
+  trackRef?: TrackReferenceOrPlaceholder;
   show?: 'always' | 'muted' | 'unmuted';
 }
 
-/** @public */
-export interface UseTrackMutedIndicatorOptions {
-  participant?: Participant;
-}
-
-/** @public */
-export const useTrackMutedIndicator = (
-  source: Track.Source,
-  options: UseTrackMutedIndicatorOptions = {},
-) => {
-  const p = useEnsureParticipant(options.participant);
-  const { className, mediaMutedObserver } = React.useMemo(
-    () => setupTrackMutedIndicator(p, source),
-    [p, source],
-  );
-
-  const isMuted = useObservableState(mediaMutedObserver, !!p.getTrack(source)?.isMuted);
-
-  return { isMuted, className };
-};
-
 /**
- * The TrackMutedIndicator shows whether the participant's camera or microphone is muted or not.
+ * The `TrackMutedIndicator` shows whether the participant's camera or microphone is muted or not.
+ * By default, a muted/unmuted icon is displayed for a camera, microphone, and screen sharing track.
  *
  * @example
  * ```tsx
@@ -44,13 +26,15 @@ export const useTrackMutedIndicator = (
  * ```
  * @public
  */
-export const TrackMutedIndicator = ({
+export function TrackMutedIndicator({
   source,
   participant,
+  trackRef,
   show = 'always',
   ...props
-}: TrackMutedIndicatorProps) => {
-  const { className, isMuted } = useTrackMutedIndicator(source, { participant });
+}: TrackMutedIndicatorProps) {
+  // @ts-ignore this should work
+  const { className, isMuted } = useTrackMutedIndicator(trackRef ?? source, { participant });
 
   const showIndicator =
     show === 'always' || (show === 'muted' && isMuted) || (show === 'unmuted' && !isMuted);
@@ -69,7 +53,7 @@ export const TrackMutedIndicator = ({
 
   return (
     <div {...htmlProps} data-lk-muted={isMuted}>
-      {props.children ?? getSourceIcon(source, !isMuted)}
+      {props.children ?? getSourceIcon((trackRef?.source ?? source)!, !isMuted)}
     </div>
   );
-};
+}

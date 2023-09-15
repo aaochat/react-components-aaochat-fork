@@ -1,6 +1,7 @@
 import { Track } from 'livekit-client';
 import * as React from 'react';
 import { MediaDeviceMenu } from './MediaDeviceMenu';
+import { HostEndMeetingMenu } from './HostEndMeetingMenu';
 import { DisconnectButton } from '../components/controls/DisconnectButton';
 import { TrackToggle } from '../components/controls/TrackToggle';
 import { StartAudio } from '../components/controls/StartAudio';
@@ -12,8 +13,9 @@ import SvgInviteIcon from '../assets/icons/InviteIcon';
 import SvgUserIcon from '../assets/icons/UsersIcon';
 import { useLocalParticipantPermissions } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
-import { useMaybeLayoutContext } from '../context';
+import { useLayoutContext, useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
+import { mergeProps } from '../utils';
 
 /** @public */
 export type ControlBarControls = {
@@ -25,10 +27,11 @@ export type ControlBarControls = {
   sharelink?: boolean;
   users?: boolean;
   leaveButton?: string;
+  endForAll?: string | false;
 };
 
 /** @public */
-export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
+export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   variation?: 'minimal' | 'verbose' | 'textOnly';
   controls?: ControlBarControls;
   waitingRoomCount: number;
@@ -36,8 +39,8 @@ export type ControlBarProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 /**
- * The ControlBar prefab component gives the user the basic user interface
- * to control their media devices and leave the room.
+ * The `ControlBar` prefab gives the user the basic user interface to control their
+ * media devices (camera, microphone and screen share), open the `Chat` and leave the room.
  *
  * @remarks
  * This component is build with other LiveKit components like `TrackToggle`,
@@ -59,10 +62,10 @@ export function ControlBar({
   ...props
 }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
-
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
+  const { state } = useLayoutContext().widget;
 
   React.useEffect(() => {
     if (layoutContext?.widget.state?.showChat == 'show_chat') {
@@ -118,8 +121,10 @@ export function ControlBar({
     setIsScreenShareEnabled(enabled);
   };
 
+  const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+
   return (
-    <div className="lk-control-bar" {...props}>
+    <div {...htmlProps}>
       {visibleControls.microphone && (
         <div className="lk-button-group">
           <TrackToggle source={Track.Source.Microphone} showIcon={showIcon}>
@@ -151,8 +156,8 @@ export function ControlBar({
             !isScreenShareEnabled && screenShareTracks !== 0
               ? 'Someone has shared screen'
               : isScreenShareEnabled
-              ? "You're sharing your scrren"
-              : 'You can share your screen'
+                ? "You're sharing your scrren"
+                : 'You can share your screen'
           }
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
@@ -162,6 +167,12 @@ export function ControlBar({
         <ChatToggle>
           {showIcon && <ChatIcon />}
           {showText && 'Chat'}
+          {state && state.unreadMessages !== 0 && (
+            <span className="waiting-count">
+              {state.unreadMessages < 10
+                ? (state.unreadMessages.toFixed(0))
+                : ('9+')}
+            </span>)}
         </ChatToggle>
       )}
       {visibleControls.sharelink && (
@@ -177,13 +188,31 @@ export function ControlBar({
           {waitingRoomCount !== 0 && <span className="waiting-count">{waitingRoomCount}</span>}
         </UserToggle>
       )}
-      {visibleControls.leave && (
+      {visibleControls.endForAll ? (
+        <div className="tl-leave lk-button-group">
+          <button className="lk-disconnect-button">
+            {showIcon && <LeaveIcon />}
+            {showText && "Leave"}
+          </button>
+
+          <div className="tl-leave-btn lk-button-group-menu">
+            <HostEndMeetingMenu
+              leave={visibleControls.leave}
+              leaveButton={visibleControls.leaveButton}
+              endForAll={visibleControls.endForAll}
+              showIcon={showIcon}
+              showText={showText}
+            />
+          </div>
+        </div>
+      ) : (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
           {showText && visibleControls.leaveButton}
         </DisconnectButton>
-      )}
+      )
+      }
       <StartAudio label="Start Audio" />
-    </div>
+    </div >
   );
 }

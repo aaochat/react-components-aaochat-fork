@@ -9,7 +9,7 @@ import { ParticipantLoop } from '../components';
 import { useParticipants } from '../hooks';
 
 /** @public */
-export type AudioConferenceProps = React.HTMLAttributes<HTMLDivElement>;
+export interface AudioConferenceProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 /**
  * This component is the default setup of a classic LiveKit audio conferencing app.
@@ -30,6 +30,7 @@ export type AudioConferenceProps = React.HTMLAttributes<HTMLDivElement>;
 export function AudioConference({ ...props }: AudioConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
+    unreadMessages: 0,
   });
   const participants = useParticipants();
 

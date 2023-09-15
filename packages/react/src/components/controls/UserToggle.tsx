@@ -8,7 +8,7 @@ interface UseToggleUserProps {
 }
 
 function useToggleUserLink({ props }: UseToggleUserProps) {
-  const { dispatch } = useLayoutContext().widget;
+  const { dispatch, state } = useLayoutContext().widget;
   const { className } = React.useMemo(() => setupUserToggle(), []);
 
   const mergedProps = React.useMemo(
@@ -18,6 +18,7 @@ function useToggleUserLink({ props }: UseToggleUserProps) {
         onClick: () => {
           if (dispatch) dispatch({ msg: 'show_users' });
         },
+        'aria-pressed': state?.showChat == 'show_users' ? 'true' : 'false',
       }),
     [props, className, dispatch],
   );

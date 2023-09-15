@@ -1,7 +1,20 @@
-export * from './Chat';
-export * from '../components/ChatEntry';
-export * from './PreJoin';
-export * from './VideoConference';
-export * from './ControlBar';
-export * from './MediaDeviceMenu';
-export * from './AudioConference';
+export { Chat, type ChatProps } from './Chat';
+export {
+  PreJoin,
+  PreJoinProps,
+  usePreviewDevice,
+  usePreviewTracks,
+  type LocalUserChoices,
+} from './PreJoin';
+export { VideoConference, type VideoConferenceProps } from './VideoConference';
+export { ControlBar, type ControlBarProps, type ControlBarControls } from './ControlBar';
+export { MediaDeviceMenu, type MediaDeviceMenuProps } from './MediaDeviceMenu';
+export { AudioConference, type AudioConferenceProps } from './AudioConference';
+
+// Re-export types from core
+export {
+  type ChatMessage,
+  type ReceivedChatMessage,
+  type MessageDecoder,
+  type MessageEncoder,
+} from '@livekit/components-core';

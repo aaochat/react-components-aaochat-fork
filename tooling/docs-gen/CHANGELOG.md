@@ -1,5 +1,19 @@
 # @livekit/components-docs-gen
 
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies [[`74d38659`](https://github.com/livekit/components-js/commit/74d386592b1e593550b5942e2720d38a86a53c55), [`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`c421c99c`](https://github.com/livekit/components-js/commit/c421c99c076c57adc61facfb41ecdef0abcb95dd), [`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`d5b2093b`](https://github.com/livekit/components-js/commit/d5b2093b1999df891cdd6fbe7b350c488b330cf7), [`17760aab`](https://github.com/livekit/components-js/commit/17760aabe36279b9e0f511ba9d4ea09b652d27df), [`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee)]:
+  - @livekit/components-react@1.2.0
+
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [[`5f018d5`](https://github.com/livekit/components-js/commit/5f018d5773f31a756e83b76152627cab991b4d3b), [`4083a08`](https://github.com/livekit/components-js/commit/4083a08312235b4e3b77299227bababffe8430c4), [`ae466ab`](https://github.com/livekit/components-js/commit/ae466ab7272c7b696ef9bea09f753add1c9fd969), [`8a1964a`](https://github.com/livekit/components-js/commit/8a1964a821a568b24856186bdd118768cc24e78c), [`95f48c0`](https://github.com/livekit/components-js/commit/95f48c0ab2768f2f4a3cc5f399e7100d8db9a21a), [`4fe7bf4`](https://github.com/livekit/components-js/commit/4fe7bf42c364f39bdaa633b8dd9f1a1ce22ae991), [`1a9851b`](https://github.com/livekit/components-js/commit/1a9851b9ecdd48e22ef3c4e17a3795086f06e979), [`7ba5b27`](https://github.com/livekit/components-js/commit/7ba5b27df3328a209a4a76e0eb7e895a54630786)]:
+  - @livekit/components-react@1.1.0
+
 ## 0.0.20
 
 ### Patch Changes

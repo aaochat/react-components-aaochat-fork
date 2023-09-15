@@ -8,7 +8,7 @@ interface UseToggleShareLinkProps {
 }
 
 function useToggleShareLink({ props }: UseToggleShareLinkProps) {
-  const { dispatch } = useLayoutContext().widget;
+  const { dispatch, state } = useLayoutContext().widget;
   const { className } = React.useMemo(() => setupShareLinkToggle(), []);
 
   const mergedProps = React.useMemo(
@@ -18,6 +18,7 @@ function useToggleShareLink({ props }: UseToggleShareLinkProps) {
         onClick: () => {
           if (dispatch) dispatch({ msg: 'show_invite' });
         },
+        'aria-pressed': state?.showChat == 'show_invite' ? 'true' : 'false',
       }),
     [props, className, dispatch],
   );

@@ -1,7 +1,6 @@
 import type { TrackIdentifier } from '@livekit/components-core';
 import { isTrackReference } from '@livekit/components-core';
 import { setupMediaTrack, log, isLocal, getTrackByIdentifier } from '@livekit/components-core';
-import { Track } from 'livekit-client';
 import * as React from 'react';
 import { mergeProps } from '../utils';
 import type { UseMediaTrackOptions } from './useMediaTrack';
@@ -17,6 +16,7 @@ export function useMediaTrackBySourceOrName(
 
   const [isMuted, setMuted] = React.useState(publication?.isMuted);
   const [isSubscribed, setSubscribed] = React.useState(publication?.isSubscribed);
+
   const [track, setTrack] = React.useState(publication?.track);
   const [orientation, setOrientation] = React.useState<'landscape' | 'portrait'>('landscape');
   const previousElement = React.useRef<HTMLMediaElement | undefined | null>();
@@ -24,7 +24,7 @@ export function useMediaTrackBySourceOrName(
   const { className, trackObserver } = React.useMemo(() => {
     return setupMediaTrack(observerOptions);
   }, [
-    observerOptions.participant.identity,
+    observerOptions.participant.sid ?? observerOptions.participant.identity,
     observerOptions.source,
     isTrackReference(observerOptions) && observerOptions.publication.trackSid,
   ]);
@@ -82,10 +82,7 @@ export function useMediaTrackBySourceOrName(
       className,
       'data-lk-local-participant': observerOptions.participant.isLocal,
       'data-lk-source': publication?.source,
-      ...(publication?.source === Track.Source.Camera ||
-      publication?.source === Track.Source.ScreenShare
-        ? { 'data-lk-orientation': orientation }
-        : {}),
+      ...(publication?.kind === 'video' && { 'data-lk-orientation': orientation }),
     }),
   };
 }

@@ -7,6 +7,7 @@ import type { ParticipantEventCallbacks } from 'livekit-client/dist/src/room/par
 import { allParticipantEvents, allParticipantRoomEvents } from '../helper/eventGroups';
 import type { TrackIdentifier } from '../types';
 import { getTrackByIdentifier } from '../components/mediaTrack';
+import { TrackReferenceOrPlaceholder } from '../track-reference';
 
 export function observeParticipantEvents<T extends Participant>(
   participant: T,
@@ -18,12 +19,12 @@ export function observeParticipantEvents<T extends Participant>(
     };
 
     events.forEach((evt) => {
-      participant.on(evt, onParticipantUpdate);
+      participant.on(evt as keyof ParticipantEventCallbacks, onParticipantUpdate);
     });
 
     const unsubscribe = () => {
       events.forEach((evt) => {
-        participant.off(evt, onParticipantUpdate);
+        participant.off(evt as keyof ParticipantEventCallbacks, onParticipantUpdate);
       });
     };
     return unsubscribe;
@@ -50,10 +51,10 @@ export function observeParticipantMedia<T extends Participant>(participant: T) {
     // ParticipantEvent.IsSpeakingChanged,
     ParticipantEvent.TrackPublished,
     ParticipantEvent.TrackUnpublished,
-    ParticipantEvent.TrackSubscribed,
-    ParticipantEvent.TrackUnsubscribed,
     ParticipantEvent.LocalTrackPublished,
     ParticipantEvent.LocalTrackUnpublished,
+    ParticipantEvent.MediaDevicesError,
+    ParticipantEvent.TrackSubscriptionStatusChanged,
     // ParticipantEvent.ConnectionQualityChanged,
   ).pipe(
     map((p) => {
@@ -120,15 +121,19 @@ export function participantEventSelector<T extends ParticipantEvent>(
   participant: Participant,
   event: T,
 ) {
-  const observable = new Observable<Parameters<ParticipantEventCallbacks[T]>>((subscribe) => {
-    const update = (...params: Parameters<ParticipantEventCallbacks[T]>) => {
+  const observable = new Observable<
+    Parameters<ParticipantEventCallbacks[Extract<T, keyof ParticipantEventCallbacks>]>
+  >((subscribe) => {
+    const update = (
+      ...params: Parameters<ParticipantEventCallbacks[Extract<T, keyof ParticipantEventCallbacks>]>
+    ) => {
       subscribe.next(params);
     };
-    // @ts-ignore
+    // @ts-expect-error not a perfect overlap between ParticipantEvent and keyof ParticipantEventCallbacks
     participant.on(event, update);
 
     const unsubscribe = () => {
-      // @ts-ignore
+      // @ts-expect-error not a perfect overlap between ParticipantEvent and keyof ParticipantEventCallbacks
       participant.off(event, update);
     };
     return unsubscribe;
@@ -137,9 +142,9 @@ export function participantEventSelector<T extends ParticipantEvent>(
   return observable;
 }
 
-export function mutedObserver(participant: Participant, source: Track.Source) {
+export function mutedObserver(trackRef: TrackReferenceOrPlaceholder) {
   return observeParticipantEvents(
-    participant,
+    trackRef.participant,
     ParticipantEvent.TrackMuted,
     ParticipantEvent.TrackUnmuted,
     ParticipantEvent.TrackSubscribed,
@@ -148,10 +153,14 @@ export function mutedObserver(participant: Participant, source: Track.Source) {
     ParticipantEvent.LocalTrackUnpublished,
   ).pipe(
     map((participant) => {
-      const pub = participant.getTrack(source);
+      const pub = trackRef.publication ?? participant.getTrack(trackRef.source);
       return pub?.isMuted ?? true;
     }),
-    startWith(participant.getTrack(source)?.isMuted ?? true),
+    startWith(
+      trackRef.publication?.isMuted ??
+        trackRef.participant.getTrack(trackRef.source)?.isMuted ??
+        true,
+    ),
   );
 }
 

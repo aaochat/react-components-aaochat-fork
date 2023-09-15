@@ -17,12 +17,22 @@ export interface UseParticipantsOptions {
 }
 
 /**
- * The useParticipants hook returns all participants (local and remote) of the current room.
+ * The `useParticipants` hook returns all participants (local and remote) of the current room.
+ * @remarks
+ * To optimize performance, you can use the `updateOnlyOn` property to decide on what `RoomEvents` the hook updates.
+ *
+ * @example
+ * ```tsx
+ * const participants = useParticipants();
+ * <ParticipantLoop participants={participants}>
+ *  <ParticipantName />
+ * </ParticipantLoop>
+ * ```
  * @public
  */
-export const useParticipants = (options: UseParticipantsOptions = {}) => {
+export function useParticipants(options: UseParticipantsOptions = {}) {
   const remoteParticipants = useRemoteParticipants(options);
   const { localParticipant } = useLocalParticipant(options);
 
   return [localParticipant, ...remoteParticipants];
-};
+}
