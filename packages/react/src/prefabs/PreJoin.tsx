@@ -80,8 +80,7 @@ export function usePreviewTracks(
           } else {
             setTracks(tracks);
           }
-        })
-        .catch(onError);
+        }).catch(onError);
     }
 
     return () => {
@@ -123,9 +122,9 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
       const track =
         kind === 'videoinput'
           ? await createLocalVideoTrack({
-              deviceId: deviceId,
-              resolution: VideoPresets.h720.resolution,
-            })
+            deviceId: deviceId,
+            resolution: VideoPresets.h720.resolution,
+          })
           : await createLocalAudioTrack({ deviceId });
 
       const newDeviceId = await track.getDeviceId();
@@ -197,12 +196,12 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
 }
 
 /**
- * The PreJoin prefab component is normally presented to the user before he enters a room.
+ * The `PreJoin` prefab component is normally presented to the user before he enters a room.
  * This component allows the user to check and select the preferred media device (camera und microphone).
- * On submit the user decisions are returned, which can then be passed on to the LiveKitRoom so that the user enters the room with the correct media devices.
+ * On submit the user decisions are returned, which can then be passed on to the `LiveKitRoom` so that the user enters the room with the correct media devices.
  *
  * @remarks
- * This component is independent from the LiveKitRoom component and don't has to be nested inside it.
+ * This component is independent from the `LiveKitRoom` component and don't has to be nested inside it.
  * Because it only access the local media tracks this component is self contained and works without connection to the LiveKit server.
  *
  * @example

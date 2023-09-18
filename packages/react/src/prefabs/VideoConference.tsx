@@ -1,49 +1,49 @@
-import * as React from 'react';
-import { LayoutContextProvider } from '../components/layout/LayoutContextProvider';
-import { RoomAudioRenderer } from '../components/RoomAudioRenderer';
-import { ControlBar } from './ControlBar';
-import { FocusLayout, FocusLayoutContainer } from '../components/layout/FocusLayout';
-import { GridLayout } from '../components/layout/GridLayout';
-import type { WidgetState } from '@livekit/components-core';
-import { ShareLink } from './ShareLink';
-import { Users } from './Users';
-import { isEqualTrackRef, isTrackReference, log, isWeb, setupParticipantName } from '@livekit/components-core';
-// import { Chat } from './Chat';
-import { ConnectionStateToast } from '../components/Toast';
-// import type { MessageFormatter } from '../components/ChatEntry';
+import type {
+  MessageDecoder,
+  MessageEncoder,
+  TrackReferenceOrPlaceholder,
+  WidgetState,
+} from '@livekit/components-core';
+import { isEqualTrackRef, isTrackReference, isWeb, log, setupParticipantName } from '@livekit/components-core';
 import { RoomEvent, Track } from 'livekit-client';
-import { useTracks } from '../hooks/useTracks';
-import { usePinnedTracks } from '../hooks/usePinnedTracks';
-import { CarouselLayout } from '../components/layout/CarouselLayout';
-import { useCreateLayoutContext } from '../context/layout-context';
-import { ParticipantTile } from '../components';
-import { Toast } from '../components';
-import { UserToggle } from '../components/controls/UserToggle';
-import type { TrackReferenceOrPlaceholder } from '@livekit/components-core';
-import { useLocalParticipant } from '../hooks';
-import { MessageFormatter } from '../components/ChatEntry';
-import { useEnsureParticipant } from '../context';
-import { useObservableState } from '../hooks/internal';
+import * as React from 'react';
+import type { MessageFormatter } from '../components';
+import {
+  CarouselLayout,
+  ConnectionStateToast,
+  FocusLayout,
+  FocusLayoutContainer,
+  GridLayout,
+  LayoutContextProvider,
+  ParticipantTile,
+  RoomAudioRenderer,
+} from '../components';
+import { useCreateLayoutContext, useEnsureParticipant } from '../context';
+import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
 import { Chat } from './Chat';
+import { ControlBar } from './ControlBar';
+import { Users } from './Users';
+import { ShareLink } from './ShareLink';
+import { useObservableState } from '../hooks/internal';
 
 /**
  * @public
  */
 export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElement> {
   chatMessageFormatter?: MessageFormatter;
-  // showShareButton: boolean;
-  // showParticipantButton: boolean;
-  // leaveButton: string;
-  // endForAll: string | false;
+  chatMessageEncoder?: MessageEncoder;
+  chatMessageDecoder?: MessageDecoder;
 }
 
 /**
- * This component is the default setup of a classic LiveKit video conferencing app.
- * It provides functionality like switching between participant grid view and focus view.
+ * The `VideoConference` ready-made component is your drop-in solution for a classic video conferencing application.
+ * It provides functionality such as focusing on one participant, grid view with pagination to handle large numbers
+ * of participants, basic non-persistent chat, screen sharing, and more.
  *
  * @remarks
  * The component is implemented with other LiveKit components like `FocusContextProvider`,
  * `GridLayout`, `ControlBar`, `FocusLayoutContainer` and `FocusLayout`.
+ * You can use this components as a starting point for your own custom video conferencing application.
  *
  * @example
  * ```tsx
@@ -55,6 +55,8 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
  */
 export function VideoConference({
   chatMessageFormatter,
+  chatMessageDecoder,
+  chatMessageEncoder,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
@@ -83,7 +85,7 @@ export function VideoConference({
 
   const meta = metadata ? JSON.parse(metadata) : {};
 
-  const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
+  // const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
 
   const tracks = useTracks(
@@ -121,14 +123,14 @@ export function VideoConference({
 
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
-  React.useEffect(() => {
-    if (waiting) {
-      // Remove toast message after 2 second
-      setTimeout(() => {
-        setWaiting(null);
-      }, 3000);
-    }
-  }, [waiting]);
+  // React.useEffect(() => {
+  //   if (waiting) {
+  //     // Remove toast message after 2 second
+  //     setTimeout(() => {
+  //       setWaiting(null);
+  //     }, 3000);
+  //   }
+  // }, [waiting]);
 
   React.useEffect(() => {
     if (meta && meta.host) {
@@ -213,7 +215,7 @@ export function VideoConference({
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
             />
-          </div >
+          </div>
 
           {
             showShareButton ?
@@ -237,18 +239,11 @@ export function VideoConference({
             ) : (<></>)
           }
 
-          {
-            waiting ? (
-              <Toast className="lk-toast-connection-state">
-                <UserToggle>{waiting}</UserToggle>
-              </Toast>
-            ) : (
-              <></>
-            )
-          }
           <Chat
             style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
             messageFormatter={chatMessageFormatter}
+            messageEncoder={chatMessageEncoder}
+            messageDecoder={chatMessageDecoder}
           />
         </LayoutContextProvider >
       )

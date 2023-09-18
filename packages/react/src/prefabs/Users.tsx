@@ -42,6 +42,32 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
   /**
    * Get list of users in waiting room
    */
+  async function getWaitingRoomState() {
+    const postData = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        meeting_id: room.name,
+        domain: getDomainIdentifier()
+      }),
+    };
+    fetch(`/api/get-waitingroom-state`, postData).then(async (res) => {
+      if (res.ok) {
+        const body = await res.json();
+        console.log(body);
+
+        setToggleWaiting(body.waiting_room);
+      } else {
+        throw Error('Error fetching server url, check server logs');
+      }
+    });
+  }
+  /**
+   * Get list of users in waiting room
+   */
   async function usersList() {
     const postData = {
       method: 'POST',
@@ -78,6 +104,10 @@ export function Users({ onWaitingRoomChange, ...props }: UserProps) {
       // setWaiting(`Users are in waiting room`)
     }, 2000)
     return () => clearInterval(interval);
+  }, []);
+
+  React.useEffect(() => {
+    getWaitingRoomState();
   }, []);
 
   React.useEffect(() => {
