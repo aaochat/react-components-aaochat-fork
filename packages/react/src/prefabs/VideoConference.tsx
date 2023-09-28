@@ -17,6 +17,7 @@ import {
   LayoutContextProvider,
   ParticipantTile,
   RoomAudioRenderer,
+  formatChatMessageLinks,
 } from '../components';
 import { useCreateLayoutContext, useEnsureParticipant } from '../context';
 import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
@@ -241,7 +242,7 @@ export function VideoConference({
 
           <Chat
             style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
-            messageFormatter={chatMessageFormatter}
+            messageFormatter={formatChatMessageLinks}
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}
           />

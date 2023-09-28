@@ -122,6 +122,7 @@ export function ControlBar({
   };
 
   const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+  console.log(`Share scree tracks ${screenShareTracks}`);
 
   return (
     <div {...htmlProps}>

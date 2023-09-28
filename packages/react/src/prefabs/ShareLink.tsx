@@ -137,7 +137,22 @@ export function ShareLink({ ...props }: any) {
     }
   }
 
+  async function setInvitedFirst(user: User, valueToSet: boolean = true) {
+    user.invited = valueToSet;
+
+    const newUsers = users.map((item) =>
+      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+    );
+    setUsers(newUsers);
+
+    const newSearched = searched.map((item) =>
+      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+    );
+    setSearched(newSearched);
+  }
+
   async function handleInvite(user: User) {
+    setInvitedFirst(user, true);
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -155,31 +170,9 @@ export function ShareLink({ ...props }: any) {
 
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
-        user.invited = true;
-        // 1. Find the user with the provided id
-        const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the user as invited
-        const updatedUser = { ...users[currentUserIndex], invited: true };
-        // 3. Update the todo list with the updated todo
-        const newUsers = [
-          ...users.slice(0, currentUserIndex),
-          updatedUser,
-          ...users.slice(currentUserIndex + 1)
-        ];
-        setUsers(newUsers);
 
-        // 1. Find the user with the provided id
-        const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the todo as complete
-        const updatedSearched = { ...searched[currentSearchedIndex], invited: true };
-        // 3. Update the todo list with the updated todo
-        const newSearched = [
-          ...searched.slice(0, currentSearchedIndex),
-          updatedSearched,
-          ...searched.slice(currentSearchedIndex + 1)
-        ];
-        setSearched(newSearched);
       } else {
+        setInvitedFirst(user, false);
         throw Error('Error fetching server url, check server logs');
       }
     });
