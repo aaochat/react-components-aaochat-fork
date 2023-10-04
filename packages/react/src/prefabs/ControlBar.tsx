@@ -163,6 +163,7 @@ export function ControlBar({
           </div>
         </div>
       )}
+
       {visibleControls.camera && (
         <div className="lk-button-group">
           <TrackToggle source={Track.Source.Camera} showIcon={showIcon}>
@@ -173,6 +174,7 @@ export function ControlBar({
           </div>
         </div>
       )}
+
       {visibleControls.screenShare && browserSupportsScreenSharing && (
         <TrackToggle
           source={Track.Source.ScreenShare}
