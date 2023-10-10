@@ -23,7 +23,7 @@ export function getHostUrl() {
 
 export function getToken() {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('token');
+  return localStorage.getItem('host') ?? urlParams.get('token');
 }
 
 export type User = {
@@ -109,10 +109,13 @@ export function ShareLink({ ...props }: any) {
   });
 
   const meta = metadata ? JSON.parse(metadata) : {};
-  const [showInviteUser, setShowInviteUser] = React.useState<boolean>(true);
+  const [showInviteUser, setShowInviteUser] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     if (meta && meta.host && meta.limited) {
       setShowInviteUser(false);
+    } else {
+      setShowInviteUser(true);
     }
   }, [meta]);
 
@@ -120,6 +123,8 @@ export function ShareLink({ ...props }: any) {
     const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
     if (pmeta && pmeta.host && meta.limited) {
       setShowInviteUser(false);
+    } else {
+      setShowInviteUser(true);
     }
   }, [p]);
 
