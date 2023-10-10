@@ -135,6 +135,11 @@ export function VideoConference({
 
   React.useEffect(() => {
     if (meta && meta.host) {
+      localStorage.setItem('host', meta.host);
+      if (meta.limited) {
+        localStorage.setItem('limited', meta.limited);
+      }
+
       setShowShareButton(true);
       setShowParticipantButton(true);
       setLeaveButton("Leave Meeting");
@@ -145,6 +150,11 @@ export function VideoConference({
   React.useEffect(() => {
     const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
     if (pmeta && pmeta.host) {
+      localStorage.setItem('host', meta.host);
+      if (meta.limited) {
+        localStorage.setItem('limited', meta.limited);
+      }
+
       setShowShareButton(true);
       setShowParticipantButton(true);
       setLeaveButton("Leave Meeting");

@@ -27,7 +27,7 @@ export function getDomainIdentifier() {
 
 export function getToken() {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('token');
+  return localStorage.getItem('host') ?? urlParams.get('token');
 }
 
 export type User = {
