@@ -27,9 +27,8 @@ export function getToken() {
 }
 
 export type User = {
+  contact_id: string;
   user_id: string;
-  user_name: string;
-  designation: string;
   full_name: string;
   invited: boolean
 };
@@ -141,12 +140,12 @@ export function ShareLink({ ...props }: any) {
     user.invited = valueToSet;
 
     const newUsers = users.map((item) =>
-      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+      item.contact_id === user.contact_id ? { ...item, invited: valueToSet } : item
     );
     setUsers(newUsers);
 
     const newSearched = searched.map((item) =>
-      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+      item.contact_id === user.contact_id ? { ...item, invited: valueToSet } : item
     );
     setSearched(newSearched);
   }
@@ -159,7 +158,7 @@ export function ShareLink({ ...props }: any) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "userId": user.user_id, // body data type must match "Content-Type" header
+        "userId": user.contact_id, // body data type must match "Content-Type" header
         "userName": user.full_name, // body data type must match "Content-Type" header
         "message": link,
         "meeting_id": room.name,
