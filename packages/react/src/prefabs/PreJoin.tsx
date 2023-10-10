@@ -118,9 +118,9 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
       const track =
         kind === 'videoinput'
           ? await createLocalVideoTrack({
-              deviceId: deviceId,
-              resolution: VideoPresets.h720.resolution,
-            })
+            deviceId: deviceId,
+            resolution: VideoPresets.h720.resolution,
+          })
           : await createLocalAudioTrack({ deviceId });
 
       const newDeviceId = await track.getDeviceId();
@@ -324,6 +324,7 @@ export function PreJoin({
       <div className="lk-button-group-container">
         <div className="lk-button-group audio">
           <TrackToggle
+            id='microphoneButton'
             initialState={audioEnabled}
             source={Track.Source.Microphone}
             onChange={(enabled) => setAudioEnabled(enabled)}
@@ -342,6 +343,7 @@ export function PreJoin({
         </div>
         <div className="lk-button-group video">
           <TrackToggle
+            id='cameraButton'
             initialState={videoEnabled}
             source={Track.Source.Camera}
             onChange={(enabled) => setVideoEnabled(enabled)}
@@ -374,6 +376,7 @@ export function PreJoin({
         <button
           className="lk-button lk-join-button"
           type="submit"
+          id="submitButton"
           onClick={handleSubmit}
           disabled={!isValid}
         >
