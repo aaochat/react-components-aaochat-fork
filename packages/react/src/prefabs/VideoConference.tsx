@@ -143,6 +143,8 @@ export function VideoConference({
 
   React.useEffect(() => {
     const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
+    console.log(pmeta);
+
     if (pmeta && pmeta.host) {
       setShowShareButton(true);
       setShowParticipantButton(true);

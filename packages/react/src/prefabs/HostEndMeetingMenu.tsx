@@ -4,7 +4,6 @@ import { DisconnectButton } from '../components';
 // import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
 import { useLocalParticipant, useParticipants } from '../hooks';
-import { getDomainIdentifier } from './ShareLink';
 
 /** @public */
 export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -110,7 +109,6 @@ export function HostEndMeetingMenu({
       body: JSON.stringify({
         room: room.name,
         token: meta.host,
-        domain: getDomainIdentifier(),
       }),
     };
     fetch(`/api/end-meeting`, postData).then(async (res) => {
@@ -136,7 +134,6 @@ export function HostEndMeetingMenu({
         room: room.name,
         identity: identity,
         token: meta.host,
-        domain: getDomainIdentifier(),
       }),
     };
     await fetch(`/api/make-host`, postData).then(async (res) => {

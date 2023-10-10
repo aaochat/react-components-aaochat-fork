@@ -8,7 +8,7 @@ import { useObservableState } from '../hooks/internal';
 
 export function useGetLink() {
   const host = getHostUrl();
-  const link = `${host}/${getDomainIdentifier()}/meeting/${useGetRoom().name}`;
+  const link = `${host}/meeting/${useGetRoom().name}`;
   return { link: link };
 }
 
@@ -19,10 +19,6 @@ export function useGetRoom() {
 
 export function getHostUrl() {
   return typeof window ? window.location.origin : '';
-}
-
-export function getDomainIdentifier() {
-  return typeof window ? ((window.location.href).split("/"))[3] : '';
 }
 
 export function getToken() {
@@ -80,7 +76,6 @@ export function ShareLink({ ...props }: any) {
       body: JSON.stringify({
         meeting_id: room.name,
         token: getToken(),
-        domain: getDomainIdentifier(),
       })
     };
     fetch(`${getHostUrl()}/api/get-users`, data).then(async (res) => {
@@ -163,8 +158,7 @@ export function ShareLink({ ...props }: any) {
         "userName": user.full_name, // body data type must match "Content-Type" header
         "message": link,
         "meeting_id": room.name,
-        "token": getToken(),
-        "domain": getDomainIdentifier()
+        "token": getToken()
       })
     };
 
