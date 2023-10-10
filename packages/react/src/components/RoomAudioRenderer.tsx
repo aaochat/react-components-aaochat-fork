@@ -1,4 +1,4 @@
-import { isLocal } from '@livekit/components-core';
+import { getTrackReferenceId, isLocal } from '@livekit/components-core';
 import type { RemoteTrackPublication } from 'livekit-client';
 import { Track } from 'livekit-client';
 import * as React from 'react';
@@ -6,7 +6,7 @@ import { useTracks } from '../hooks';
 import { AudioTrack } from './participant/AudioTrack';
 
 /**
- * The RoomAudioRenderer component is a drop-in solution for adding audio to your LiveKit app.
+ * The `RoomAudioRenderer` component is a drop-in solution for adding audio to your LiveKit app.
  * It takes care of handling remote participants’ audio tracks and makes sure that microphones and screen share are audible.
  *
  * @example
@@ -30,7 +30,7 @@ export function RoomAudioRenderer() {
   return (
     <div style={{ display: 'none' }}>
       {tracks.map((trackRef) => (
-        <AudioTrack key={trackRef.publication.trackSid} {...trackRef} />
+        <AudioTrack key={getTrackReferenceId(trackRef)} trackRef={trackRef} />
       ))}
     </div>
   );

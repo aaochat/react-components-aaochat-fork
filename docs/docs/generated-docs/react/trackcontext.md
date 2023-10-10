@@ -2,10 +2,14 @@
 
 ## TrackContext variable
 
+> Warning: This API is now obsolete.
+>
+> `TrackContext` has been to `TrackRefContext`<!-- -->, use this as a drop in replacement.
+
 **Signature:**
 
 ```typescript
 TrackContext: React.Context<TrackReferenceOrPlaceholder | undefined>;
 ```
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}

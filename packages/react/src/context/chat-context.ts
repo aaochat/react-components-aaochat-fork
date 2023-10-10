@@ -21,7 +21,13 @@ export function chatReducer(state: WidgetState, action: ChatContextAction): Widg
   if (action.msg && action.msg !== state.showChat) {
     if (action.msg === 'show_chat') {
       return { ...state, showChat: 'show_chat' };
-    } else if (action.msg === 'show_invite') {
+    } else if (action.msg === 'toggle_chat') {
+      const newState = { ...state, showChat: state.showChat == 'show_chat' ? null : 'show_chat' };
+      if (newState.showChat === 'show_chat') {
+        newState.unreadMessages = 0;
+      }
+      return newState;
+    }  else if (action.msg === 'show_invite') {
       return { ...state, showChat: 'show_invite' };
     } else if (action.msg === 'show_users') {
       return { ...state, showChat: 'show_users' };

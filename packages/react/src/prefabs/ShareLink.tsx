@@ -1,11 +1,14 @@
 /* eslint-disable prettier/prettier */
 import * as React from 'react';
-import { useRoomContext } from '../context';
+import { useEnsureParticipant, useRoomContext } from '../context';
 import { Toast } from '../components';
+import { useLocalParticipant } from '../hooks';
+import { setupParticipantName } from '@livekit/components-core';
+import { useObservableState } from '../hooks/internal';
 
 export function useGetLink() {
   const host = getHostUrl();
-  const link = `${host}/meeting/${useGetRoom().name}`;
+  const link = `${host}/${getDomainIdentifier()}/meeting/${useGetRoom().name}`;
   return { link: link };
 }
 
@@ -18,6 +21,10 @@ export function getHostUrl() {
   return typeof window ? window.location.origin : '';
 }
 
+export function getDomainIdentifier() {
+  return typeof window ? ((window.location.href).split("/"))[3] : '';
+}
+
 export function getToken() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get('token');
@@ -25,8 +32,8 @@ export function getToken() {
 
 export type User = {
   user_id: string;
-  contact_id: string;
   user_name: string;
+  designation: string;
   full_name: string;
   invited: boolean
 };
@@ -73,6 +80,7 @@ export function ShareLink({ ...props }: any) {
       body: JSON.stringify({
         meeting_id: room.name,
         token: getToken(),
+        domain: getDomainIdentifier(),
       })
     };
     fetch(`${getHostUrl()}/api/get-users`, data).then(async (res) => {
@@ -92,6 +100,34 @@ export function ShareLink({ ...props }: any) {
     }
   }, [room.name]);
 
+  const { localParticipant } = useLocalParticipant();
+  const p = useEnsureParticipant(localParticipant);
+
+  const { infoObserver } = React.useMemo(() => {
+    return setupParticipantName(p);
+  }, [p]);
+
+  const { metadata } = useObservableState(infoObserver, {
+    name: p.name,
+    identity: p.identity,
+    metadata: p.metadata,
+  });
+
+  const meta = metadata ? JSON.parse(metadata) : {};
+  const [showInviteUser, setShowInviteUser] = React.useState<boolean>(true);
+  React.useEffect(() => {
+    if (meta && meta.host && meta.limited) {
+      setShowInviteUser(false);
+    }
+  }, [meta]);
+
+  React.useEffect(() => {
+    const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
+    if (pmeta && pmeta.host && meta.limited) {
+      setShowInviteUser(false);
+    }
+  }, [p]);
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (inputRef.current && inputRef.current.value.trim() !== '') {
@@ -101,48 +137,42 @@ export function ShareLink({ ...props }: any) {
     }
   }
 
+  async function setInvitedFirst(user: User, valueToSet: boolean = true) {
+    user.invited = valueToSet;
+
+    const newUsers = users.map((item) =>
+      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+    );
+    setUsers(newUsers);
+
+    const newSearched = searched.map((item) =>
+      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+    );
+    setSearched(newSearched);
+  }
+
   async function handleInvite(user: User) {
+    setInvitedFirst(user, true);
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "userId": user.contact_id, // body data type must match "Content-Type" header
+        "userId": user.user_id, // body data type must match "Content-Type" header
         "userName": user.full_name, // body data type must match "Content-Type" header
         "message": link,
         "meeting_id": room.name,
         "token": getToken(),
+        "domain": getDomainIdentifier()
       })
     };
 
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
-        user.invited = true;
-        // 1. Find the user with the provided id
-        const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the user as invited
-        const updatedUser = { ...users[currentUserIndex], invited: true };
-        // 3. Update the todo list with the updated todo
-        const newUsers = [
-          ...users.slice(0, currentUserIndex),
-          updatedUser,
-          ...users.slice(currentUserIndex + 1)
-        ];
-        setUsers(newUsers);
 
-        // 1. Find the user with the provided id
-        const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the todo as complete
-        const updatedSearched = { ...searched[currentSearchedIndex], invited: true };
-        // 3. Update the todo list with the updated todo
-        const newSearched = [
-          ...searched.slice(0, currentSearchedIndex),
-          updatedSearched,
-          ...searched.slice(currentSearchedIndex + 1)
-        ];
-        setSearched(newSearched);
       } else {
+        setInvitedFirst(user, false);
         throw Error('Error fetching server url, check server logs');
       }
     });
@@ -178,36 +208,40 @@ export function ShareLink({ ...props }: any) {
 
       {showToast ? <Toast className="lk-toast-connection-state">Copied</Toast> : <></>}
 
-      <form className="lk-chat-form" onSubmit={handleSubmit}>
-        <input
-          className="lk-form-control lk-chat-form-input"
-          ref={inputRef}
-          type="text"
-          placeholder="Search User..."
-          onChange={handleSubmit}
-        />
-      </form>
+      {showInviteUser ? (
+        <form className="lk-chat-form" onSubmit={handleSubmit}>
+          <input
+            className="lk-form-control lk-chat-form-input"
+            ref={inputRef}
+            type="text"
+            placeholder="Search User..."
+            onChange={handleSubmit}
+          />
+        </form>
+      ) : (<></>)}
 
-      {searched.length > 0 ? (
-        <ul className="lk-list lk-chat-messages" ref={ulRef}>
-          {searched.map((user, index) => {
-            return (
-              <li key={index} className="lk-chat-entry">
-                <div>
-                  <span className="lk-message-body">{user.full_name}</span>
-                  <span className="lk-message-body lk-message-text">{user.user_name}</span>
-                </div>
+      {
+        showInviteUser && searched.length > 0 ? (
+          <ul className="lk-list lk-chat-messages" ref={ulRef}>
+            {searched.map((user, index) => {
+              return (
+                <li key={index} className="lk-chat-entry">
+                  <div>
+                    <span className="lk-message-body">{user.full_name}</span>
+                    <span className="lk-message-body lk-message-text">{user.user_name}</span>
+                  </div>
 
-                <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
-                  {user.invited ? 'Invited' : 'Invite'}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      ) : (
-        ''
-      )}
-    </div>
+                  <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
+                    {user.invited ? 'Invited' : 'Invite'}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          ''
+        )
+      }
+    </div >
   );
 }

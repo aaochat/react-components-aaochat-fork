@@ -8,10 +8,10 @@
 export interface UseRemoteParticipantOptions
 ```
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
 
 ## Properties
 
-| Property                                                             | Type                 | Description  |
-| -------------------------------------------------------------------- | -------------------- | ------------ |
-| [updateOnlyOn?](./react/useremoteparticipantoptions.updateonlyon.md) | ParticipantEvent\[\] | _(Optional)_ |
+| Property                                                             | Type                 | Description                                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [updateOnlyOn?](./react/useremoteparticipantoptions.updateonlyon.md) | ParticipantEvent\[\] | _(Optional)_ To optimize performance, you can use the <code>updateOnlyOn</code> property to decide on what <code>ParticipantEvents</code> the hook updates. By default it updates on all relevant ParticipantEvents to keep the returned participant up to date. |

@@ -1,5 +1,29 @@
 # @livekit/components-core
 
+## 0.7.0
+
+### Minor Changes
+
+- Update more hooks and components to use `trackRef` and deprecate participant/source property pairs - [#629](https://github.com/livekit/components-js/pull/629) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- fix handling of multiple tracks of the same source from the same participant - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Listen to ParticipantDisconnected event for useTracks hook - [#631](https://github.com/livekit/components-js/pull/631) ([@lukasIO](https://github.com/lukasIO))
+
+- fix handling of multiple tracks of the same source from the same participant - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+## 0.6.15
+
+### Patch Changes
+
+- Update dependency livekit-client to v1.13.1 - [#606](https://github.com/livekit/components-js/pull/606) ([@renovate](https://github.com/apps/renovate))
+
+- Add useIsEncrypted hooks and display to tile - [#600](https://github.com/livekit/components-js/pull/600) ([@lukasIO](https://github.com/lukasIO))
+
+- Make sure pinning is only attempted when screen share track is subscribed - [#604](https://github.com/livekit/components-js/pull/604) ([@lukasIO](https://github.com/lukasIO))
+
 ## 0.6.14
 
 ### Patch Changes

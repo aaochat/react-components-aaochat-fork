@@ -8,7 +8,13 @@ export interface UseChatToggleProps {
   props: React.ButtonHTMLAttributes<HTMLButtonElement>;
 }
 
-/** @public */
+/**
+ * The `useChatToggle` hook provides state and functions for toggling the chat window.
+ * @remarks
+ * Depends on the `LayoutContext` to work properly.
+ * @see {@link ChatToggle}, {@link Chat}
+ * @public
+ */
 export function useChatToggle({ props }: UseChatToggleProps) {
   const { dispatch, state } = useLayoutContext().widget;
   const { className } = React.useMemo(() => setupChatToggle(), []);
@@ -19,7 +25,7 @@ export function useChatToggle({ props }: UseChatToggleProps) {
       onClick: () => {
         if (dispatch) dispatch({ msg: 'toggle_chat' });
       },
-      'aria-pressed': state?.showChat ? 'true' : 'false',
+      'aria-pressed': state?.showChat == 'show_chat' ? 'true' : 'false',
       'data-lk-unread-msgs': state
         ? state.unreadMessages < 10
           ? state.unreadMessages.toFixed(0)

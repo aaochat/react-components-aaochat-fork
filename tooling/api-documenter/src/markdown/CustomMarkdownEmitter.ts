@@ -23,6 +23,8 @@ import {
 } from './MarkdownEmitter';
 import { IndentedWriter } from '../utils/IndentedWriter';
 import { MarkDocTag } from '../nodes/MarkDocTag';
+import { ParameterList } from '../nodes/ParameterList';
+import { ParameterItem } from '../nodes/ParameterItem';
 
 export interface ICustomMarkdownEmitterOptions extends IMarkdownEmitterOptions {
   contextApiItem: ApiItem | undefined;
@@ -178,9 +180,52 @@ export class CustomMarkdownEmitter extends MarkdownEmitter {
             })
             .join(' ');
 
+        const variablesString: string =
+          ' variables={' +
+          Object.entries(markDocTag.variables)
+            .map(([key, value]) => {
+              switch (typeof value) {
+                case 'number':
+                case 'boolean': {
+                  return `${key}: ${value}`;
+                }
+                case 'string': {
+                  return `${key}: "${value}"`;
+                }
+              }
+            })
+            .join(' ') +
+          '}';
+
+        // const variablesString: string = markDocTag.variables.toString();
+
         writer.ensureSkippedLine();
-        writer.writeLine('{% ' + this.getEscapedText(markDocTag.name) + attributesString + ' /%}');
+        writer.writeLine(
+          '{% ' +
+            this.getEscapedText(markDocTag.name) +
+            attributesString +
+            variablesString +
+            ' /%}',
+        );
         writer.writeLine();
+        break;
+      }
+      case CustomDocNodeKind.ParameterList: {
+        const parameterList: ParameterList = docNode as ParameterList;
+        writer.ensureSkippedLine();
+        for (const parameter of parameterList.getParameters()) {
+          this.writeNode(parameter, context, docNodeSiblings);
+        }
+        writer.ensureSkippedLine();
+        break;
+      }
+      case CustomDocNodeKind.ParameterItem: {
+        const parameterItem: ParameterItem = docNode as ParameterItem;
+        writer.ensureSkippedLine();
+        const { name, type, optional, description } = parameterItem.attributes;
+        writer.writeLine(`{% parameter name="${name}" type="${type}" optional=${optional} %}`);
+        this.writeNodes(description, context);
+        writer.writeLine(`{% /parameter %}`);
         break;
       }
       default:

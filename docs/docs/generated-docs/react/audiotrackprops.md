@@ -10,15 +10,16 @@ export interface AudioTrackProps<T extends HTMLMediaElement = HTMLMediaElement> 
 
 **Extends:** React.HTMLAttributes&lt;T&gt;
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
 
 ## Properties
 
-| Property                                                                               | Type                             | Description                                              |
-| -------------------------------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------- |
-| [name?](./react/audiotrackprops.name.md)                                               | string                           | _(Optional)_                                             |
-| [onSubscriptionStatusChanged?](./react/audiotrackprops.onsubscriptionstatuschanged.md) | (subscribed: boolean) =&gt; void | _(Optional)_                                             |
-| [participant?](./react/audiotrackprops.participant.md)                                 | Participant                      | _(Optional)_                                             |
-| [publication?](./react/audiotrackprops.publication.md)                                 | TrackPublication                 | _(Optional)_                                             |
-| [source](./react/audiotrackprops.source.md)                                            | Track.Source                     |                                                          |
-| [volume?](./react/audiotrackprops.volume.md)                                           | number                           | _(Optional)_ by the default the range is between 0 and 1 |
+| Property                                                                               | Type                                       | Description                                                                           |
+| -------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| [name?](./react/audiotrackprops.name.md)                                               | string                                     | _(Optional)_                                                                          |
+| [onSubscriptionStatusChanged?](./react/audiotrackprops.onsubscriptionstatuschanged.md) | (subscribed: boolean) =&gt; void           | _(Optional)_                                                                          |
+| [participant?](./react/audiotrackprops.participant.md)                                 | Participant                                | _(Optional)_                                                                          |
+| [publication?](./react/audiotrackprops.publication.md)                                 | TrackPublication                           | _(Optional)_                                                                          |
+| [source?](./react/audiotrackprops.source.md)                                           | Track.Source                               | _(Optional)_                                                                          |
+| [trackRef?](./react/audiotrackprops.trackref.md)                                       | [TrackReference](./core/trackreference.md) | _(Optional)_ The track reference of the track from which the audio is to be rendered. |
+| [volume?](./react/audiotrackprops.volume.md)                                           | number                                     | _(Optional)_ by the default the range is between 0 and 1                              |

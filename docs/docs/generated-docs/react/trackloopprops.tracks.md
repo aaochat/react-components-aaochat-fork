@@ -2,7 +2,7 @@
 
 ## TrackLoopProps.tracks property
 
-Track references to loop over.
+Track references to loop over. You can the use `useTracks()` hook to get TrackReferences.
 
 **Signature:**
 
@@ -10,4 +10,4 @@ Track references to loop over.
 tracks: TrackReference[] | TrackReferenceOrPlaceholder[];
 ```
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}

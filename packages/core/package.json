@@ -1,6 +1,6 @@
 {
   "name": "@livekit/components-core",
-  "version": "0.6.14",
+  "version": "0.7.0",
   "license": "Apache-2.0",
   "author": "LiveKit",
   "repository": {
@@ -51,7 +51,7 @@
     "@size-limit/webpack": "^8.2.4",
     "size-limit": "^8.2.4",
     "tsup": "^7.0.0",
-    "typescript": "5.1.6",
+    "typescript": "5.2.2",
     "vitest": "^0.34.0"
   },
   "engines": {

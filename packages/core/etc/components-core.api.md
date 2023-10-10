@@ -144,6 +144,9 @@ export const DataTopic: {
     readonly CHAT: "lk-chat-topic";
 };
 
+// @public (undocumented)
+export function encryptionStatusObservable(room: Room, participant: Participant): Observable<boolean>;
+
 // Warning: (ae-internal-missing-underscore) The name "getScrollBarWidth" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -181,8 +184,16 @@ export function isLocal(p: Participant): boolean;
 // @public
 export function isMobileBrowser(): boolean;
 
-// @public
+// @public @deprecated
 export function isParticipantSourcePinned(participant: Participant, source: Track.Source, pinState: PinState | undefined): boolean;
+
+// @public
+export function isParticipantTrackReferencePinned(trackRef: TrackReference, pinState: PinState | undefined): boolean;
+
+// Warning: (ae-internal-missing-underscore) The name "isPlaceholderReplacement" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function isPlaceholderReplacement(currentTrackRef: TrackReferenceOrPlaceholder, nextTrackRef: TrackReferenceOrPlaceholder): boolean;
 
 // @public (undocumented)
 export function isRemote(p: Participant): boolean;
@@ -219,7 +230,13 @@ export type MediaToggleType<T extends ToggleSource> = {
 };
 
 // @public (undocumented)
-export function mutedObserver(participant: Participant, source: Track.Source): Observable<boolean>;
+export type MessageDecoder = (message: Uint8Array) => ReceivedChatMessage;
+
+// @public (undocumented)
+export type MessageEncoder = (message: ChatMessage) => Uint8Array;
+
+// @public (undocumented)
+export function mutedObserver(trackRef: TrackReferenceOrPlaceholder): Observable<boolean>;
 
 // @public (undocumented)
 export function observeParticipantEvents<T extends Participant>(participant: T, ...events: ParticipantEvent[]): Observable<T>;
@@ -369,7 +386,7 @@ export function setupClearPinButton(): {
 
 // @public (undocumented)
 export function setupConnectionQualityIndicator(participant: Participant): {
-    className: "lk-rotate" | "lk-audio-conference" | "lk-audio-conference-stage" | "lk-audio-container" | "lk-button" | "lk-button-group" | "lk-button-group-container" | "lk-camera-off-note" | "lk-chat" | "lk-chat-entry" | "lk-chat-form" | "lk-chat-form-input" | "lk-chat-messages" | "lk-control-bar" | "lk-focus-layout-wrapper" | "lk-form-control" | "lk-grid-layout-wrapper" | "lk-join-button" | "lk-list" | "lk-message-body" | "lk-meta-data" | "lk-participant-name" | "lk-prejoin" | "lk-timestamp" | "lk-username-container" | "lk-video-conference" | "lk-video-conference-inner" | "lk-video-container" | "lk-audio-visualizer" | "lk-button-group-menu" | "lk-button-menu" | "lk-carousel" | "lk-chat-toggle" | "lk-connection-quality" | "lk-device-menu" | "lk-device-menu-heading" | "lk-disconnect-button" | "lk-focus-layout" | "lk-focus-toggle-button" | "lk-focused-participant" | "lk-grid-layout" | "lk-media-device-select" | "lk-pagination-control" | "lk-pagination-count" | "lk-pagination-indicator" | "lk-participant-media-audio" | "lk-participant-media-video" | "lk-participant-metadata" | "lk-participant-metadata-item" | "lk-participant-placeholder" | "lk-participant-tile" | "lk-pip-track" | "lk-room-container" | "lk-spinner" | "lk-start-audio-button" | "lk-toast" | "lk-track-muted-indicator-camera" | "lk-track-muted-indicator-microphone";
+    className: "lk-connection-quality";
     connectionQualityObserver: Observable<ConnectionQuality>;
 };
 
@@ -451,7 +468,7 @@ export function setupStartAudio(): {
 };
 
 // @public (undocumented)
-export function setupTrackMutedIndicator(participant: Participant, source: Track.Source): {
+export function setupTrackMutedIndicator(trackRef: TrackReferenceOrPlaceholder): {
     className: string;
     mediaMutedObserver: Observable<boolean>;
 };
@@ -497,6 +514,9 @@ export type TrackReference = {
 
 // @public (undocumented)
 export type TrackReferenceFilter = Parameters<TrackReferenceOrPlaceholder[]['filter']>['0'];
+
+// @public (undocumented)
+export type TrackReferenceId = ReturnType<typeof getTrackReferenceId>;
 
 // @public (undocumented)
 export type TrackReferenceOrPlaceholder = TrackReference | TrackReferencePlaceholder;

@@ -1,38 +1,16 @@
-import type { ChatMessage, ReceivedChatMessage } from '@livekit/components-core';
-import { setupChat } from '@livekit/components-core';
+import type { ChatMessage, MessageEncoder, MessageDecoder } from '@livekit/components-core';
 import * as React from 'react';
-import { useMaybeLayoutContext, useRoomContext } from '../context';
-import { useObservableState } from '../hooks/internal/useObservableState';
+import { useMaybeLayoutContext } from '../context';
 import { cloneSingleChild } from '../utils';
-import type { MessageDecoder, MessageEncoder, MessageFormatter } from '../components/ChatEntry';
-import { ChatEntry } from '../components/ChatEntry';
-
-export type { ChatMessage, ReceivedChatMessage };
-
+import type { MessageFormatter } from '../components/ChatEntry';
+// import { ChatEntry } from '../components/ChatEntry';
+import { useChat } from '../hooks/useChat';
+import { UserChat } from './UserChat';
 /** @public */
 export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
   messageFormatter?: MessageFormatter;
   messageEncoder?: MessageEncoder;
   messageDecoder?: MessageDecoder;
-}
-
-/** @public */
-export function useChat(options?: {
-  messageEncoder?: MessageEncoder;
-  messageDecoder?: MessageDecoder;
-}) {
-  const room = useRoomContext();
-  const [setup, setSetup] = React.useState<ReturnType<typeof setupChat>>();
-  const isSending = useObservableState(setup?.isSendingObservable, false);
-  const chatMessages = useObservableState(setup?.messageObservable, []);
-
-  React.useEffect(() => {
-    const setupChatReturn = setupChat(room, options);
-    setSetup(setupChatReturn);
-    return setupChatReturn.destroy;
-  }, [room, options]);
-
-  return { send: setup?.send, chatMessages, isSending };
 }
 
 /**
@@ -103,30 +81,30 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
 
   return (
     <div {...props} className="lk-chat">
-      <ul className="lk-list lk-chat-messages" ref={ulRef}>
+      <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
           ? chatMessages.map((msg, idx) =>
-              cloneSingleChild(props.children, {
-                entry: msg,
-                key: idx,
-                messageFormatter,
-              }),
-            )
+            cloneSingleChild(props.children, {
+              entry: msg,
+              key: idx,
+              messageFormatter,
+            }),
+          )
           : chatMessages.map((msg, idx, allMsg) => {
-              const hideName = idx >= 1 && allMsg[idx - 1].from === msg.from;
-              // If the time delta between two messages is bigger than 60s show timestamp.
-              const hideTimestamp = idx >= 1 && msg.timestamp - allMsg[idx - 1].timestamp < 60_000;
+            const hideName = idx >= 1 && allMsg[idx - 1].from === msg.from;
+            // If the time delta between two messages is bigger than 60s show timestamp.
+            const hideTimestamp = idx >= 1 && msg.timestamp - allMsg[idx - 1].timestamp < 60_000;
 
-              return (
-                <ChatEntry
-                  key={idx}
-                  hideName={hideName}
-                  hideTimestamp={hideName === false ? false : hideTimestamp} // If we show the name always show the timestamp as well.
-                  entry={msg}
-                  messageFormatter={messageFormatter}
-                />
-              );
-            })}
+            return (
+              <UserChat
+                key={idx}
+                hideName={hideName}
+                hideTimestamp={hideName === false ? false : hideTimestamp} // If we show the name always show the timestamp as well.
+                entry={msg}
+                messageFormatter={messageFormatter}
+              />
+            );
+          })}
       </ul>
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input

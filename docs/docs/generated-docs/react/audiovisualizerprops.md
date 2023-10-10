@@ -10,10 +10,11 @@ export interface AudioVisualizerProps extends React.HTMLAttributes<SVGElement>
 
 **Extends:** React.HTMLAttributes&lt;SVGElement&gt;
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
 
 ## Properties
 
-| Property                                                    | Type        | Description  |
-| ----------------------------------------------------------- | ----------- | ------------ |
-| [participant?](./react/audiovisualizerprops.participant.md) | Participant | _(Optional)_ |
+| Property                                                    | Type                                                                 | Description  |
+| ----------------------------------------------------------- | -------------------------------------------------------------------- | ------------ |
+| [participant?](./react/audiovisualizerprops.participant.md) | Participant                                                          | _(Optional)_ |
+| [trackRef?](./react/audiovisualizerprops.trackref.md)       | [TrackReferenceOrPlaceholder](./core/trackreferenceorplaceholder.md) | _(Optional)_ |

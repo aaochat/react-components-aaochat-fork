@@ -1,5 +1,71 @@
 # @livekit/components-react
 
+## 1.2.0
+
+### Minor Changes
+
+- fix handling of multiple tracks of the same source from the same participant - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Update more hooks and components to use `trackRef` and deprecate participant/source property pairs - [#629](https://github.com/livekit/components-js/pull/629) ([@lukasIO](https://github.com/lukasIO))
+
+- refactor `ParticipantTile` and `useParticipantTile` to trackRef and rename `TrackContext` to `TrackRefContext`. - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Update AudioTrack and VideoTrack components to accept track references. - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- Make `source` and `participant` props optional for `UseParticipantTileProps`. - [#632](https://github.com/livekit/components-js/pull/632) ([@Ocupe](https://github.com/Ocupe))
+
+- Add internal feature flag support - [#637](https://github.com/livekit/components-js/pull/637) ([@lukasIO](https://github.com/lukasIO))
+
+- fix handling of multiple tracks of the same source from the same participant - [#627](https://github.com/livekit/components-js/pull/627) ([@lukasIO](https://github.com/lukasIO))
+
+- Update and add doc strings for all components. - [#633](https://github.com/livekit/components-js/pull/633) ([@Ocupe](https://github.com/Ocupe))
+
+- Updated dependencies [[`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`71690916`](https://github.com/livekit/components-js/commit/71690916a80d053fe6457c66f3fa3b584b69c5fe), [`999eb2ca`](https://github.com/livekit/components-js/commit/999eb2ca85f6d9cab16988f2815974d5f394e4ee), [`d5b2093b`](https://github.com/livekit/components-js/commit/d5b2093b1999df891cdd6fbe7b350c488b330cf7)]:
+  - @livekit/components-core@0.7.0
+
+## 1.1.8
+
+### Patch Changes
+
+- Add e2ee user choices to PreJoin component - [#624](https://github.com/livekit/components-js/pull/624) ([@lukasIO](https://github.com/lukasIO))
+
+- Apply default passphrase in PreJoin - [#625](https://github.com/livekit/components-js/pull/625) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix: media tracks were memoized on participant identity - [#620](https://github.com/livekit/components-js/pull/620) ([@dbkr](https://github.com/dbkr))
+
+## 1.1.7
+
+### Patch Changes
+
+- Fix occasional black tiles, unsusbscribe if intersection entry is still not intersecting - [#619](https://github.com/livekit/components-js/pull/619) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.6
+
+### Patch Changes
+
+- Pass participant explicitly to useIsEncrypted - [#607](https://github.com/livekit/components-js/pull/607) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.1.5
+
+### Patch Changes
+
+- Update dependency livekit-client to v1.13.1 - [#606](https://github.com/livekit/components-js/pull/606) ([@renovate](https://github.com/apps/renovate))
+
+- Add useIsEncrypted hooks and display to tile - [#600](https://github.com/livekit/components-js/pull/600) ([@lukasIO](https://github.com/lukasIO))
+
+- Make sure pinning is only attempted when screen share track is subscribed - [#604](https://github.com/livekit/components-js/pull/604) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`d5dadd2`](https://github.com/livekit/components-js/commit/d5dadd2991a415545ff0b6d392197c5be01cb43d), [`49de8d7`](https://github.com/livekit/components-js/commit/49de8d7755fc408d02c94afdb2e94d8ca75af6c3), [`915b371`](https://github.com/livekit/components-js/commit/915b371b9c9195a09173a3ff73c6d772fe71e248)]:
+  - @livekit/components-core@0.6.15
+
+## 1.1.4
+
+### Patch Changes
+
+- Automatically generate doc meta-data.json file - [#601](https://github.com/livekit/components-js/pull/601) ([@Ocupe](https://github.com/Ocupe))
+
 ## 1.1.3
 
 ### Patch Changes

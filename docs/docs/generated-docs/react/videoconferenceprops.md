@@ -10,10 +10,12 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
 
 **Extends:** React.HTMLAttributes&lt;HTMLDivElement&gt;
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
 
 ## Properties
 
 | Property                                                                      | Type                                            | Description  |
 | ----------------------------------------------------------------------------- | ----------------------------------------------- | ------------ |
+| [chatMessageDecoder?](./react/videoconferenceprops.chatmessagedecoder.md)     | [MessageDecoder](./core/messagedecoder.md)      | _(Optional)_ |
+| [chatMessageEncoder?](./react/videoconferenceprops.chatmessageencoder.md)     | [MessageEncoder](./core/messageencoder.md)      | _(Optional)_ |
 | [chatMessageFormatter?](./react/videoconferenceprops.chatmessageformatter.md) | [MessageFormatter](./react/messageformatter.md) | _(Optional)_ |

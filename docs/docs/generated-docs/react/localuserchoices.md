@@ -11,7 +11,9 @@ export type LocalUserChoices = {
   audioEnabled: boolean;
   videoDeviceId: string;
   audioDeviceId: string;
+  e2ee: boolean;
+  sharedPassphrase: string;
 };
 ```
 
-{% partial file="p_usage.md" /%}
+{% partial file="p_usage.md" variables={exampleCount: 0} /%}
