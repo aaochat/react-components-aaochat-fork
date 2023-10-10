@@ -122,7 +122,34 @@ export function ControlBar({
   };
 
   const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+  console.log(`Share scree tracks ${screenShareTracks}`);
+  React.useEffect(() => {
+    // Get all button elements with the "data-lk-source" attribute
+    const buttons = document.querySelectorAll('[data-lk-source]');
+    if (!isScreenShareEnabled && screenShareTracks !== 0) {
+      // Loop through each button and check its "data-lk-source" attribute
+      buttons.forEach(button => {
+        const source = button.getAttribute('data-lk-source');
 
+        // Check if the "data-lk-source" attribute value is "screen_share"
+        if (source === 'screen_share') {
+          // Disable the button
+          (button as HTMLButtonElement).disabled = true;
+        }
+      });
+    } else {
+      // Loop through each button and check its "data-lk-source" attribute
+      buttons.forEach(button => {
+        const source = button.getAttribute('data-lk-source');
+
+        // Check if the "data-lk-source" attribute value is "screen_share"
+        if (source === 'screen_share') {
+          // Disable the button
+          (button as HTMLButtonElement).disabled = false;
+        }
+      });
+    }
+  }, [screenShareTracks, isScreenShareEnabled]);
   return (
     <div {...htmlProps}>
       {visibleControls.microphone && (
