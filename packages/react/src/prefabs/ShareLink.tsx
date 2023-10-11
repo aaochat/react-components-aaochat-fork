@@ -151,7 +151,6 @@ export function ShareLink({ ...props }: any) {
   }
 
   async function handleInvite(user: User) {
-    setInvitedFirst(user, true);
     const data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -168,7 +167,7 @@ export function ShareLink({ ...props }: any) {
 
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
-
+        setInvitedFirst(user, true);
       } else {
         setInvitedFirst(user, false);
         throw Error('Error fetching server url, check server logs');
