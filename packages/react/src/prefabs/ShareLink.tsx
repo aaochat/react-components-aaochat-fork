@@ -225,7 +225,6 @@ export function ShareLink({ ...props }: any) {
                 <li key={index} className="lk-chat-entry">
                   <div>
                     <span className="lk-message-body">{user.full_name}</span>
-                    <span className="lk-message-body lk-message-text">{user.user_name}</span>
                   </div>
 
                   <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
