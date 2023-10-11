@@ -113,6 +113,8 @@ export function HostEndMeetingMenu({
     };
     fetch(`/api/end-meeting`, postData).then(async (res) => {
       if (res.ok) {
+        localStorage.removeItem('host');
+        localStorage.removeItem('limited');
         console.log("Meeting ended");
       } else {
         throw Error('Error fetching server url, check server logs');

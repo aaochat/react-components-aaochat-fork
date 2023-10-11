@@ -134,10 +134,12 @@ export function VideoConference({
   // }, [waiting]);
 
   React.useEffect(() => {
-    console.log("Initial meta update", new Date());
-    console.log(meta);
-
     if (meta && meta.host) {
+      localStorage.setItem('host', meta.host);
+      if (meta.limited) {
+        localStorage.setItem('limited', meta.limited);
+      }
+
       setShowShareButton(true);
       setShowParticipantButton(true);
       setLeaveButton("Leave Meeting");
@@ -146,9 +148,13 @@ export function VideoConference({
   }, [meta]);
 
   React.useEffect(() => {
-    console.log("P data update", new Date());
     const pmeta = p.metadata ? JSON.parse(p.metadata) : {};
     if (pmeta && pmeta.host) {
+      localStorage.setItem('host', meta.host);
+      if (meta.limited) {
+        localStorage.setItem('limited', meta.limited);
+      }
+
       setShowShareButton(true);
       setShowParticipantButton(true);
       setLeaveButton("Leave Meeting");
