@@ -71,11 +71,10 @@ function getTrackReferences(
             // either return all or only the ones that are subscribed
             (!onlySubscribedTracks || track.track),
         )
-        .map((track) => {
+        .map((track): TrackReference => {
           return {
             participant: participant,
             publication: track,
-            track: track.track,
             source: track.source,
           };
         });
@@ -102,6 +101,7 @@ export function trackReferencesObservable(
   const roomEvents = Array.from(
     new Set([
       RoomEvent.ParticipantConnected,
+      RoomEvent.ParticipantDisconnected,
       RoomEvent.ConnectionStateChanged,
       RoomEvent.LocalTrackPublished,
       RoomEvent.LocalTrackUnpublished,

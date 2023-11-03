@@ -1,5 +1,31 @@
 # @livekit/components-styles
 
+## 1.0.6
+
+### Patch Changes
+
+- update to "postcss-prefixer": "^3.0.0" - [#591](https://github.com/livekit/components-js/pull/591) ([@Ocupe](https://github.com/Ocupe))
+
+## 1.0.5
+
+### Patch Changes
+
+- Add unread chat message badge - [#563](https://github.com/livekit/components-js/pull/563) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.0.4
+
+### Patch Changes
+
+- Show start audio button in center of screen on mobile - [#550](https://github.com/livekit/components-js/pull/550) ([@lukasIO](https://github.com/lukasIO))
+
+- Display active state of chat toggle - [#549](https://github.com/livekit/components-js/pull/549) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.0.3
+
+### Patch Changes
+
+- Update devDependencies (non-major) - [#540](https://github.com/livekit/components-js/pull/540) ([@renovate](https://github.com/apps/renovate))
+
 ## 1.0.2
 
 ### Patch Changes
