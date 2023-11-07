@@ -83,14 +83,14 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     <div {...props} className="lk-chat">
       <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
-          ? chatMessages.map((msg, idx) =>
+          ? chatMessages.reverse().map((msg, idx) =>
             cloneSingleChild(props.children, {
               entry: msg,
               key: idx,
               messageFormatter,
             }),
           )
-          : chatMessages.map((msg, idx, allMsg) => {
+          : chatMessages.reverse().map((msg, idx, allMsg) => {
             const hideName = idx >= 1 && allMsg[idx - 1].from === msg.from;
             // If the time delta between two messages is bigger than 60s show timestamp.
             const hideTimestamp = idx >= 1 && msg.timestamp - allMsg[idx - 1].timestamp < 60_000;
