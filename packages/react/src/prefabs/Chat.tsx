@@ -69,7 +69,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       return;
     }
 
-    const unreadMessageCount = chatMessages.filter(
+    const unreadMessageCount = chatMessages.reverse().filter(
       (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     ).length;
 
