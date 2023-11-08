@@ -69,7 +69,10 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       return;
     }
 
-    const unreadMessageCount = chatMessages.reverse().filter(
+    console.log(chatMessages);
+    console.log(lastReadMsgAt.current);
+
+    const unreadMessageCount = chatMessages.filter(
       (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     ).length;
 
@@ -83,14 +86,14 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     <div {...props} className="lk-chat">
       <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
-          ? chatMessages.reverse().map((msg, idx) =>
+          ? chatMessages.map((msg, idx) =>
             cloneSingleChild(props.children, {
               entry: msg,
               key: idx,
               messageFormatter,
             }),
           )
-          : chatMessages.reverse().map((msg, idx, allMsg) => {
+          : chatMessages.map((msg, idx, allMsg) => {
             const hideName = idx >= 1 && allMsg[idx - 1].from === msg.from;
             // If the time delta between two messages is bigger than 60s show timestamp.
             const hideTimestamp = idx >= 1 && msg.timestamp - allMsg[idx - 1].timestamp < 60_000;
