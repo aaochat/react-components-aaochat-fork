@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@livekit/components-docs-gen",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Generate component docs.",
   "license": "Apache 2.0",
   "author": "LiveKit",
@@ -14,14 +14,14 @@
     "gen:docs": "yarn gen:api-documenter && yarn gather-api-files && yarn format-gen-docs",
     "gather-api-files": "mkdir -p ./temp && cp ./../../packages/react/temp/*.api.json ./temp/ && cp ./../../packages/core/temp/*.api.json ./temp/",
     "gen:api-documenter": "api-documenter markdown --input-folder ./temp --output-folder ../../docs/docs/generated-docs",
-    "format-gen-docs": "prettier --write \"./../../docs/docs/**/*.md\" --loglevel warn",
+    "format-gen-docs": "prettier --write \"./../../docs/docs/**/*.md\" --loglevel warn --single-quote false --trailing-comma none",
     "lint": "eslint -f unix \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   },
   "sideEffects": false,
   "dependencies": {
     "@livekit/api-documenter": "*",
-    "@livekit/components-react": "~1.2.0",
+    "@livekit/components-react": "~1.3.0",
     "eslint-config-lk-custom": "*"
   },
   "devDependencies": {

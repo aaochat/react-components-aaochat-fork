@@ -1,5 +1,23 @@
 # @livekit/components-react
 
+## 1.3.0
+
+### Minor Changes
+
+- Add `volume` and `muted` control to `RoomAudioRenderer` and `AudioTrack`. Include to render `Track.Source.Unknown` in `RoomAudioRenderer` as long as they are of king `Track.Kind.Audio`. - [#648](https://github.com/livekit/components-js/pull/648) ([@Ocupe](https://github.com/Ocupe))
+
+## 1.2.2
+
+### Patch Changes
+
+- Initialize canPlayAudio with room state - [#646](https://github.com/livekit/components-js/pull/646) ([@lukasIO](https://github.com/lukasIO))
+
+## 1.2.1
+
+### Patch Changes
+
+- Set the default value for `canPlayAudio` returned by the `useStartAudio` hook to `true` to avoid flashing issues. - [#641](https://github.com/livekit/components-js/pull/641) ([@harrisonlo](https://github.com/harrisonlo))
+
 ## 1.2.0
 
 ### Minor Changes
