@@ -69,9 +69,6 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       return;
     }
 
-    console.log(chatMessages);
-    console.log(lastReadMsgAt.current);
-
     const unreadMessageCount = chatMessages.filter(
       (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     ).length;
