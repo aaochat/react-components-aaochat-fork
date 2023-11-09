@@ -58,9 +58,11 @@ export function UserChat({
             {...props}
         >
             <span className="lk-meta-data">
-                <strong className="lk-participant-name">
-                    {entry.from?.name ?? entry.from?.identity}
-                </strong>
+                {entry.from?.isLocal ??
+                    <strong className="lk-participant-name">
+                        {entry.from?.name ?? entry.from?.identity}
+                    </strong>
+                }
             </span>
             <span className="lk-message-body">{formattedMessage}</span>
         </li>
