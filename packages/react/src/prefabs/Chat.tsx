@@ -40,10 +40,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-
     if (inputRef.current && inputRef.current.value.trim() !== '') {
-      inputRef.current.focus();
-
       if (send) {
         await send(inputRef.current.value);
         inputRef.current.value = '';
@@ -112,9 +109,8 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input
           className="lk-form-control lk-chat-form-input"
-          disabled={isSending}
+          // disabled={isSending}
           ref={inputRef}
-          autoFocus
           type="text"
           placeholder="Enter a message..."
         />
