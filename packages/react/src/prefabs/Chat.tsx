@@ -109,7 +109,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input
           className="lk-form-control lk-chat-form-input"
-          disabled={isSending}
+          // disabled={isSending}
           ref={inputRef}
           type="text"
           placeholder="Enter a message..."
