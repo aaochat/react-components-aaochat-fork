@@ -51,8 +51,7 @@ export function setupChat(
   /** Build up the message array over time. */
   const messagesObservable = messageSubject.pipe(
     map((msg) => {
-      console.log("MSG", msg);
-      
+      console.log("MSG", msg);      
       console.log("PAYLOAD", msg.payload);
       
       const parsedMessage = finalMessageDecoder(msg.payload);

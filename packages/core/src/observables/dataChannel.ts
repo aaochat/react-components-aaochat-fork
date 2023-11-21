@@ -47,10 +47,10 @@ export function setupDataMessageHandler<T extends string>(
   const messageObservable = createDataObserver(room).pipe(
     filter(([, , , messageTopic]) => topic === undefined || messageTopic === topic),
     map(([payload, participant, , messageTopic]) => {
+      console.log("Message Event");      
       console.log(payload);
       console.log(participant);
-      
-      
+           
       const msg = {
         payload,
         topic: messageTopic as T,
