@@ -74,7 +74,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     ).length;
 
     console.log(chatMessages);
-    console.log("Last read message" + lastReadMsgAt);
+    console.log("Last read message" + lastReadMsgAt.current);
     console.log("Unread message counts " + unreadMessageCount);
 
     const { widget } = layoutContext;
