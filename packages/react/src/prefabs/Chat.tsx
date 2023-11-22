@@ -73,6 +73,9 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     ).length;
 
+    console.log("Unread message counts" + unreadMessageCount);
+
+
     const { widget } = layoutContext;
     if (unreadMessageCount > 0 && widget.state?.unreadMessages !== unreadMessageCount) {
       widget.dispatch?.({ msg: 'unread_msg', count: unreadMessageCount });

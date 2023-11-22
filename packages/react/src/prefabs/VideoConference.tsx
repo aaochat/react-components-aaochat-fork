@@ -96,8 +96,6 @@ export function VideoConference({
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
 
-  console.log(tracks);
-
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
     setWidgetState(state);
