@@ -6,6 +6,8 @@ import type { MessageFormatter } from '../components/ChatEntry';
 // import { ChatEntry } from '../components/ChatEntry';
 import { useChat } from '../hooks/useChat';
 import { UserChat } from './UserChat';
+import SvgSendMessage from './../assets/icons/tl/SendMessage';
+
 /** @public */
 export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
   messageFormatter?: MessageFormatter;
@@ -76,9 +78,9 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     //   (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     // ).length;
 
-    console.log(layoutContext.widget.state?.showChat);
-    console.log("Last read message" + lastReadMsgAt.current);
-    console.log("Unread message counts " + unreadMessageCount);
+    // console.log(layoutContext.widget.state?.showChat);
+    // console.log("Last read message" + lastReadMsgAt.current);
+    // console.log("Unread message counts " + unreadMessageCount);
 
     const { widget } = layoutContext;
     if (unreadMessageCount > 0 && widget.state?.unreadMessages !== unreadMessageCount) {
@@ -87,7 +89,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
   }, [chatMessages, layoutContext?.widget]);
 
   return (
-    <div {...props} className="lk-chat">
+    <div {...props} className="lk-chat tl-chat">
       <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
           ? chatMessages.map((msg, idx) =>
@@ -122,7 +124,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
           placeholder="Enter a message..."
         />
         <button type="submit" className="lk-button lk-chat-form-button tl-submit" disabled={isSending}>
-          Send
+          <SvgSendMessage />
         </button>
       </form>
     </div>
