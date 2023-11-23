@@ -121,7 +121,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
           type="text"
           placeholder="Enter a message..."
         />
-        <button type="submit" className="lk-button lk-chat-form-button" disabled={isSending}>
+        <button type="submit" className="lk-button lk-chat-form-button tl-submit" disabled={isSending}>
           Send
         </button>
       </form>
