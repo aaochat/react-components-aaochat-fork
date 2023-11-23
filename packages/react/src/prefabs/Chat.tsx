@@ -61,7 +61,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     }
 
     if (
-      layoutContext.widget.state?.showChat &&
+      layoutContext.widget.state?.showChat == 'show_chat' &&
       chatMessages.length > 0 &&
       // lastReadMsgAt.current !== chatMessages[chatMessages.length - 1]?.timestamp
       lastReadMsgAt.current < chatMessages.length
@@ -76,7 +76,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     //   (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     // ).length;
 
-    console.log(chatMessages);
+    console.log(layoutContext.widget.state?.showChat);
     console.log("Last read message" + lastReadMsgAt.current);
     console.log("Unread message counts " + unreadMessageCount);
 
