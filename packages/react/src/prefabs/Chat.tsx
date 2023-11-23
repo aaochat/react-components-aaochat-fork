@@ -63,15 +63,18 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     if (
       layoutContext.widget.state?.showChat &&
       chatMessages.length > 0 &&
-      lastReadMsgAt.current !== chatMessages[chatMessages.length - 1]?.timestamp
+      // lastReadMsgAt.current !== chatMessages[chatMessages.length - 1]?.timestamp
+      lastReadMsgAt.current < chatMessages.length
     ) {
-      lastReadMsgAt.current = chatMessages[chatMessages.length - 1]?.timestamp;
+      // lastReadMsgAt.current = chatMessages[chatMessages.length - 1]?.timestamp;
+      lastReadMsgAt.current = chatMessages.length;
       return;
     }
 
-    const unreadMessageCount = chatMessages.filter(
-      (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
-    ).length;
+    const unreadMessageCount = chatMessages.length - lastReadMsgAt.current;
+    // const unreadMessageCount = chatMessages.filter(
+    //   (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
+    // ).length;
 
     console.log(chatMessages);
     console.log("Last read message" + lastReadMsgAt.current);
