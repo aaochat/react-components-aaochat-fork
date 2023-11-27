@@ -122,7 +122,6 @@ export function ControlBar({
   };
 
   const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
-  console.log(`Share scree tracks ${screenShareTracks}`);
   React.useEffect(() => {
     // Get all button elements with the "data-lk-source" attribute
     const buttons = document.querySelectorAll('[data-lk-source]');

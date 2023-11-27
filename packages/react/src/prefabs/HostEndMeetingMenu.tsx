@@ -54,8 +54,6 @@ export function HostEndMeetingMenu({
   React.useLayoutEffect(() => {
     if (button.current && tooltip.current && updateRequired) {
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
-        console.log(x, y);
-
         if (tooltip.current) {
           Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y + 5}px` });
         }

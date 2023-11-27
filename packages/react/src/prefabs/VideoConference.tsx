@@ -17,6 +17,7 @@ import {
   LayoutContextProvider,
   ParticipantTile,
   RoomAudioRenderer,
+  formatChatMessageLinks
 } from '../components';
 import { useCreateLayoutContext, useEnsureParticipant } from '../context';
 import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
@@ -96,12 +97,8 @@ export function VideoConference({
     { updateOnlyOn: [RoomEvent.ActiveSpeakersChanged], onlySubscribed: false },
   );
 
-  console.log(tracks);
-
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
-    console.log(state);
-
     setWidgetState(state);
   };
 
@@ -260,7 +257,7 @@ export function VideoConference({
           } */}
           <Chat
             style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
-            messageFormatter={chatMessageFormatter}
+            messageFormatter={formatChatMessageLinks}
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}
           />

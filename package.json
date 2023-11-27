@@ -6,9 +6,9 @@
   "author": "LiveKit",
   "scripts": {
     "build": "turbo run build",
+    "build:styles": "turbo run build --filter=@livekit/components-styles...",
     "build:core": "turbo run build --filter=@livekit/components-core...",
     "build:react": "turbo run build --filter=@livekit/components-react...",
-    "build:styles": "turbo run build --filter=@livekit/components-styles...",
     "dev:next": "turbo run dev --filter=@livekit/component-example-next...",
     "dev:storybook": "turbo run dev --filter=@livekit/component-docs-storybook...",
     "format:check": "prettier --check \"**/src/**/*.{ts,tsx,md}\"",

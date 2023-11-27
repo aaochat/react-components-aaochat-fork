@@ -20,7 +20,7 @@ export type ChatContextType = {
 export function chatReducer(state: WidgetState, action: ChatContextAction): WidgetState {
   if (action.msg && action.msg !== state.showChat) {
     if (action.msg === 'show_chat') {
-      return { ...state, showChat: 'show_chat' };
+      return { ...state, showChat: 'show_chat', unreadMessages: 0 };
     } else if (action.msg === 'toggle_chat') {
       const newState = { ...state, showChat: state.showChat == 'show_chat' ? null : 'show_chat' };
       if (newState.showChat === 'show_chat') {

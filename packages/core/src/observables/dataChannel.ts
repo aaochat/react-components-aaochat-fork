@@ -42,7 +42,7 @@ export function setupDataMessageHandler<T extends string>(
   room: Room,
   topic?: T,
   onMessage?: (msg: ReceivedDataMessage<T>) => void,
-) {
+) {  
   /** Setup a Observable that returns all data messages belonging to a topic. */
   const messageObservable = createDataObserver(room).pipe(
     filter(([, , , messageTopic]) => topic === undefined || messageTopic === topic),
