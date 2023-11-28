@@ -28,7 +28,7 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
  * @public
  */
 export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...props }: ChatProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
 
   const chatOptions = React.useMemo(() => {
@@ -39,19 +39,6 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
 
   const layoutContext = useMaybeLayoutContext();
   const lastReadMsgAt = React.useRef<ChatMessage['timestamp']>(0);
-
-  async function press(event: any) {
-    if (event.keyCode == 13 && !event.shiftKey) {
-
-      //Stops enter from creating a new line 
-      event.preventDefault();
-      await handleSubmit(event);
-      return true;
-    } else {
-      console.log(event.shiftKey);
-    }
-    return false;
-  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -129,18 +116,18 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
             );
           })}
       </ul>
-      <form className="lk-chat-form" onSubmit={press}>
-        <input
+      <form className="lk-chat-form" onSubmit={handleSubmit}>
+        <textarea
           className="lk-form-control lk-chat-form-input"
           // disabled={isSending}
           ref={inputRef}
-          type="text"
+          rows={1}
           placeholder="Enter a message..."
-        />
+        ></textarea>
         <button type="submit" className="lk-button lk-chat-form-button tl-submit" disabled={isSending}>
           <SvgSendMessage />
         </button>
-      </form>
-    </div>
+      </form >
+    </div >
   );
 }
