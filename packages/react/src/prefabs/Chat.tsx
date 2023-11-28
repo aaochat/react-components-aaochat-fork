@@ -29,6 +29,7 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...props }: ChatProps) {
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const chatForm = React.useRef<HTMLFormElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
 
   const chatOptions = React.useMemo(() => {
@@ -49,6 +50,13 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
         inputRef.current.value = '';
         inputRef.current.focus();
       }
+    }
+  }
+
+  async function onEnterPress(e: any) {
+    if (e.keyCode == 13 && e.shiftKey == false) {
+      e.preventDefault();
+      chatForm.current?.dispatchEvent(new Event('submit'));
     }
   }
 
@@ -116,11 +124,12 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
             );
           })}
       </ul>
-      <form className="lk-chat-form" onSubmit={handleSubmit}>
+      <form className="lk-chat-form" ref={chatForm} onSubmit={handleSubmit}>
         <textarea
-          className="lk-form-control lk-chat-form-input"
+          className="lk-form-control lk-chat-form-input overflow-hidden"
           // disabled={isSending}
           ref={inputRef}
+          onKeyDown={onEnterPress}
           rows={1}
           placeholder="Enter a message..."
         ></textarea>
