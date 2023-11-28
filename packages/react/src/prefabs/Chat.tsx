@@ -40,8 +40,21 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
   const layoutContext = useMaybeLayoutContext();
   const lastReadMsgAt = React.useRef<ChatMessage['timestamp']>(0);
 
+  async function press(event: any) {
+    if (event.keyCode == 13 && !event.shiftKey) {
+
+      //Stops enter from creating a new line 
+      event.preventDefault();
+      await handleSubmit(event);
+      return true;
+    } else {
+      console.log(event.shiftKey);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
     if (inputRef.current && inputRef.current.value.trim() !== '') {
       if (send) {
         await send(inputRef.current.value);
@@ -115,7 +128,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
             );
           })}
       </ul>
-      <form className="lk-chat-form" onSubmit={handleSubmit}>
+      <form className="lk-chat-form" onSubmit={press}>
         <input
           className="lk-form-control lk-chat-form-input"
           // disabled={isSending}
