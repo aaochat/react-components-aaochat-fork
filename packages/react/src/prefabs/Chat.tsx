@@ -28,7 +28,8 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
  * @public
  */
 export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...props }: ChatProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const chatForm = React.useRef<HTMLFormElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
 
   const chatOptions = React.useMemo(() => {
@@ -40,14 +41,23 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
   const layoutContext = useMaybeLayoutContext();
   const lastReadMsgAt = React.useRef<ChatMessage['timestamp']>(0);
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: any) {
     event.preventDefault();
+
     if (inputRef.current && inputRef.current.value.trim() !== '') {
       if (send) {
         await send(inputRef.current.value);
         inputRef.current.value = '';
         inputRef.current.focus();
       }
+    }
+  }
+
+  async function onEnterPress(e: React.KeyboardEvent) {
+    if (e.code == 'Enter' && e.shiftKey == false) {
+      e.preventDefault();
+
+      await handleSubmit(e);
     }
   }
 
@@ -115,18 +125,19 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
             );
           })}
       </ul>
-      <form className="lk-chat-form" onSubmit={handleSubmit}>
-        <input
-          className="lk-form-control lk-chat-form-input"
+      <form className="lk-chat-form" ref={chatForm} onSubmit={handleSubmit}>
+        <textarea
+          className="lk-form-control lk-chat-form-input overflow-hidden"
           // disabled={isSending}
           ref={inputRef}
-          type="text"
+          onKeyDown={onEnterPress}
+          rows={1}
           placeholder="Enter a message..."
-        />
+        ></textarea>
         <button type="submit" className="lk-button lk-chat-form-button tl-submit" disabled={isSending}>
           <SvgSendMessage />
         </button>
-      </form>
-    </div>
+      </form >
+    </div >
   );
 }

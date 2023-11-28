@@ -72,11 +72,21 @@ export function ChatEntry({
   );
 }
 
+export function nl2br(str: string, is_xhtml: any) {
+  if (typeof str === 'undefined' || str === null) {
+    return '';
+  }
+  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+}
+
 /** @public */
 export function formatChatMessageLinks(message: string): React.ReactNode {
   return tokenize(message, createDefaultGrammar()).map((tok, i) => {
     if (typeof tok === `string`) {
-      return tok;
+      const html = nl2br(tok, false);
+
+      return (<span key={i} dangerouslySetInnerHTML={{ __html: html }} />);
     } else {
       const content = tok.content.toString();
       const href =
