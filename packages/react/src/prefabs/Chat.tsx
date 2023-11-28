@@ -41,7 +41,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
   const layoutContext = useMaybeLayoutContext();
   const lastReadMsgAt = React.useRef<ChatMessage['timestamp']>(0);
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: any) {
     event.preventDefault();
 
     if (inputRef.current && inputRef.current.value.trim() !== '') {
@@ -53,10 +53,11 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     }
   }
 
-  async function onEnterPress(e: any) {
-    if (e.keyCode == 13 && e.shiftKey == false) {
+  async function onEnterPress(e: React.KeyboardEvent) {
+    if (e.code == 'Enter' && e.shiftKey == false) {
       e.preventDefault();
-      chatForm.current?.dispatchEvent(new Event('submit'));
+
+      await handleSubmit(e);
     }
   }
 
