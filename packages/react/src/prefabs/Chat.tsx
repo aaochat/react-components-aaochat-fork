@@ -50,6 +50,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     } else {
       console.log(event.shiftKey);
     }
+    return false;
   }
 
   async function handleSubmit(event: React.FormEvent) {
