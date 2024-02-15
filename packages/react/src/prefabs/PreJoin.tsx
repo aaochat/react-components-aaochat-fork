@@ -116,7 +116,6 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
   React.useEffect(() => {
     setLocalDeviceId(deviceId);
   }, [deviceId]);
-
   const createTrack = async (deviceId: string, kind: 'videoinput' | 'audioinput') => {
     try {
       const track =

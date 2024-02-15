@@ -27,6 +27,8 @@
     "packages/*"
   ],
   "dependencies": {
+    "@livekit/track-processors": "^0.3.0",
+    "@mediapipe/selfie_segmentation": "^0.1.1675465747",
     "livekit-client": "^1.7.0",
     "react": ">=18",
     "react-dom": ">=18"

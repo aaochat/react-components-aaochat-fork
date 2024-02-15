@@ -659,6 +659,14 @@
     "@changesets/types" "^5.2.1"
     dotenv "^8.1.0"
 
+"@livekit/track-processors@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@livekit/track-processors/-/track-processors-0.3.0.tgz#1e57c9def9f9e674db469fa4c1572bc5c5d353c8"
+  integrity sha512-jrRNvlj5h9NbeW9+03UYqlPYnOS8LV1gnpiDd+014D3SXxrny4qLB215dBxIxRJxlVXYqH4gFlc2l2bBiw2L6A==
+  dependencies:
+    "@mediapipe/holistic" "0.5.1675471629"
+    "@mediapipe/tasks-vision" "0.10.9"
+
 "@manypkg/find-root@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@manypkg/find-root/-/find-root-1.1.0.tgz#a62d8ed1cd7e7d4c11d9d52a8397460b5d4ad29f"
@@ -680,6 +688,21 @@
     fs-extra "^8.1.0"
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
+
+"@mediapipe/holistic@0.5.1675471629":
+  version "0.5.1675471629"
+  resolved "https://registry.yarnpkg.com/@mediapipe/holistic/-/holistic-0.5.1675471629.tgz#f1127d43161ff27e8889d5d39aaea164f9730980"
+  integrity sha512-qY+cxtDeSOvVtevrLgnodiwXYaAtPi7dHZtNv/bUCGEjFicAOYtMmrZSqMmbPkTB2+4jLnPF1vgshkAqQRSYAw==
+
+"@mediapipe/selfie_segmentation@^0.1.1675465747":
+  version "0.1.1675465747"
+  resolved "https://registry.yarnpkg.com/@mediapipe/selfie_segmentation/-/selfie_segmentation-0.1.1675465747.tgz#f1f61eb116bf2efc262faf0a49a1829f4bae2712"
+  integrity sha512-IxYxNhwE5VwOm52L1yoFWYLP7q9Pd+NJjzOC5tlepfvEGaY3o9hslhUrx9BgseqdfZtKSDtd/4NfCSMjNzQalA==
+
+"@mediapipe/tasks-vision@0.10.9":
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/@mediapipe/tasks-vision/-/tasks-vision-0.10.9.tgz#fbd669f50ac2e888b2c64c9c9863927c111da02f"
+  integrity sha512-/gFguyJm1ng4Qr7VVH2vKO+zZcQd8wc3YafUfvBuYFX0Y5+CvrV+VNPEVkl5W/gUZF5KNKNZAiaHPULGPCIjyQ==
 
 "@microsoft/api-extractor-model@7.27.6":
   version "7.27.6"

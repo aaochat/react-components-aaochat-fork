@@ -13,7 +13,7 @@ import {
   useFeatureContext,
   useMaybeLayoutContext,
   useMaybeParticipantContext,
-  useMaybeTrackRefContext,
+  useMaybeTrackRefContext
 } from '../../context';
 import { FocusToggle } from '../controls/FocusToggle';
 import { ParticipantPlaceholder } from '../../assets/images';
