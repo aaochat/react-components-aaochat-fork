@@ -16,6 +16,7 @@ import { useMediaQuery } from '../hooks/internal';
 import { useLayoutContext, useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
+import { ExtraOptionMenu } from './ExtraOptionMenu';
 
 /** @public */
 export type ControlBarControls = {
@@ -214,6 +215,13 @@ export function ControlBar({
           {waitingRoomCount !== 0 && <span className="waiting-count">{waitingRoomCount}</span>}
         </UserToggle>
       )}
+      <div className="lk-button-group">
+        <div className="lk-button-group-menu">
+          <ExtraOptionMenu
+            blurEnabled={true}
+          />
+        </div>
+      </div>
       {visibleControls.endForAll ? (
         <div className="tl-leave lk-button-group">
           <button className="lk-disconnect-button">
