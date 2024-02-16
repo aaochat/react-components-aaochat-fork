@@ -41,7 +41,7 @@ export function BlurIndicater({ source, ref }: BlurIndicaterProps) {
 
     return (
         <button ref={ref} className="tl-blur lk-button" onClick={toggleBlur}>
-            {isBlur ? 'Remove Blur' : 'Add Blur'}
+            {isBlur ? 'Remove Blur' : 'Blur Background'}
         </button>
     )
 }

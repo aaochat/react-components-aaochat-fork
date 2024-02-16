@@ -80,7 +80,6 @@ export function ExtraOptionMenu({
         {...props}
         onClick={() => setIsOpen(!isOpen)}
         ref={button}>
-        More
       </button>
       {/** only render when enabled in order to make sure that the permissions are requested only if the menu is enabled */}
       <div
