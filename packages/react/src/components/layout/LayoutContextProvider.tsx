@@ -40,7 +40,7 @@ export function LayoutContextProvider({
     if (onWhiteboardChange && layoutContextValue.whiteboard.state) {
       onWhiteboardChange(layoutContextValue.whiteboard.state);
     }
-  }, [onWhiteboardChange, layoutContextValue.widget.state]);
+  }, [onWhiteboardChange, layoutContextValue.whiteboard.state]);
 
   return <LayoutContext.Provider value={layoutContextValue}>{children}</LayoutContext.Provider>;
 }

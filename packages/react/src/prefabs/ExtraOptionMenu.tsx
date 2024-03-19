@@ -91,14 +91,12 @@ export function ExtraOptionMenu({
         style={{ visibility: isOpen ? 'visible' : 'hidden' }}
       >
         <ul className="lk-media-device-select lk-list" style={{ display: !showDropdown ? 'unset' : 'none' }}>
-          {whiteBoard && (
-            <li>
-              <WhiteboardIndicater />
-            </li>
-          )}
+          <li>
+            <WhiteboardIndicater isWhiteboard={whiteBoard} />
+          </li>
           {blurEnabled && (
             <li>
-              <BlurIndicater ref={blurButtonRef} source={Track.Source.Camera} />
+              <BlurIndicater source={Track.Source.Camera} />
             </li>
           )}
         </ul>

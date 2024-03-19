@@ -23,7 +23,6 @@ import { AudioTrack } from './AudioTrack';
 import { useParticipantTile } from '../../hooks';
 import { useIsEncrypted } from '../../hooks/useIsEncrypted';
 import { WhiteboardTrack } from '../../prefabs/WhiteboardTrack';
-import { WhiteboardState } from '../../context/whiteboard-context';
 
 /**
  * The `ParticipantContextIfNeeded` component only creates a `ParticipantContext`
@@ -79,7 +78,6 @@ export interface ParticipantTileProps extends React.HTMLAttributes<HTMLDivElemen
   /** @deprecated This parameter will be removed in a future version use `trackRef` instead. */
   publication?: TrackPublication;
   onParticipantClick?: (event: ParticipantClickEvent) => void;
-  isWhiteboard?: WhiteboardState;
 }
 
 /**
@@ -106,7 +104,6 @@ export function ParticipantTile({
   onParticipantClick,
   publication,
   disableSpeakingIndicator,
-  isWhiteboard,
   ...htmlProps
 }: ParticipantTileProps) {
   // TODO: remove deprecated props and refactor in a future version.
@@ -155,7 +152,7 @@ export function ParticipantTile({
         <ParticipantContextIfNeeded participant={trackReference.participant}>
           {children ?? (
             <>
-              {isWhiteboard?.show_whiteboard ? (
+              {trackReference.publication?.trackName == 'whiteboard' ? (
                 <WhiteboardTrack />
               ) : (
                 isTrackReference(trackReference) &&

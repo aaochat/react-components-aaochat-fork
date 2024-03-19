@@ -4,7 +4,6 @@ import { mergeProps } from '../../utils';
 import type { TrackReference, TrackReferenceOrPlaceholder } from '@livekit/components-core';
 import { ParticipantTile } from '../participant/ParticipantTile';
 import type { ParticipantClickEvent } from '@livekit/components-core';
-import { WhiteboardState } from '../../context/whiteboard-context';
 
 /** @public */
 export interface FocusLayoutContainerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,14 +33,13 @@ export interface FocusLayoutProps extends React.HTMLAttributes<HTMLElement> {
   /** @deprecated This property will be removed in a future version use `trackRef` instead. */
   track?: TrackReferenceOrPlaceholder;
   onParticipantClick?: (evt: ParticipantClickEvent) => void;
-  isWhiteboard?: WhiteboardState;
 }
 
 /**
  * The `FocusLayout` component is just a light wrapper around the `ParticipantTile` to display a single participant.
  * @public
  */
-export function FocusLayout({ trackRef, track, isWhiteboard, ...htmlProps }: FocusLayoutProps) {
+export function FocusLayout({ trackRef, track, ...htmlProps }: FocusLayoutProps) {
   const trackReference = trackRef ?? track;
-  return <ParticipantTile {...trackReference} {...htmlProps} isWhiteboard={isWhiteboard} />;
+  return <ParticipantTile {...trackReference} {...htmlProps} />;
 }

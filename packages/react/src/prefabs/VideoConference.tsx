@@ -129,15 +129,6 @@ export function VideoConference({
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
-  // React.useEffect(() => {
-  //   if (waiting) {
-  //     // Remove toast message after 2 second
-  //     setTimeout(() => {
-  //       setWaiting(null);
-  //     }, 3000);
-  //   }
-  // }, [waiting]);
-
   React.useEffect(() => {
     if (meta && meta.host) {
       localStorage.setItem('host', meta.host);
@@ -196,34 +187,37 @@ export function VideoConference({
   ]);
 
   const room = useRoomContext();
-  const decoder = new TextDecoder()
-  const [isWhiteboard, setIsWhiteboard] = React.useState<WhiteboardState>({
-    show_whiteboard: false,
-  });
+  const decoder = new TextDecoder();
 
   const whiteboardUpdate = (state: WhiteboardState) => {
     log.debug('updating widget state', state);
-    setIsWhiteboard(state);
-    layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
-    layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+    // setIsWhiteboard(state);
+    if (state.show_whiteboard) {
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+    } else {
+      layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+    }
   };
+
+  const [isWhiteboard, setIsWhiteboard] = React.useState<boolean>(false);
+
   // receive data from other participants
   room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
     const strData = decoder.decode(payload)
     const str = JSON.parse(strData);
 
     if (str.openWhiteboard) {
-      console.log('Event Show whiteboard');
-      whiteboardUpdate({ show_whiteboard: true });
+      layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+      setIsWhiteboard(true);
     } else {
-      console.log('Event Hide whiteboard');
-      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" })
+      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+      setIsWhiteboard(false);
       if (screenShareTracks.length) {
         layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: screenShareTracks[0] });
       } else {
         layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
       }
-
     }
   });
 
@@ -249,7 +243,7 @@ export function VideoConference({
                   <CarouselLayout tracks={carouselTracks}>
                     <ParticipantTile />
                   </CarouselLayout>
-                  {focusTrack && <FocusLayout trackRef={focusTrack} isWhiteboard={isWhiteboard} />}
+                  {focusTrack && <FocusLayout trackRef={focusTrack} />}
                   {/* {isWhiteboard.show_whiteboard && <FocusLayout trackRef={whiteboardTrack} isWhiteboard={isWhiteboard} />} */}
                 </FocusLayoutContainer>
               </div>
@@ -264,6 +258,7 @@ export function VideoConference({
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
+              isWhiteboard={isWhiteboard}
             />
           </div >
 

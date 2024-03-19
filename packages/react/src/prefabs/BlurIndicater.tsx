@@ -5,10 +5,9 @@ import React from "react";
 
 export interface BlurIndicaterProps {
     source: Track.Source.Camera;
-    ref: any;
 }
 
-export function BlurIndicater({ source, ref }: BlurIndicaterProps) {
+export function BlurIndicater({ source }: BlurIndicaterProps) {
     const state = {
         defaultDevices: new Map<MediaDeviceKind, string>(),
         bitrateInterval: undefined as any,
@@ -40,7 +39,7 @@ export function BlurIndicater({ source, ref }: BlurIndicaterProps) {
     }
 
     return (
-        <button ref={ref} className="tl-blur lk-button" onClick={toggleBlur}>
+        <button className="tl-blur lk-button" onClick={toggleBlur}>
             {isBlur ? 'Remove Blur' : 'Blur Background'}
         </button>
     )
