@@ -13,7 +13,7 @@ import {
   useFeatureContext,
   useMaybeLayoutContext,
   useMaybeParticipantContext,
-  useMaybeTrackRefContext
+  useMaybeTrackRefContext,
 } from '../../context';
 import { FocusToggle } from '../controls/FocusToggle';
 import { ParticipantPlaceholder } from '../../assets/images';
@@ -22,6 +22,8 @@ import { VideoTrack } from './VideoTrack';
 import { AudioTrack } from './AudioTrack';
 import { useParticipantTile } from '../../hooks';
 import { useIsEncrypted } from '../../hooks/useIsEncrypted';
+import { WhiteboardTrack } from '../../prefabs/WhiteboardTrack';
+import { WhiteboardState } from '../../context/whiteboard-context';
 
 /**
  * The `ParticipantContextIfNeeded` component only creates a `ParticipantContext`
@@ -77,6 +79,7 @@ export interface ParticipantTileProps extends React.HTMLAttributes<HTMLDivElemen
   /** @deprecated This parameter will be removed in a future version use `trackRef` instead. */
   publication?: TrackPublication;
   onParticipantClick?: (event: ParticipantClickEvent) => void;
+  isWhiteboard?: WhiteboardState;
 }
 
 /**
@@ -103,6 +106,7 @@ export function ParticipantTile({
   onParticipantClick,
   publication,
   disableSpeakingIndicator,
+  isWhiteboard,
   ...htmlProps
 }: ParticipantTileProps) {
   // TODO: remove deprecated props and refactor in a future version.
@@ -144,29 +148,33 @@ export function ParticipantTile({
     [trackReference, layoutContext],
   );
 
+
   return (
     <div style={{ position: 'relative' }} {...elementProps}>
       <TrackRefContextIfNeeded trackRef={trackReference}>
         <ParticipantContextIfNeeded participant={trackReference.participant}>
           {children ?? (
             <>
-              {isTrackReference(trackReference) &&
-                (trackReference.publication?.kind === 'video' ||
-                  trackReference.source === Track.Source.Camera ||
-                  trackReference.source === Track.Source.ScreenShare) ? (
-                <VideoTrack
-                  trackRef={trackReference}
-                  onSubscriptionStatusChanged={handleSubscribe}
-                  manageSubscription={autoManageSubscription}
-                />
+              {isWhiteboard?.show_whiteboard ? (
+                <WhiteboardTrack />
               ) : (
-                isTrackReference(trackReference) && (
-                  <AudioTrack
+                isTrackReference(trackReference) &&
+                  (trackReference.publication?.kind === 'video' ||
+                    trackReference.source === Track.Source.Camera ||
+                    trackReference.source === Track.Source.ScreenShare) ? (
+                  <VideoTrack
                     trackRef={trackReference}
                     onSubscriptionStatusChanged={handleSubscribe}
+                    manageSubscription={autoManageSubscription}
                   />
-                )
-              )}
+                ) : (
+                  isTrackReference(trackReference) && (
+                    <AudioTrack
+                      trackRef={trackReference}
+                      onSubscriptionStatusChanged={handleSubscribe}
+                    />
+                  )
+                ))}
               <div className="lk-participant-placeholder">
                 <ParticipantPlaceholder />
               </div>

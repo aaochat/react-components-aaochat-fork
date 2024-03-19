@@ -5,7 +5,7 @@ import type {
   WidgetState,
 } from '@livekit/components-core';
 import { isEqualTrackRef, isTrackReference, isWeb, log, setupParticipantName } from '@livekit/components-core';
-import { RoomEvent, Track } from 'livekit-client';
+import { RoomEvent, Track, TrackPublication } from 'livekit-client';
 import * as React from 'react';
 import type { MessageFormatter } from '../components';
 import {
@@ -19,13 +19,14 @@ import {
   RoomAudioRenderer,
   formatChatMessageLinks
 } from '../components';
-import { useCreateLayoutContext, useEnsureParticipant } from '../context';
+import { useCreateLayoutContext, useEnsureParticipant, useRoomContext } from '../context';
 import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
 import { Chat } from './Chat';
 import { ControlBar } from './ControlBar';
 import { Users } from './Users';
 import { ShareLink } from './ShareLink';
 import { useObservableState } from '../hooks/internal';
+import { WhiteboardState } from '../context/whiteboard-context';
 
 /**
  * @public
@@ -118,6 +119,13 @@ export function VideoConference({
     .filter(isTrackReference)
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
 
+  const whitePub = new TrackPublication(Track.Kind.Unknown, 'whiteboard', "whiteboard");
+  const whiteboardTrack = {
+    participant: p,
+    publication: whitePub,
+    source: Track.Source.Unknown,
+  }
+
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
 
@@ -187,6 +195,38 @@ export function VideoConference({
     focusTrack?.publication?.trackSid,
   ]);
 
+  const room = useRoomContext();
+  const decoder = new TextDecoder()
+  const [isWhiteboard, setIsWhiteboard] = React.useState<WhiteboardState>({
+    show_whiteboard: false,
+  });
+
+  const whiteboardUpdate = (state: WhiteboardState) => {
+    log.debug('updating widget state', state);
+    setIsWhiteboard(state);
+    layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+    layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+  };
+  // receive data from other participants
+  room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
+    const strData = decoder.decode(payload)
+    const str = JSON.parse(strData);
+
+    if (str.openWhiteboard) {
+      console.log('Event Show whiteboard');
+      whiteboardUpdate({ show_whiteboard: true });
+    } else {
+      console.log('Event Hide whiteboard');
+      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" })
+      if (screenShareTracks.length) {
+        layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: screenShareTracks[0] });
+      } else {
+        layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+      }
+
+    }
+  });
+
   return (
     <div className="lk-video-conference" {...props}>
       {isWeb() && (
@@ -194,6 +234,7 @@ export function VideoConference({
           value={layoutContext}
           // onPinChange={handleFocusStateChange}
           onWidgetChange={widgetUpdate}
+          onWhiteboardChange={whiteboardUpdate}
         >
           <div className="lk-video-conference-inner">
             {!focusTrack ? (
@@ -208,7 +249,8 @@ export function VideoConference({
                   <CarouselLayout tracks={carouselTracks}>
                     <ParticipantTile />
                   </CarouselLayout>
-                  {focusTrack && <FocusLayout trackRef={focusTrack} />}
+                  {focusTrack && <FocusLayout trackRef={focusTrack} isWhiteboard={isWhiteboard} />}
+                  {/* {isWhiteboard.show_whiteboard && <FocusLayout trackRef={whiteboardTrack} isWhiteboard={isWhiteboard} />} */}
                 </FocusLayoutContainer>
               </div>
             )}

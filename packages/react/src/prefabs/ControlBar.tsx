@@ -219,6 +219,7 @@ export function ControlBar({
         <div className="lk-button-group-menu">
           <ExtraOptionMenu
             blurEnabled={true}
+            whiteBoard={true}
           />
         </div>
       </div>

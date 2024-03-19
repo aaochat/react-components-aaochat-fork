@@ -4,11 +4,13 @@ import type { PinContextType } from './pin-context';
 import type { ChatContextType } from './chat-context';
 import { chatReducer } from './chat-context';
 import { pinReducer } from './pin-context';
+import { WHITEBOARD_DEFAULT_STATE, WhiteboardContextType, whiteboardReducer } from './whiteboard-context';
 
 /** @public */
 export type LayoutContextType = {
   pin: PinContextType;
   widget: ChatContextType;
+  whiteboard: WhiteboardContextType;
 };
 
 /** @public */
@@ -45,9 +47,12 @@ export function useEnsureLayoutContext(layoutContext?: LayoutContextType) {
 export function useCreateLayoutContext(): LayoutContextType {
   const [pinState, pinDispatch] = React.useReducer(pinReducer, PIN_DEFAULT_STATE);
   const [widgetState, widgetDispatch] = React.useReducer(chatReducer, WIDGET_DEFAULT_STATE);
+  const [whiteboardState, whiteboardDispatch] = React.useReducer(whiteboardReducer, WHITEBOARD_DEFAULT_STATE);
+  
   return {
     pin: { dispatch: pinDispatch, state: pinState },
     widget: { dispatch: widgetDispatch, state: widgetState },
+    whiteboard: { dispatch: whiteboardDispatch, state: whiteboardState },
   };
 }
 
@@ -55,11 +60,13 @@ export function useCreateLayoutContext(): LayoutContextType {
 export function useEnsureCreateLayoutContext(layoutContext?: LayoutContextType): LayoutContextType {
   const [pinState, pinDispatch] = React.useReducer(pinReducer, PIN_DEFAULT_STATE);
   const [widgetState, widgetDispatch] = React.useReducer(chatReducer, WIDGET_DEFAULT_STATE);
-
+  const [whiteboardState, whiteboardDispatch] = React.useReducer(whiteboardReducer, WHITEBOARD_DEFAULT_STATE);
+  
   return (
     layoutContext ?? {
       pin: { dispatch: pinDispatch, state: pinState },
       widget: { dispatch: widgetDispatch, state: widgetState },
+      whiteboard: { dispatch: whiteboardDispatch, state: whiteboardState },
     }
   );
 }
