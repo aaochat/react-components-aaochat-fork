@@ -7,7 +7,6 @@ export interface WhiteboardIndicaterProps {
 
 export function WhiteboardIndicater({
     isWhiteboard,
-    ...props
 }: WhiteboardIndicaterProps) {
     const room = useRoomContext();
     const { dispatch, state } = useLayoutContext().whiteboard;
@@ -46,7 +45,7 @@ export function WhiteboardIndicater({
     }
 
     return (
-        <button {...props} disabled={isWhiteboard} className="tl-blur lk-button" onClick={toggleWhiteboard}>
+        <button disabled={isWhiteboard} className="tl-blur lk-button" onClick={toggleWhiteboard}>
             Whiteboard {state?.show_whiteboard}
         </button>
     )

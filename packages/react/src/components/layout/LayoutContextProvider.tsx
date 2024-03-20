@@ -37,10 +37,12 @@ export function LayoutContextProvider({
 
   React.useEffect(() => {
     log.debug('Whiteboard Updated', { state: layoutContextValue.whiteboard.state });
+    console.log('Whiteboard Updated', onWhiteboardChange, { state: layoutContextValue.whiteboard.state });
+
     if (onWhiteboardChange && layoutContextValue.whiteboard.state) {
       onWhiteboardChange(layoutContextValue.whiteboard.state);
     }
-  }, [onWhiteboardChange, layoutContextValue.whiteboard.state]);
+  }, [layoutContextValue.whiteboard.state]);
 
   return <LayoutContext.Provider value={layoutContextValue}>{children}</LayoutContext.Provider>;
 }

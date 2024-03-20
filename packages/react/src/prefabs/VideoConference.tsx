@@ -87,7 +87,6 @@ export function VideoConference({
 
   const meta = metadata ? JSON.parse(metadata) : {};
 
-  // const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
 
   const tracks = useTracks(
@@ -191,7 +190,6 @@ export function VideoConference({
 
   const whiteboardUpdate = (state: WhiteboardState) => {
     log.debug('updating widget state', state);
-    // setIsWhiteboard(state);
     if (state.show_whiteboard) {
       layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
     } else {
@@ -213,11 +211,6 @@ export function VideoConference({
     } else {
       layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
       setIsWhiteboard(false);
-      if (screenShareTracks.length) {
-        layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: screenShareTracks[0] });
-      } else {
-        layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
-      }
     }
   });
 
