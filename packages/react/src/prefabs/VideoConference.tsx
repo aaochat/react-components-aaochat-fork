@@ -5,7 +5,7 @@ import type {
   WidgetState,
 } from '@livekit/components-core';
 import { isEqualTrackRef, isTrackReference, isWeb, log, setupParticipantName } from '@livekit/components-core';
-import { RoomEvent, Track } from 'livekit-client';
+import { RoomEvent, Track, TrackPublication } from 'livekit-client';
 import * as React from 'react';
 import type { MessageFormatter } from '../components';
 import {
@@ -19,13 +19,14 @@ import {
   RoomAudioRenderer,
   formatChatMessageLinks
 } from '../components';
-import { useCreateLayoutContext, useEnsureParticipant } from '../context';
+import { useCreateLayoutContext, useEnsureParticipant, useRoomContext } from '../context';
 import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
 import { Chat } from './Chat';
 import { ControlBar } from './ControlBar';
 import { Users } from './Users';
 import { ShareLink } from './ShareLink';
 import { useObservableState } from '../hooks/internal';
+import { WhiteboardState } from '../context/whiteboard-context';
 
 /**
  * @public
@@ -86,7 +87,6 @@ export function VideoConference({
 
   const meta = metadata ? JSON.parse(metadata) : {};
 
-  // const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
 
   const tracks = useTracks(
@@ -118,17 +118,15 @@ export function VideoConference({
     .filter(isTrackReference)
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
 
+  const whitePub = new TrackPublication(Track.Kind.Unknown, 'whiteboard', "whiteboard");
+  const whiteboardTrack = {
+    participant: p,
+    publication: whitePub,
+    source: Track.Source.Unknown,
+  }
+
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
-
-  // React.useEffect(() => {
-  //   if (waiting) {
-  //     // Remove toast message after 2 second
-  //     setTimeout(() => {
-  //       setWaiting(null);
-  //     }, 3000);
-  //   }
-  // }, [waiting]);
 
   React.useEffect(() => {
     if (meta && meta.host) {
@@ -187,6 +185,35 @@ export function VideoConference({
     focusTrack?.publication?.trackSid,
   ]);
 
+  const room = useRoomContext();
+  const decoder = new TextDecoder();
+
+  const whiteboardUpdate = (state: WhiteboardState) => {
+    log.debug('updating widget state', state);
+    if (state.show_whiteboard) {
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+    } else {
+      layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+    }
+  };
+
+  const [isWhiteboard, setIsWhiteboard] = React.useState<boolean>(false);
+
+  // receive data from other participants
+  room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
+    const strData = decoder.decode(payload)
+    const str = JSON.parse(strData);
+
+    if (str.openWhiteboard) {
+      layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+      setIsWhiteboard(true);
+    } else {
+      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+      setIsWhiteboard(false);
+    }
+  });
+
   return (
     <div className="lk-video-conference" {...props}>
       {isWeb() && (
@@ -194,6 +221,7 @@ export function VideoConference({
           value={layoutContext}
           // onPinChange={handleFocusStateChange}
           onWidgetChange={widgetUpdate}
+          onWhiteboardChange={whiteboardUpdate}
         >
           <div className="lk-video-conference-inner">
             {!focusTrack ? (
@@ -209,6 +237,7 @@ export function VideoConference({
                     <ParticipantTile />
                   </CarouselLayout>
                   {focusTrack && <FocusLayout trackRef={focusTrack} />}
+                  {/* {isWhiteboard.show_whiteboard && <FocusLayout trackRef={whiteboardTrack} isWhiteboard={isWhiteboard} />} */}
                 </FocusLayoutContainer>
               </div>
             )}
@@ -222,6 +251,7 @@ export function VideoConference({
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
+              isWhiteboard={isWhiteboard}
             />
           </div >
 

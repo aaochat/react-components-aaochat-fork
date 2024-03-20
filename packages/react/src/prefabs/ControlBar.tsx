@@ -37,6 +37,7 @@ export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   controls?: ControlBarControls;
   waitingRoomCount: number;
   screenShareTracks?: number;
+  isWhiteboard?: boolean;
 };
 
 /**
@@ -60,6 +61,7 @@ export function ControlBar({
   controls,
   waitingRoomCount,
   screenShareTracks,
+  isWhiteboard,
   ...props
 }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
@@ -150,6 +152,7 @@ export function ControlBar({
       });
     }
   }, [screenShareTracks, isScreenShareEnabled]);
+
   return (
     <div {...htmlProps}>
       {visibleControls.microphone && (
@@ -219,6 +222,7 @@ export function ControlBar({
         <div className="lk-button-group-menu">
           <ExtraOptionMenu
             blurEnabled={true}
+            whiteBoard={isWhiteboard}
           />
         </div>
       </div>
