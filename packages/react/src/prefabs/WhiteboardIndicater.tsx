@@ -1,5 +1,6 @@
 import { useLayoutContext, useRoomContext } from "../context";
 import React from "react";
+import { useWhiteboard } from "../hooks";
 
 export interface WhiteboardIndicaterProps {
     isWhiteboard?: boolean;
@@ -10,8 +11,23 @@ export function WhiteboardIndicater({
 }: WhiteboardIndicaterProps) {
     const room = useRoomContext();
     const { dispatch, state } = useLayoutContext().whiteboard;
-
+    const participant = room.localParticipant;
     const encoder = new TextEncoder()
+    const { isWhiteboardHost } = useWhiteboard();
+    const [disableWhiteboard, setDisableWhiteboard] = React.useState(false);
+
+    React.useEffect(() => {
+        if (isWhiteboard) {
+            if (isWhiteboardHost) {
+                setDisableWhiteboard(false);
+            } else {
+                setDisableWhiteboard(true);
+            }
+        } else {
+            setDisableWhiteboard(false);
+        }
+
+    }, [isWhiteboardHost, isWhiteboard]);
 
     const toggleWhiteboard = async () => {
         if (!room) return;
@@ -23,7 +39,7 @@ export function WhiteboardIndicater({
 
                 // publish lossy data to the entire room
                 room.localParticipant.publishData(data, 0);
-
+                updateMeta(false);
                 if (dispatch) {
                     dispatch({ msg: "hide_whiteboard" })
                 }
@@ -32,7 +48,8 @@ export function WhiteboardIndicater({
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
-                room.localParticipant.publishData(data, 0)
+                room.localParticipant.publishData(data, 0);
+                updateMeta(true);
                 if (dispatch) {
                     dispatch({ msg: "show_whiteboard" })
                 }
@@ -44,8 +61,26 @@ export function WhiteboardIndicater({
         }
     }
 
+    const updateMeta = (data: Boolean) => {
+        const postData = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ room: room.name, whiteboard: data, identity: participant.identity }),
+        };
+
+        fetch(`/api/update-room-meta`, postData).then(async (res) => {
+            if (res.status) {
+            } else {
+                throw Error('Error fetching server url, check server logs');
+            }
+        });
+    }
+
     return (
-        <button disabled={isWhiteboard} className="tl-blur lk-button" onClick={toggleWhiteboard}>
+        <button disabled={disableWhiteboard} className="tl-blur lk-button" onClick={toggleWhiteboard}>
             Whiteboard {state?.show_whiteboard}
         </button>
     )
