@@ -197,7 +197,11 @@ export function ParticipantTile({
               </div>
             </>
           )}
-          <FocusToggle trackRef={trackReference} />
+
+          {trackReference.publication?.trackName !== 'whiteboard' ?? (
+            <FocusToggle trackRef={trackReference} />
+          )}
+
         </ParticipantContextIfNeeded>
       </TrackRefContextIfNeeded>
     </div>

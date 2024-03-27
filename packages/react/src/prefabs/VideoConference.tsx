@@ -20,7 +20,7 @@ import {
   formatChatMessageLinks
 } from '../components';
 import { useCreateLayoutContext, useEnsureParticipant, useRoomContext } from '../context';
-import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
+import { useLocalParticipant, usePinnedTracks, useTracks, useWhiteboard } from '../hooks';
 import { Chat } from './Chat';
 import { ControlBar } from './ControlBar';
 import { Users } from './Users';
@@ -187,7 +187,7 @@ export function VideoConference({
 
   const room = useRoomContext();
   const decoder = new TextDecoder();
-
+  const { isWhiteboardShared } = useWhiteboard();
   const whiteboardUpdate = (state: WhiteboardState) => {
     log.debug('updating widget state', state);
     if (state.show_whiteboard) {
@@ -197,6 +197,17 @@ export function VideoConference({
     }
   };
 
+  React.useEffect(() => {
+    console.log("Updating initail whiteboard setting");
+    if (isWhiteboardShared) {
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+      layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+    } else {
+      layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+    }
+  }, [isWhiteboardShared]);
+
   const [isWhiteboard, setIsWhiteboard] = React.useState<boolean>(false);
 
   // receive data from other participants
@@ -205,11 +216,11 @@ export function VideoConference({
     const str = JSON.parse(strData);
 
     if (str.openWhiteboard) {
-      layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
-      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+      // layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+      // layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
       setIsWhiteboard(true);
     } else {
-      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+      // layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
       setIsWhiteboard(false);
     }
   });
@@ -237,7 +248,6 @@ export function VideoConference({
                     <ParticipantTile />
                   </CarouselLayout>
                   {focusTrack && <FocusLayout trackRef={focusTrack} />}
-                  {/* {isWhiteboard.show_whiteboard && <FocusLayout trackRef={whiteboardTrack} isWhiteboard={isWhiteboard} />} */}
                 </FocusLayoutContainer>
               </div>
             )}

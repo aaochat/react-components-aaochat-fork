@@ -17,6 +17,7 @@ import { useLayoutContext, useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
 import { ExtraOptionMenu } from './ExtraOptionMenu';
+import { useWhiteboard } from '../hooks/useWhiteboard';
 
 /** @public */
 export type ControlBarControls = {
@@ -64,6 +65,7 @@ export function ControlBar({
   isWhiteboard,
   ...props
 }: ControlBarProps) {
+
   const layoutContext = useMaybeLayoutContext();
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
@@ -79,6 +81,8 @@ export function ControlBar({
       setIsUserOpen(layoutContext?.widget.state?.showChat == 'show_users');
     }
   }, [layoutContext?.widget.state?.showChat]);
+
+  const { isWhiteboardShared } = useWhiteboard();
 
   const isTooLittleSpace = useMediaQuery(
     `(max-width: ${isChatOpen || isShareLinkOpen || isUserOpen ? 1000 : 760}px)`,
@@ -153,6 +157,25 @@ export function ControlBar({
     }
   }, [screenShareTracks, isScreenShareEnabled]);
 
+  React.useEffect(() => {
+    const buttons = document.querySelectorAll('[data-lk-source]');
+    if (isWhiteboardShared) {
+      buttons.forEach(button => {
+        const source = button.getAttribute('data-lk-source');
+        if (source === 'screen_share') {
+          (button as HTMLButtonElement).disabled = true;
+        }
+      });
+    } else {
+      buttons.forEach(button => {
+        const source = button.getAttribute('data-lk-source');
+        if (source === 'screen_share') {
+          (button as HTMLButtonElement).disabled = false;
+        }
+      });
+    }
+  }, [isWhiteboardShared]);
+
   return (
     <div {...htmlProps}>
       {visibleControls.microphone && (
@@ -181,7 +204,7 @@ export function ControlBar({
           captureOptions={{ audio: true, selfBrowserSurface: 'include' }}
           showIcon={showIcon}
           onChange={onScreenShareChange}
-          disabled={!isScreenShareEnabled && screenShareTracks !== 0}
+          disabled={(!isScreenShareEnabled && screenShareTracks !== 0)}
           title={
             !isScreenShareEnabled && screenShareTracks !== 0
               ? 'Someone has shared screen'
