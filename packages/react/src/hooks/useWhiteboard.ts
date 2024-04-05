@@ -26,7 +26,6 @@ export function useWhiteboard() {
             }
 
             if (meta?.whiteboard_domain) {
-                // let url = `https://cloud13.de/testwhiteboard/?whiteboardid=${room.name}`;
                 let url = `${meta?.whiteboard_domain}?whiteboardid=${room.name}`;
                 if (room.localParticipant.name) {
                     url += `&username=${room.localParticipant.name}`;
