@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRoomContext } from '../context';
+import { useWhiteboard } from '../hooks/useWhiteboard';
 
 /**
  * The WhiteboardTrack component is responsible for rendering whiteboard.
@@ -15,19 +15,7 @@ import { useRoomContext } from '../context';
  * @public
  */
 export function WhiteboardTrack() {
-    return <iframe src={getURL()} width={"100%"} height={'100%'}></iframe>;
-}
+    const { url } = useWhiteboard();
 
-export function getURL() {
-    const room = useRoomContext();
-
-    let url = `https://cloud13.de/testwhiteboard/?whiteboardid=${room.name}`;
-
-    const username = room.localParticipant.name;
-
-    if (username) {
-        url += `&username=${username}`;
-    }
-
-    return url;
+    return <iframe src={url} width={"100%"} height={'100%'}></iframe>;
 }
