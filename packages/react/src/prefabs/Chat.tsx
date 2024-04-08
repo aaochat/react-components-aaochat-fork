@@ -69,9 +69,6 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       return;
     }
 
-    console.log(chatMessages);
-    console.log(lastReadMsgAt.current);
-
     const unreadMessageCount = chatMessages.filter(
       (msg) => !lastReadMsgAt.current || msg.timestamp > lastReadMsgAt.current,
     ).length;
@@ -112,7 +109,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
       <form className="lk-chat-form" onSubmit={handleSubmit}>
         <input
           className="lk-form-control lk-chat-form-input"
-          disabled={isSending}
+          // disabled={isSending}
           ref={inputRef}
           type="text"
           placeholder="Enter a message..."
