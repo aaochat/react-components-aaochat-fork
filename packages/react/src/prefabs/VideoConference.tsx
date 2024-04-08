@@ -121,6 +121,7 @@ export function VideoConference({
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
 
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
+  console.log({ version: 0.1 });
 
   // React.useEffect(() => {
   //   if (waiting) {
