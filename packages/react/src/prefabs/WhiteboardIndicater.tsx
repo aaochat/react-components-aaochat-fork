@@ -13,11 +13,13 @@ export function WhiteboardIndicater({
     const { dispatch, state } = useLayoutContext().whiteboard;
     const participant = room.localParticipant;
     const encoder = new TextEncoder()
-    const { isWhiteboardHost } = useWhiteboard();
+    const { isWhiteboardHost, isWhiteboardShared } = useWhiteboard();
     const [disableWhiteboard, setDisableWhiteboard] = React.useState(false);
 
     React.useEffect(() => {
-        if (isWhiteboard) {
+        console.log({ isWhiteboard, isWhiteboardHost, isWhiteboardShared });
+
+        if (isWhiteboardShared) {
             if (isWhiteboardHost) {
                 setDisableWhiteboard(false);
             } else {
@@ -27,7 +29,7 @@ export function WhiteboardIndicater({
             setDisableWhiteboard(false);
         }
 
-    }, [isWhiteboardHost, isWhiteboard]);
+    }, [isWhiteboardHost, isWhiteboard, isWhiteboardShared]);
 
     const toggleWhiteboard = async () => {
         if (!room) return;
