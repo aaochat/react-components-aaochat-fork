@@ -7,7 +7,7 @@ import { WhiteboardIndicater } from './WhiteboardIndicater';
 /** @public */
 export interface ExtraOptionMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   blurEnabled?: boolean;
-  whiteBoard?: boolean;
+  shareScreenTracks?: number;
 }
 
 /**
@@ -23,7 +23,7 @@ export interface ExtraOptionMenuProps extends React.ButtonHTMLAttributes<HTMLBut
  */
 export function ExtraOptionMenu({
   blurEnabled,
-  whiteBoard,
+  shareScreenTracks,
   ...props
 }: ExtraOptionMenuProps) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -97,7 +97,7 @@ export function ExtraOptionMenu({
       >
         <ul className="lk-media-device-select lk-list" style={{ display: !showDropdown ? 'unset' : 'none' }}>
           <li>
-            <WhiteboardIndicater isWhiteboard={whiteBoard} parentCallback={changeState} />
+            <WhiteboardIndicater shareScreenTracks={shareScreenTracks} parentCallback={changeState} />
           </li>
           {blurEnabled && (
             <li>

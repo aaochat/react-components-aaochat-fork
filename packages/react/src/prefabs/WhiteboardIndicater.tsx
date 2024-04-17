@@ -3,11 +3,12 @@ import React from "react";
 import { useWhiteboard } from "../hooks";
 
 export interface WhiteboardIndicaterProps {
-    isWhiteboard?: boolean;
+    shareScreenTracks?: number;
     parentCallback: () => void;
 }
 
 export function WhiteboardIndicater({
+    shareScreenTracks,
     parentCallback,
 }: WhiteboardIndicaterProps) {
     const room = useRoomContext();
@@ -20,7 +21,10 @@ export function WhiteboardIndicater({
     React.useEffect(() => {
         console.log({ isWhiteboardShared, isWhiteboardHost });
 
-        if (isWhiteboardShared) {
+        if (shareScreenTracks !== 0) {
+            setDisableWhiteboard(true);
+        }
+        else if (isWhiteboardShared) {
             if (isWhiteboardHost) {
                 setDisableWhiteboard(false);
             } else {
@@ -30,7 +34,7 @@ export function WhiteboardIndicater({
             setDisableWhiteboard(false);
         }
 
-    }, [isWhiteboardHost, isWhiteboardShared]);
+    }, [isWhiteboardHost, isWhiteboardShared, shareScreenTracks]);
 
     const toggleWhiteboard = async () => {
         if (!room) return;
