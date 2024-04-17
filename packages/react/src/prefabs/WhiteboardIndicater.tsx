@@ -4,10 +4,12 @@ import { useWhiteboard } from "../hooks";
 
 export interface WhiteboardIndicaterProps {
     isWhiteboard?: boolean;
+    parentCallback: () => void;
 }
 
 export function WhiteboardIndicater({
     isWhiteboard,
+    parentCallback,
 }: WhiteboardIndicaterProps) {
     const room = useRoomContext();
     const { dispatch, state } = useLayoutContext().whiteboard;
@@ -17,8 +19,6 @@ export function WhiteboardIndicater({
     const [disableWhiteboard, setDisableWhiteboard] = React.useState(false);
 
     React.useEffect(() => {
-        console.log({ isWhiteboard, isWhiteboardHost, isWhiteboardShared });
-
         if (isWhiteboardShared) {
             if (isWhiteboardHost) {
                 setDisableWhiteboard(false);
@@ -59,6 +59,7 @@ export function WhiteboardIndicater({
         } catch (e: any) {
             console.log(`ERROR: ${e.message}`);
         } finally {
+            parentCallback();
             console.log("Whiteboard toggle");
         }
     }
