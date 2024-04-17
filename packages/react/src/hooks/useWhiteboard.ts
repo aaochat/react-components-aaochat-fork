@@ -9,6 +9,7 @@ export function useWhiteboard() {
     const [isWhiteboardShared, setIsWhiteboardShared] = React.useState(false);
     const [isWhiteboardHost, setIsWhiteboardHost] = React.useState(true);
     const [url, setUrl] = React.useState('');
+    
     React.useEffect(() => {
         let meta = JSON.parse(metadata || '{}');
 

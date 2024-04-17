@@ -68,6 +68,11 @@ export function ExtraOptionMenu({
     [isOpen, tooltip, button],
   );
 
+  function changeState() {
+    setIsOpen(false);
+    setShowDropdown(false);
+  }
+
   React.useEffect(() => {
     document.addEventListener<'click'>('click', handleClickOutside);
     window.addEventListener<'resize'>('resize', () => setUpdateRequired(true));
@@ -92,11 +97,11 @@ export function ExtraOptionMenu({
       >
         <ul className="lk-media-device-select lk-list" style={{ display: !showDropdown ? 'unset' : 'none' }}>
           <li>
-            <WhiteboardIndicater isWhiteboard={whiteBoard} />
+            <WhiteboardIndicater isWhiteboard={whiteBoard} parentCallback={changeState} />
           </li>
           {blurEnabled && (
             <li>
-              <BlurIndicater source={Track.Source.Camera} />
+              <BlurIndicater source={Track.Source.Camera} parentCallback={changeState} />
             </li>
           )}
         </ul>

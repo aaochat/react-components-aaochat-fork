@@ -176,6 +176,21 @@ export function ControlBar({
     }
   }, [isWhiteboardShared]);
 
+  const [sharescreenTitle, setSharescreenTitle] = React.useState('You can share your screen');
+
+  React.useEffect(() => {
+    if (!isScreenShareEnabled && screenShareTracks !== 0) {
+      setSharescreenTitle('Someone has shared screen');
+    } else if (isWhiteboardShared) {
+      setSharescreenTitle('Whiteboard is shared');
+    } else if (isScreenShareEnabled) {
+      setSharescreenTitle("You're sharing your screen");
+    } else {
+      setSharescreenTitle('You can share your screen');
+    }
+  }, [isScreenShareEnabled, screenShareTracks, isWhiteboardShared]);
+
+
   return (
     <div {...htmlProps}>
       {visibleControls.microphone && (
@@ -204,14 +219,8 @@ export function ControlBar({
           captureOptions={{ audio: true, selfBrowserSurface: 'include' }}
           showIcon={showIcon}
           onChange={onScreenShareChange}
-          disabled={(!isScreenShareEnabled && screenShareTracks !== 0)}
-          title={
-            !isScreenShareEnabled && screenShareTracks !== 0
-              ? 'Someone has shared screen'
-              : isScreenShareEnabled
-                ? "You're sharing your scrren"
-                : 'You can share your screen'
-          }
+          disabled={(!isScreenShareEnabled && screenShareTracks !== 0 && isWhiteboardShared)}
+          title={sharescreenTitle}
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>

@@ -5,9 +5,10 @@ import React from "react";
 
 export interface BlurIndicaterProps {
     source: Track.Source.Camera;
+    parentCallback: () => void;
 }
 
-export function BlurIndicater({ source }: BlurIndicaterProps) {
+export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
     const state = {
         defaultDevices: new Map<MediaDeviceKind, string>(),
         bitrateInterval: undefined as any,
@@ -33,6 +34,7 @@ export function BlurIndicater({ source }: BlurIndicaterProps) {
         } catch (e: any) {
             console.log(`ERROR: ${e.message}`);
         } finally {
+            parentCallback();
             // renderParticipant(currentRoom.localParticipant);
             // updateButtonsForPublishState();
         }
