@@ -198,7 +198,7 @@ export function VideoConference({
   };
 
   React.useEffect(() => {
-    console.log("Updating initail whiteboard setting");
+    // console.log("Updating initail whiteboard setting");
     if (isWhiteboardShared) {
       layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
       layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
