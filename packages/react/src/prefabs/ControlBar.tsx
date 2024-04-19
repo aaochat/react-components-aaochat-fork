@@ -17,6 +17,7 @@ import { useLayoutContext, useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
 import { ExtraOptionMenu } from './ExtraOptionMenu';
+import { useWhiteboard } from '../hooks/useWhiteboard';
 
 /** @public */
 export type ControlBarControls = {
@@ -37,6 +38,7 @@ export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   controls?: ControlBarControls;
   waitingRoomCount: number;
   screenShareTracks?: number;
+  isWhiteboard?: boolean;
 };
 
 /**
@@ -60,8 +62,10 @@ export function ControlBar({
   controls,
   waitingRoomCount,
   screenShareTracks,
+  isWhiteboard,
   ...props
 }: ControlBarProps) {
+
   const layoutContext = useMaybeLayoutContext();
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
@@ -77,6 +81,8 @@ export function ControlBar({
       setIsUserOpen(layoutContext?.widget.state?.showChat == 'show_users');
     }
   }, [layoutContext?.widget.state?.showChat]);
+
+  const { isWhiteboardShared } = useWhiteboard();
 
   const isTooLittleSpace = useMediaQuery(
     `(max-width: ${isChatOpen || isShareLinkOpen || isUserOpen ? 1000 : 760}px)`,
@@ -150,6 +156,41 @@ export function ControlBar({
       });
     }
   }, [screenShareTracks, isScreenShareEnabled]);
+
+  React.useEffect(() => {
+    const buttons = document.querySelectorAll('[data-lk-source]');
+    if (isWhiteboardShared) {
+      buttons.forEach(button => {
+        const source = button.getAttribute('data-lk-source');
+        if (source === 'screen_share') {
+          (button as HTMLButtonElement).disabled = true;
+        }
+      });
+    } else {
+      buttons.forEach(button => {
+        const source = button.getAttribute('data-lk-source');
+        if (source === 'screen_share') {
+          (button as HTMLButtonElement).disabled = false;
+        }
+      });
+    }
+  }, [isWhiteboardShared]);
+
+  const [sharescreenTitle, setSharescreenTitle] = React.useState('You can share your screen');
+
+  React.useEffect(() => {
+    if (!isScreenShareEnabled && screenShareTracks !== 0) {
+      setSharescreenTitle('Someone has shared screen');
+    } else if (isWhiteboardShared) {
+      setSharescreenTitle('Whiteboard is shared');
+    } else if (isScreenShareEnabled) {
+      setSharescreenTitle("You're sharing your screen");
+    } else {
+      setSharescreenTitle('You can share your screen');
+    }
+  }, [isScreenShareEnabled, screenShareTracks, isWhiteboardShared]);
+
+
   return (
     <div {...htmlProps}>
       {visibleControls.microphone && (
@@ -178,14 +219,8 @@ export function ControlBar({
           captureOptions={{ audio: true, selfBrowserSurface: 'include' }}
           showIcon={showIcon}
           onChange={onScreenShareChange}
-          disabled={!isScreenShareEnabled && screenShareTracks !== 0}
-          title={
-            !isScreenShareEnabled && screenShareTracks !== 0
-              ? 'Someone has shared screen'
-              : isScreenShareEnabled
-                ? "You're sharing your scrren"
-                : 'You can share your screen'
-          }
+          disabled={(!isScreenShareEnabled && screenShareTracks !== 0 && isWhiteboardShared)}
+          title={sharescreenTitle}
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>
@@ -219,6 +254,7 @@ export function ControlBar({
         <div className="lk-button-group-menu">
           <ExtraOptionMenu
             blurEnabled={true}
+            shareScreenTracks={screenShareTracks}
           />
         </div>
       </div>
