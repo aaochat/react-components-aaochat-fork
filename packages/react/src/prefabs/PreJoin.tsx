@@ -15,32 +15,17 @@ import {
 import * as React from 'react';
 import { MediaDeviceMenu } from './MediaDeviceMenu';
 import { TrackToggle } from '../components/controls/TrackToggle';
+import type { LocalUserChoices } from '@livekit/components-core';
 import { log } from '@livekit/components-core';
 import { ParticipantPlaceholder } from '../assets/images';
-import { useMediaDevices } from '../hooks';
+import { useMediaDevices, usePersistentUserChoices } from '../hooks';
+import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
+import { defaultUserChoices } from '@livekit/components-core';
 
-/** @public */
-export type LocalUserChoices = {
-  username: string;
-  videoEnabled: boolean;
-  audioEnabled: boolean;
-  videoDeviceId: string;
-  audioDeviceId: string;
-  e2ee: boolean;
-  sharedPassphrase: string;
-};
-
-const DEFAULT_USER_CHOICES: LocalUserChoices = {
-  username: '',
-  videoEnabled: true,
-  audioEnabled: true,
-  videoDeviceId: 'default',
-  audioDeviceId: 'default',
-  e2ee: false,
-  sharedPassphrase: '',
-};
-
-/** @public */
+/**
+ * Props for the PreJoin component.
+ * @public
+ */
 export interface PreJoinProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onError'> {
   /** This function is called with the `LocalUserChoices` if validation is passed. */
@@ -58,7 +43,12 @@ export interface PreJoinProps
   micLabel?: string;
   camLabel?: string;
   userLabel?: string;
-  showE2EEOptions?: boolean;
+  /**
+   * If true, user choices are persisted across sessions.
+   * @defaultValue true
+   * @alpha
+   */
+  persistUserChoices?: boolean;
 }
 
 /** @alpha */
@@ -184,7 +174,7 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
   }, []);
 
   React.useEffect(() => {
-    setSelectedDevice(devices.find((dev) => dev.deviceId === localDeviceId));
+    setSelectedDevice(devices?.find((dev) => dev.deviceId === localDeviceId));
   }, [localDeviceId, devices]);
 
   return {
@@ -200,7 +190,7 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
  * On submit the user decisions are returned, which can then be passed on to the `LiveKitRoom` so that the user enters the room with the correct media devices.
  *
  * @remarks
- * This component is independent from the `LiveKitRoom` component and don't has to be nested inside it.
+ * This component is independent of the `LiveKitRoom` component and should not be nested within it.
  * Because it only access the local media tracks this component is self contained and works without connection to the LiveKit server.
  *
  * @example
@@ -219,32 +209,65 @@ export function PreJoin({
   micLabel = 'Microphone',
   camLabel = 'Camera',
   userLabel = 'Username',
-  showE2EEOptions = false,
+  persistUserChoices = true,
   ...htmlProps
 }: PreJoinProps) {
-  const [userChoices, setUserChoices] = React.useState(DEFAULT_USER_CHOICES);
-  const [username, setUsername] = React.useState(
-    defaults.username ?? DEFAULT_USER_CHOICES.username,
+  const [userChoices, setUserChoices] = React.useState(defaultUserChoices);
+
+  // TODO: Remove and pipe `defaults` object directly into `usePersistentUserChoices` once we fully switch from type `LocalUserChoices` to `UserChoices`.
+  const partialDefaults: Partial<LocalUserChoices> = {
+    ...(defaults.audioDeviceId !== undefined && { audioDeviceId: defaults.audioDeviceId }),
+    ...(defaults.videoDeviceId !== undefined && { videoDeviceId: defaults.videoDeviceId }),
+    ...(defaults.audioEnabled !== undefined && { audioEnabled: defaults.audioEnabled }),
+    ...(defaults.videoEnabled !== undefined && { videoEnabled: defaults.videoEnabled }),
+    ...(defaults.username !== undefined && { username: defaults.username }),
+  };
+
+  const {
+    userChoices: initialUserChoices,
+    saveAudioInputDeviceId,
+    saveAudioInputEnabled,
+    saveVideoInputDeviceId,
+    saveVideoInputEnabled,
+    saveUsername,
+  } = usePersistentUserChoices({
+    defaults: partialDefaults,
+    preventSave: !persistUserChoices,
+    preventLoad: !persistUserChoices,
+  });
+
+  // Initialize device settings
+  const [audioEnabled, setAudioEnabled] = React.useState<boolean>(initialUserChoices.audioEnabled);
+  const [videoEnabled, setVideoEnabled] = React.useState<boolean>(initialUserChoices.videoEnabled);
+  const [audioDeviceId, setAudioDeviceId] = React.useState<string>(
+    initialUserChoices.audioDeviceId,
   );
-  const [videoEnabled, setVideoEnabled] = React.useState<boolean>(
-    defaults.videoEnabled ?? DEFAULT_USER_CHOICES.videoEnabled,
+  const [videoDeviceId, setVideoDeviceId] = React.useState<string>(
+    initialUserChoices.videoDeviceId,
   );
-  const initialVideoDeviceId = defaults.videoDeviceId ?? DEFAULT_USER_CHOICES.videoDeviceId;
-  const [videoDeviceId, setVideoDeviceId] = React.useState<string>(initialVideoDeviceId);
-  const initialAudioDeviceId = defaults.audioDeviceId ?? DEFAULT_USER_CHOICES.audioDeviceId;
-  const [audioEnabled, setAudioEnabled] = React.useState<boolean>(
-    defaults.audioEnabled ?? DEFAULT_USER_CHOICES.audioEnabled,
-  );
-  const [audioDeviceId, setAudioDeviceId] = React.useState<string>(initialAudioDeviceId);
-  const [e2ee, setE2ee] = React.useState<boolean>(defaults.e2ee ?? DEFAULT_USER_CHOICES.e2ee);
-  const [sharedPassphrase, setSharedPassphrase] = React.useState<string>(
-    defaults.sharedPassphrase ?? DEFAULT_USER_CHOICES.sharedPassphrase,
-  );
+  const [username, setUsername] = React.useState(initialUserChoices.username);
+
+  // Save user choices to persistent storage.
+  React.useEffect(() => {
+    saveAudioInputEnabled(audioEnabled);
+  }, [audioEnabled, saveAudioInputEnabled]);
+  React.useEffect(() => {
+    saveVideoInputEnabled(videoEnabled);
+  }, [videoEnabled, saveVideoInputEnabled]);
+  React.useEffect(() => {
+    saveAudioInputDeviceId(audioDeviceId);
+  }, [audioDeviceId, saveAudioInputDeviceId]);
+  React.useEffect(() => {
+    saveVideoInputDeviceId(videoDeviceId);
+  }, [videoDeviceId, saveVideoInputDeviceId]);
+  React.useEffect(() => {
+    saveUsername(username);
+  }, [username, saveUsername]);
 
   const tracks = usePreviewTracks(
     {
-      audio: audioEnabled ? { deviceId: initialAudioDeviceId } : false,
-      video: videoEnabled ? { deviceId: initialVideoDeviceId } : false,
+      audio: audioEnabled ? { deviceId: initialUserChoices.audioDeviceId } : false,
+      video: videoEnabled ? { deviceId: initialUserChoices.videoDeviceId } : false,
     },
     onError,
   );
@@ -301,21 +324,10 @@ export function PreJoin({
       videoDeviceId,
       audioEnabled,
       audioDeviceId,
-      e2ee,
-      sharedPassphrase,
     };
     setUserChoices(newUserChoices);
     setIsValid(handleValidation(newUserChoices));
-  }, [
-    username,
-    videoEnabled,
-    handleValidation,
-    audioEnabled,
-    audioDeviceId,
-    videoDeviceId,
-    sharedPassphrase,
-    e2ee,
-  ]);
+  }, [username, videoEnabled, handleValidation, audioEnabled, audioDeviceId, videoDeviceId]);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -327,6 +339,8 @@ export function PreJoin({
       log.warn('Validation failed with: ', userChoices);
     }
   }
+
+  useWarnAboutMissingStyles();
 
   return (
     <div className="lk-prejoin" {...htmlProps}>
@@ -390,30 +404,6 @@ export function PreJoin({
           onChange={(inputEl) => setUsername(inputEl.target.value)}
           autoComplete="off"
         />
-        {showE2EEOptions && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-              <input
-                id="use-e2ee"
-                type="checkbox"
-                checked={e2ee}
-                onChange={(ev) => setE2ee(ev.target.checked)}
-              ></input>
-              <label htmlFor="use-e2ee">Enable end-to-end encryption</label>
-            </div>
-            {e2ee && (
-              <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-                <label htmlFor="passphrase">Passphrase</label>
-                <input
-                  id="passphrase"
-                  type="password"
-                  value={sharedPassphrase}
-                  onChange={(ev) => setSharedPassphrase(ev.target.value)}
-                />
-              </div>
-            )}
-          </div>
-        )}
         <button
           className="lk-button lk-join-button"
           type="submit"

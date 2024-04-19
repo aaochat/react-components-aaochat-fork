@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { setLogLevel } from '@livekit/components-core';
-import { PreJoin } from '@livekit/components-react';
+import { PreJoin, setLogLevel } from '@livekit/components-react';
 import type { NextPage } from 'next';
 
 const PreJoinExample: NextPage = () => {
@@ -8,7 +7,15 @@ const PreJoinExample: NextPage = () => {
 
   return (
     <div data-lk-theme="default" style={{ height: '100vh' }}>
-      <PreJoin showE2EEOptions={true} />
+      <PreJoin
+        defaults={{ videoDeviceId: '' }}
+        onSubmit={(values) => {
+          values.audioDeviceId;
+        }}
+        onValidate={(values) => {
+          return true;
+        }}
+      />
     </div>
   );
 };

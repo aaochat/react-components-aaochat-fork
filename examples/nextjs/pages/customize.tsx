@@ -3,6 +3,7 @@ import {
   ParticipantName,
   TrackMutedIndicator,
   RoomAudioRenderer,
+  isTrackReference,
   useConnectionQualityIndicator,
   VideoTrack,
   useToken,
@@ -16,12 +17,12 @@ import styles from '../styles/Simple.module.css';
 import myStyles from '../styles/Customize.module.css';
 import type { NextPage } from 'next';
 import { HTMLAttributes, useState } from 'react';
-import { isTrackReference } from '@livekit/components-core';
+import { generateRandomUserId } from '../lib/helper';
 
 const CustomizeExample: NextPage = () => {
   const params = typeof window !== 'undefined' ? new URLSearchParams(location.search) : null;
   const roomName = params?.get('room') ?? 'test-room';
-  const userIdentity = params?.get('user') ?? 'test-identity';
+  const userIdentity = params?.get('user') ?? generateRandomUserId();
   const token = useToken(process.env.NEXT_PUBLIC_LK_TOKEN_ENDPOINT, roomName, {
     userInfo: {
       identity: userIdentity,
@@ -79,14 +80,23 @@ export function Stage() {
       <div className={styles.participantGrid}>
         <GridLayout tracks={tracks}>
           <TrackRefContext.Consumer>
-            {(track) =>
-              track && (
+            {(trackRef) =>
+              trackRef && (
                 <div className="my-tile">
-                  {isTrackReference(track) ? <VideoTrack {...track} /> : <p>Camera placeholder</p>}
+                  {isTrackReference(trackRef) ? (
+                    <VideoTrack trackRef={trackRef} />
+                  ) : (
+                    <p>Camera placeholder</p>
+                  )}
                   <div className={myStyles['participant-indicators']}>
                     <div style={{ display: 'flex' }}>
-                      <TrackMutedIndicator source={Track.Source.Microphone}></TrackMutedIndicator>
-                      <TrackMutedIndicator source={track.source}></TrackMutedIndicator>
+                      <TrackMutedIndicator
+                        trackRef={{
+                          participant: trackRef.participant,
+                          source: Track.Source.Microphone,
+                        }}
+                      />
+                      <TrackMutedIndicator trackRef={trackRef} />
                     </div>
                     {/* Overwrite styles: By passing class names, we can easily overwrite/extend the existing styles. */}
                     {/* In addition, we can still specify a style attribute and further customize the styles. */}
@@ -116,14 +126,16 @@ export function UserDefinedConnectionQualityIndicator(props: HTMLAttributes<HTML
 
   function qualityToText(quality: ConnectionQuality): string {
     switch (quality) {
-      case ConnectionQuality.Unknown:
-        return 'No idea';
       case ConnectionQuality.Poor:
         return 'Poor';
       case ConnectionQuality.Good:
         return 'Good';
       case ConnectionQuality.Excellent:
         return 'Excellent';
+      case ConnectionQuality.Lost:
+        return 'Reconnecting';
+      default:
+        return 'No idea';
     }
   }
 

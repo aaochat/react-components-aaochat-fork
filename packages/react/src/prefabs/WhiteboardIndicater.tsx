@@ -45,7 +45,7 @@ export function WhiteboardIndicater({
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
-                room.localParticipant.publishData(data, 0);
+                room.localParticipant.publishData(data, { reliable: false });
                 updateMeta(false);
                 if (dispatch) {
                     dispatch({ msg: "hide_whiteboard" })
@@ -55,7 +55,7 @@ export function WhiteboardIndicater({
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
-                room.localParticipant.publishData(data, 0);
+                room.localParticipant.publishData(data, { reliable: false });
                 updateMeta(true);
                 if (dispatch) {
                     dispatch({ msg: "show_whiteboard" })

@@ -27,6 +27,7 @@ import { Users } from './Users';
 import { ShareLink } from './ShareLink';
 import { useObservableState } from '../hooks/internal';
 import { WhiteboardState } from '../context/whiteboard-context';
+import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
 
 /**
  * @public
@@ -35,6 +36,8 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   chatMessageFormatter?: MessageFormatter;
   chatMessageEncoder?: MessageEncoder;
   chatMessageDecoder?: MessageDecoder;
+  /** @alpha */
+  SettingsComponent?: React.ComponentType;
 }
 
 /**
@@ -59,11 +62,13 @@ export function VideoConference({
   chatMessageFormatter,
   chatMessageDecoder,
   chatMessageEncoder,
+  SettingsComponent,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
     unreadMessages: 0,
+    showSettings: false,
   });
 
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
@@ -224,6 +229,7 @@ export function VideoConference({
       setIsWhiteboard(false);
     }
   });
+  useWarnAboutMissingStyles();
 
   return (
     <div className="lk-video-conference" {...props}>
@@ -258,6 +264,7 @@ export function VideoConference({
                 users: showParticipantButton,
                 leaveButton: leaveButton,
                 endForAll: endForAll,
+                settings: !!SettingsComponent
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
@@ -301,6 +308,16 @@ export function VideoConference({
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}
           />
+          {
+            SettingsComponent && (
+              <div
+                className="lk-settings-menu-modal"
+                style={{ display: widgetState.showSettings ? 'block' : 'none' }}
+              >
+                <SettingsComponent />
+              </div>
+            )
+          }
         </LayoutContextProvider >
       )
       }

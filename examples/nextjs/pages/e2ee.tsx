@@ -1,13 +1,13 @@
-import { setLogLevel } from '@livekit/components-core';
-import { LiveKitRoom, useToken, VideoConference } from '@livekit/components-react';
+import { LiveKitRoom, useToken, VideoConference, setLogLevel } from '@livekit/components-react';
 import type { NextPage } from 'next';
 import * as React from 'react';
 import { Room, ExternalE2EEKeyProvider } from 'livekit-client';
+import { generateRandomUserId } from '../lib/helper';
 
 const E2EEExample: NextPage = () => {
   const params = typeof window !== 'undefined' ? new URLSearchParams(location.search) : null;
   const roomName = params?.get('room') ?? 'test-room';
-  const userIdentity = params?.get('user') ?? 'test-identity';
+  const userIdentity = params?.get('user') ?? generateRandomUserId();
   setLogLevel('warn', { liveKitClientLogLevel: 'debug' });
 
   const token = useToken(process.env.NEXT_PUBLIC_LK_TOKEN_ENDPOINT, roomName, {

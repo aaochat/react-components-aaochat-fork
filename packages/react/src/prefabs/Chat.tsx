@@ -1,15 +1,17 @@
-import type { ChatMessage, MessageEncoder, MessageDecoder } from '@livekit/components-core';
+import type { ChatMessage, ChatOptions } from '@livekit/components-core';
 import * as React from 'react';
 import { useMaybeLayoutContext } from '../context';
 import { cloneSingleChild } from '../utils';
 import type { MessageFormatter } from '../components/ChatEntry';
 // import { ChatEntry } from '../components/ChatEntry';
 import { useChat } from '../hooks/useChat';
-import { UserChat } from './UserChat';
+import { MessageDecoder, MessageEncoder, UserChat } from './UserChat';
 import SvgSendMessage from './../assets/icons/tl/SendMessage';
+import { ChatToggle } from '../components';
+import { ChatCloseIcon } from '../assets/icons';
 
 /** @public */
-export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ChatProps extends React.HTMLAttributes<HTMLDivElement>, ChatOptions {
   messageFormatter?: MessageFormatter;
   messageEncoder?: MessageEncoder;
   messageDecoder?: MessageDecoder;
@@ -27,14 +29,14 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  * @public
  */
-export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...props }: ChatProps) {
+export function Chat({ messageFormatter, messageDecoder, messageEncoder, channelTopic, ...props }: ChatProps) {
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const chatForm = React.useRef<HTMLFormElement>(null);
   const ulRef = React.useRef<HTMLUListElement>(null);
 
-  const chatOptions = React.useMemo(() => {
-    return { messageDecoder, messageEncoder };
-  }, [messageDecoder, messageEncoder]);
+  const chatOptions: ChatOptions = React.useMemo(() => {
+    return { messageDecoder, messageEncoder, channelTopic };
+  }, [messageDecoder, messageEncoder, channelTopic]);
 
   const { send, chatMessages, isSending } = useChat(chatOptions);
 
@@ -55,7 +57,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
 
   async function onEnterPress(e: React.KeyboardEvent) {
     if (e.code == 'Enter' && e.shiftKey == false) {
-      e.preventDefault();
+      e.stopPropagation();
 
       await handleSubmit(e);
     }
@@ -96,6 +98,12 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
 
   return (
     <div {...props} className="lk-chat tl-chat">
+      <div className="lk-chat-header">
+        Messages
+        <ChatToggle className="lk-close-button">
+          <ChatCloseIcon />
+        </ChatToggle>
+      </div>
       <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
           ? chatMessages.map((msg, idx) =>
@@ -120,6 +128,16 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
               />
             );
           })}
+        {/* return (
+                <ChatEntry
+          key={msg.id ?? idx}
+          hideName={hideName}
+          hideTimestamp={hideName === false ? false : hideTimestamp} // If we show the name always show the timestamp as well.
+          entry={msg}
+          messageFormatter={messageFormatter}
+        />
+        ); 
+              })} */}
       </ul>
       <form className="lk-chat-form" ref={chatForm} onSubmit={handleSubmit}>
         <textarea
@@ -129,6 +147,8 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
           onKeyDown={onEnterPress}
           rows={1}
           placeholder="Enter a message..."
+          onInput={(ev) => ev.stopPropagation()}
+          onKeyUp={(ev) => ev.stopPropagation()}
         ></textarea>
         <button type="submit" className="lk-button lk-chat-form-button tl-submit" disabled={isSending}>
           <SvgSendMessage />
