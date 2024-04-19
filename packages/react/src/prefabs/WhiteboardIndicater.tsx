@@ -19,8 +19,6 @@ export function WhiteboardIndicater({
     const [disableWhiteboard, setDisableWhiteboard] = React.useState(false);
 
     React.useEffect(() => {
-        // console.log({ isWhiteboardShared, isWhiteboardHost });
-
         if (shareScreenTracks !== 0) {
             setDisableWhiteboard(true);
         }
