@@ -1,7 +1,7 @@
-import * as React from 'react';
+import { setupShareLinkToggle } from '@livekit/components-core';
 import { useLayoutContext } from '../../context';
 import { mergeProps } from '../../utils';
-import { setupShareLinkToggle } from '@livekit/components-core';
+import * as React from 'react';
 
 interface UseToggleShareLinkProps {
   props: React.ButtonHTMLAttributes<HTMLButtonElement>;

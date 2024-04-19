@@ -20,8 +20,14 @@ import { log } from '@livekit/components-core';
 import { ParticipantPlaceholder } from '../assets/images';
 import { useMediaDevices, usePersistentUserChoices } from '../hooks';
 import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
-import { defaultUserChoices } from '@livekit/components-core';
 
+export const defaultUserChoices: LocalUserChoices = {
+  videoEnabled: true,
+  audioEnabled: true,
+  videoDeviceId: '',
+  audioDeviceId: '',
+  username: '',
+} as const;
 /**
  * Props for the PreJoin component.
  * @public
