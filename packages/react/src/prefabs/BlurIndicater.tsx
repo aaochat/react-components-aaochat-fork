@@ -18,12 +18,15 @@ export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
 
     const room = useRoomContext();
     const [isBlur, setIsBlur] = React.useState(false);
+    const track = room?.localParticipant.getTrack(source);
+
     const toggleBlur = async () => {
         if (!room) return;
 
         try {
             const camTrack = room.localParticipant.getTrack(source)!
                 .track as LocalVideoTrack;
+
             if (camTrack.getProcessor()?.name !== 'background-blur') {
                 await camTrack.setProcessor(state.blur);
                 setIsBlur(true);
@@ -41,7 +44,7 @@ export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
     }
 
     return (
-        <button className="tl-blur lk-button" onClick={toggleBlur}>
+        <button className="tl-blur lk-button" onClick={toggleBlur} disabled={track?.isMuted}>
             {isBlur ? 'Remove Blur' : 'Blur Background'}
         </button>
     )

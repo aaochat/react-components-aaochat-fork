@@ -56,7 +56,9 @@ export function HostEndMeetingMenu({
     if (button.current && tooltip.current && updateRequired) {
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
         if (tooltip.current) {
-          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y + 5}px` });
+          console.log({ x, y });
+
+          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y - 5}px` });
         }
       });
       setUpdateRequired(false);
