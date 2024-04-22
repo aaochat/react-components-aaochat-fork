@@ -4,6 +4,7 @@ import { DisconnectButton } from '../components';
 // import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
 import { useLocalParticipant, useParticipants } from '../hooks';
+import { LeaveIcon } from '../assets/icons';
 
 /** @public */
 export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -207,6 +208,8 @@ export function HostEndMeetingMenu({
         ref={button}
       >
         {props.children}
+        {showIcon && <LeaveIcon />}
+        {showText && "Leave"}
       </button>
       {/** only render when enabled in order to make sure that the permissions are requested only if the menu is enabled */}
       <div
