@@ -17,19 +17,24 @@ export function WhiteboardIndicater({
     const encoder = new TextEncoder()
     const { isWhiteboardHost, isWhiteboardShared } = useWhiteboard();
     const [disableWhiteboard, setDisableWhiteboard] = React.useState(false);
+    const [title, setTitle] = React.useState("Whiteboard");
 
     React.useEffect(() => {
         if (shareScreenTracks !== 0) {
             setDisableWhiteboard(true);
+            setTitle("Whiteboard");
         }
         else if (isWhiteboardShared) {
             if (isWhiteboardHost) {
                 setDisableWhiteboard(false);
+                setTitle("Close Whiteboard");
             } else {
                 setDisableWhiteboard(true);
+                setTitle("Whiteboard");
             }
         } else {
             setDisableWhiteboard(false);
+            setTitle("Whiteboard");
         }
 
     }, [isWhiteboardHost, isWhiteboardShared, shareScreenTracks]);
@@ -39,25 +44,25 @@ export function WhiteboardIndicater({
 
         try {
             if (state?.show_whiteboard) {
+                if (dispatch) {
+                    dispatch({ msg: "hide_whiteboard" })
+                }
                 const strData = JSON.stringify({ openWhiteboard: false })
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
                 room.localParticipant.publishData(data, 0);
                 updateMeta(false);
-                if (dispatch) {
-                    dispatch({ msg: "hide_whiteboard" })
-                }
             } else {
+                if (dispatch) {
+                    dispatch({ msg: "show_whiteboard" })
+                }
                 const strData = JSON.stringify({ openWhiteboard: true })
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
                 room.localParticipant.publishData(data, 0);
                 updateMeta(true);
-                if (dispatch) {
-                    dispatch({ msg: "show_whiteboard" })
-                }
             }
         } catch (e: any) {
             console.log(`ERROR: ${e.message}`);
@@ -87,7 +92,7 @@ export function WhiteboardIndicater({
 
     return (
         <button disabled={disableWhiteboard} className="tl-blur lk-button" onClick={toggleWhiteboard}>
-            Whiteboard {state?.show_whiteboard}
+            {title}
         </button>
     )
 }

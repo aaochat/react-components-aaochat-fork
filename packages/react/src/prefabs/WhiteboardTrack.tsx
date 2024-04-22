@@ -17,5 +17,12 @@ import { useWhiteboard } from '../hooks/useWhiteboard';
 export function WhiteboardTrack() {
     const { url } = useWhiteboard();
 
-    return <iframe src={url} width={"100%"} height={'100%'}></iframe>;
+    return (url ?
+        (
+            <iframe src={url} width={"100%"} height={'100%'}></iframe>
+        )
+        : (
+            <></>
+        )
+    )
 }

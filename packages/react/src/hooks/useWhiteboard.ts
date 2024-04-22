@@ -8,24 +8,12 @@ export function useWhiteboard() {
 
     const [isWhiteboardShared, setIsWhiteboardShared] = React.useState(false);
     const [isWhiteboardHost, setIsWhiteboardHost] = React.useState(true);
-    const [url, setUrl] = React.useState('');
+    const [url, setUrl] = React.useState<string | null>(null);
     
     React.useEffect(() => {
         let meta = JSON.parse(metadata || '{}');
 
         if (meta) {
-            if (meta?.whiteboard) {
-                setIsWhiteboardShared(meta?.whiteboard);
-            } else {
-                setIsWhiteboardShared(false);
-            } 
-
-            if (meta?.whiteboard_host == room.localParticipant.identity) {
-                setIsWhiteboardHost(true);
-            } else {
-                setIsWhiteboardHost(false);
-            }
-
             if (meta?.whiteboard_domain) {
                 let url = `${meta?.whiteboard_domain}?whiteboardid=${room.name}`;
                 if (room.localParticipant.name) {
@@ -36,6 +24,18 @@ export function useWhiteboard() {
             } else {
                 setUrl('/');
             }
+
+            if (meta?.whiteboard) {
+                setIsWhiteboardShared(meta?.whiteboard);
+            } else {
+                setIsWhiteboardShared(false);
+            } 
+
+            if (meta?.whiteboard_host == room.localParticipant.identity) {
+                setIsWhiteboardHost(true);
+            } else {
+                setIsWhiteboardHost(false);
+            }          
         }
         
     }, [metadata]);
