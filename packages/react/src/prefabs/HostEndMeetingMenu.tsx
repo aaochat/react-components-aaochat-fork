@@ -1,7 +1,6 @@
 import { computeMenuPosition, setupDisconnectButton, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
 import { DisconnectButton } from '../components';
-// import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
 import { useLocalParticipant, useParticipants } from '../hooks';
 import { LeaveIcon } from '../assets/icons';
