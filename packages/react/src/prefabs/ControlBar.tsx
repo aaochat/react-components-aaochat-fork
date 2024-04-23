@@ -219,10 +219,10 @@ export function ControlBar({
       )}
       {visibleControls.endForAll ? (
         <div className="tl-leave lk-button-group">
-          <button className="lk-disconnect-button">
+          {/* <button className="lk-disconnect-button">
             {showIcon && <LeaveIcon />}
             {showText && "Leave"}
-          </button>
+          </button> */}
 
           <div className="tl-leave-btn lk-button-group-menu">
             <HostEndMeetingMenu
