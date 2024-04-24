@@ -63,7 +63,7 @@ const CustomizeExample: NextPage = () => {
           <RoomAudioRenderer />
           {/* Render a custom Stage component once connected */}
           {isConnected && <Stage />}
-          <ControlBar />
+          <ControlBar waitingRoomCount={0} />
         </LiveKitRoom>
       </main>
     </div>
@@ -102,7 +102,7 @@ export function Stage() {
                     {/* In addition, we can still specify a style attribute and further customize the styles. */}
                     <ParticipantName
                       className={myStyles['my-participant-name']}
-                      // style={{ color: 'blue' }}
+                    // style={{ color: 'blue' }}
                     />
                     {/* Custom components: Here we replace the provided <ConnectionQualityIndicator />  with our own implementation. */}
                     <UserDefinedConnectionQualityIndicator />

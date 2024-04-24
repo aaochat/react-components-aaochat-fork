@@ -65,6 +65,7 @@ const Clubhouse = () => {
           <ControlBar
             variation="minimal"
             controls={{ microphone: true, camera: false, screenShare: false }}
+            waitingRoomCount={0}
           />
           <RoomAudioRenderer />
         </div>
@@ -102,7 +103,7 @@ const CustomParticipantTile = () => {
       >
         <div
           className={styles.avatar}
-          // className="z-10 grid aspect-square items-center overflow-hidden rounded-full bg-beige transition-all will-change-transform"
+        // className="z-10 grid aspect-square items-center overflow-hidden rounded-full bg-beige transition-all will-change-transform"
         >
           <img
             src={`https://avatars.dicebear.com/api/avataaars/${id}.svg?mouth=default,smile,tongue&eyes=default,happy,hearts&eyebrows=default,defaultNatural,flatNatural`}

@@ -276,7 +276,7 @@ export function VideoConference({
             showShareButton ?
               (
                 <ShareLink style={{
-                  display: widgetState.showChat == 'show_invite' ? 'flex' : 'none'
+                  display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
                 }
                 } />
               ) : (
@@ -287,7 +287,7 @@ export function VideoConference({
           {
             showParticipantButton ? (
               <Users
-                style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
+                style={{ display: widgetState.showChat == 'show_users' ? 'block' : 'none' }}
                 onWaitingRoomChange={updateCount}
               />
             ) : (<></>)
@@ -303,7 +303,7 @@ export function VideoConference({
             )
           } */}
           <Chat
-            style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
+            style={{ display: widgetState.showChat == 'show_chat' ? 'grid' : 'none' }}
             messageFormatter={formatChatMessageLinks}
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}

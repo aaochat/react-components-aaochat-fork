@@ -1,5 +1,33 @@
 # @livekit/component-docs-storybook
 
+## 1.0.44
+
+### Patch Changes
+
+- Updated dependencies [[`8aa9567fa1f1e81a4ead1f6f2d896b8b14db0a7c`](https://github.com/livekit/components-js/commit/8aa9567fa1f1e81a4ead1f6f2d896b8b14db0a7c), [`c2ad1aeb8a90e115cb0da153ff6f5b17541923c4`](https://github.com/livekit/components-js/commit/c2ad1aeb8a90e115cb0da153ff6f5b17541923c4), [`3babc69534c0dc79ec4f3b5c0048ec9d18f2ffad`](https://github.com/livekit/components-js/commit/3babc69534c0dc79ec4f3b5c0048ec9d18f2ffad)]:
+  - @livekit/components-react@2.1.3
+
+## 1.0.43
+
+### Patch Changes
+
+- Updated dependencies [[`68068430cdeb9175a21a1c8a47177529c878120a`](https://github.com/livekit/components-js/commit/68068430cdeb9175a21a1c8a47177529c878120a)]:
+  - @livekit/components-react@2.1.2
+
+## 1.0.42
+
+### Patch Changes
+
+- Updated dependencies [[`af109550ce48c6b70c56c6ef25f03c767d94ff45`](https://github.com/livekit/components-js/commit/af109550ce48c6b70c56c6ef25f03c767d94ff45)]:
+  - @livekit/components-react@2.1.1
+
+## 1.0.41
+
+### Patch Changes
+
+- Updated dependencies [[`ccd551f98037427d92bb6e14560f972458a4544d`](https://github.com/livekit/components-js/commit/ccd551f98037427d92bb6e14560f972458a4544d), [`2da35e73ef5046e2941f3a43a9e08d55f90f9275`](https://github.com/livekit/components-js/commit/2da35e73ef5046e2941f3a43a9e08d55f90f9275), [`ccd551f98037427d92bb6e14560f972458a4544d`](https://github.com/livekit/components-js/commit/ccd551f98037427d92bb6e14560f972458a4544d), [`ecef222a309e53b62bb896aca1309c301ac354c7`](https://github.com/livekit/components-js/commit/ecef222a309e53b62bb896aca1309c301ac354c7)]:
+  - @livekit/components-react@2.1.0
+
 ## 1.0.40
 
 ### Patch Changes

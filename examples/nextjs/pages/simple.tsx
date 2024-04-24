@@ -58,7 +58,7 @@ const SimpleExample: NextPage = () => {
           <ConnectionState />
           {/* <RoomAudioRenderer /> */}
           {isConnected && <Stage />}
-          <ControlBar />
+          <ControlBar waitingRoomCount={0} />
         </LiveKitRoom>
       </main>
     </div>

@@ -219,12 +219,12 @@ export function ShareLink({ ...props }: any) {
           {searched.map((user, index) => {
             return (
               <li key={index} className="lk-chat-entry">
-                <div>
+                <div className='tl-list-user-box'>
                   <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
                   <span className="lk-message-body lk-message-text">{user.designation}</span>
                 </div>
 
-                <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
+                <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button tl-invite-button" + (user.invited ? ' invited' : '')}>
                   {user.invited ? 'Invited' : 'Invite'}
                 </button>
               </li>
