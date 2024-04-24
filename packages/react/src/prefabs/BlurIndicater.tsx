@@ -13,11 +13,21 @@ export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
         defaultDevices: new Map<MediaDeviceKind, string>(),
         bitrateInterval: undefined as any,
         blur: BackgroundBlur(10, { delegate: 'GPU' }),
-        // virtualBackground: VirtualBackground('/samantha-gades-BlIhVfXbi9s-unsplash.jpg'),
     };
 
     const room = useRoomContext();
     const [isBlur, setIsBlur] = React.useState(false);
+    const [isCameraEnabled, setIsCameraEnabled] = React.useState(false);
+    const track = room?.localParticipant.getTrackPublication(source);
+
+    React.useEffect(() => {
+        if (track?.isMuted) {
+            setIsCameraEnabled(false);
+        } else {
+            setIsCameraEnabled(true);
+        }
+    }, [track?.isMuted]);
+
     const toggleBlur = async () => {
         if (!room) return;
 
@@ -36,13 +46,11 @@ export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
             console.log(`ERROR: ${e.message}`);
         } finally {
             parentCallback();
-            // renderParticipant(currentRoom.localParticipant);
-            // updateButtonsForPublishState();
         }
     }
 
     return (
-        <button className="tl-blur lk-button" onClick={toggleBlur}>
+        <button className="tl-blur lk-button" onClick={toggleBlur} disabled={isCameraEnabled}>
             {isBlur ? 'Remove Blur' : 'Blur Background'}
         </button>
     )
