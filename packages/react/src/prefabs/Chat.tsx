@@ -3,12 +3,11 @@ import * as React from 'react';
 import { useMaybeLayoutContext } from '../context';
 import { cloneSingleChild } from '../utils';
 import type { MessageFormatter } from '../components/ChatEntry';
-// import { ChatEntry } from '../components/ChatEntry';
 import { useChat } from '../hooks/useChat';
 import { MessageDecoder, MessageEncoder, UserChat } from './UserChat';
 import SvgSendMessage from './../assets/icons/tl/SendMessage';
-import { ChatToggle } from '../components';
-import { ChatCloseIcon } from '../assets/icons';
+// import { ChatToggle } from '../components';
+// import { ChatCloseIcon } from '../assets/icons';
 
 /** @public */
 export interface ChatProps extends React.HTMLAttributes<HTMLDivElement>, ChatOptions {
@@ -98,12 +97,11 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, channel
 
   return (
     <div {...props} className="lk-chat tl-chat">
-      <div className="lk-chat-header">
-        Messages
+      {/* <div className="lk-chat-header tl-chat-header">
         <ChatToggle className="lk-close-button">
           <ChatCloseIcon />
         </ChatToggle>
-      </div>
+      </div> */}
       <ul className="tl-list lk-chat-messages" ref={ulRef}>
         {props.children
           ? chatMessages.map((msg, idx) =>
