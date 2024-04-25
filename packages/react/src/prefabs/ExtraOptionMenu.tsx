@@ -2,10 +2,12 @@ import { computeMenuPosition, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
 import { BlurIndicater } from './BlurIndicater';
 import { Track } from 'livekit-client';
+import { WhiteboardIndicater } from './WhiteboardIndicater';
 
 /** @public */
 export interface ExtraOptionMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   blurEnabled?: boolean;
+  shareScreenTracks?: number;
 }
 
 /**
@@ -21,6 +23,7 @@ export interface ExtraOptionMenuProps extends React.ButtonHTMLAttributes<HTMLBut
  */
 export function ExtraOptionMenu({
   blurEnabled,
+  shareScreenTracks,
   ...props
 }: ExtraOptionMenuProps) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -65,6 +68,11 @@ export function ExtraOptionMenu({
     [isOpen, tooltip, button],
   );
 
+  function changeState() {
+    setIsOpen(false);
+    setShowDropdown(false);
+  }
+
   React.useEffect(() => {
     document.addEventListener<'click'>('click', handleClickOutside);
     window.addEventListener<'resize'>('resize', () => setUpdateRequired(true));
@@ -88,9 +96,12 @@ export function ExtraOptionMenu({
         style={{ visibility: isOpen ? 'visible' : 'hidden' }}
       >
         <ul className="lk-media-device-select lk-list" style={{ display: !showDropdown ? 'unset' : 'none' }}>
+          <li>
+            <WhiteboardIndicater shareScreenTracks={shareScreenTracks} parentCallback={changeState} />
+          </li>
           {blurEnabled && (
             <li>
-              <BlurIndicater ref={blurButtonRef} source={Track.Source.Camera} />
+              <BlurIndicater source={Track.Source.Camera} parentCallback={changeState} />
             </li>
           )}
         </ul>

@@ -5,10 +5,10 @@ import React from "react";
 
 export interface BlurIndicaterProps {
     source: Track.Source.Camera;
-    ref: any;
+    parentCallback: () => void;
 }
 
-export function BlurIndicater({ source, ref }: BlurIndicaterProps) {
+export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
     const state = {
         defaultDevices: new Map<MediaDeviceKind, string>(),
         bitrateInterval: undefined as any,
@@ -18,12 +18,15 @@ export function BlurIndicater({ source, ref }: BlurIndicaterProps) {
 
     const room = useRoomContext();
     const [isBlur, setIsBlur] = React.useState(false);
+    const track = room?.localParticipant.getTrack(source);
+
     const toggleBlur = async () => {
         if (!room) return;
 
         try {
             const camTrack = room.localParticipant.getTrack(source)!
                 .track as LocalVideoTrack;
+
             if (camTrack.getProcessor()?.name !== 'background-blur') {
                 await camTrack.setProcessor(state.blur);
                 setIsBlur(true);
@@ -34,13 +37,14 @@ export function BlurIndicater({ source, ref }: BlurIndicaterProps) {
         } catch (e: any) {
             console.log(`ERROR: ${e.message}`);
         } finally {
+            parentCallback();
             // renderParticipant(currentRoom.localParticipant);
             // updateButtonsForPublishState();
         }
     }
 
     return (
-        <button ref={ref} className="tl-blur lk-button" onClick={toggleBlur}>
+        <button className="tl-blur lk-button" onClick={toggleBlur} disabled={track?.isMuted}>
             {isBlur ? 'Remove Blur' : 'Blur Background'}
         </button>
     )

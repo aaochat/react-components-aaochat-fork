@@ -1,9 +1,9 @@
 import { computeMenuPosition, setupDisconnectButton, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
 import { DisconnectButton } from '../components';
-// import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
 import { useLocalParticipant, useParticipants } from '../hooks';
+import { LeaveIcon } from '../assets/icons';
 
 /** @public */
 export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -55,7 +55,9 @@ export function HostEndMeetingMenu({
     if (button.current && tooltip.current && updateRequired) {
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
         if (tooltip.current) {
-          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y + 5}px` });
+          console.log({ x, y });
+
+          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y - 5}px` });
         }
       });
       setUpdateRequired(false);
@@ -207,6 +209,8 @@ export function HostEndMeetingMenu({
         ref={button}
       >
         {props.children}
+        {showIcon && <LeaveIcon />}
+        {showText && "Leave"}
       </button>
       {/** only render when enabled in order to make sure that the permissions are requested only if the menu is enabled */}
       <div
