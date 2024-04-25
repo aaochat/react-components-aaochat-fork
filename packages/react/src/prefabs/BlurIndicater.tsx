@@ -26,7 +26,7 @@ export function BlurIndicater({ source, parentCallback }: BlurIndicaterProps) {
         } else {
             setIsCameraEnabled(true);
         }
-    }, [track?.isMuted]);
+    }, [track]);
 
     const toggleBlur = async () => {
         if (!room) return;
