@@ -286,7 +286,7 @@ export function ControlBar({
       )}
       <div className="lk-button-group">
         <div className="lk-button-group-menu">
-          <ExtraOptionMenu blurEnabled={true} shareScreenTracks={screenShareTracks} />
+          <ExtraOptionMenu blurEnabled={false} shareScreenTracks={screenShareTracks} />
         </div>
       </div>
       {visibleControls.endForAll ? (

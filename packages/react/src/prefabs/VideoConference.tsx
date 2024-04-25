@@ -303,7 +303,7 @@ export function VideoConference({
             )
           } */}
           <Chat
-            style={{ display: widgetState.showChat == 'show_chat' ? 'grid' : 'none' }}
+            style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
             messageFormatter={formatChatMessageLinks}
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}
