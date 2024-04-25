@@ -165,8 +165,8 @@ importers:
   packages/react:
     dependencies:
       '@livekit/components-core':
-        specifier: workspace:*
-        version: link:../core
+        specifier: github:deepkiraninc/livekit-react-core#develop
+        version: https://codeload.github.com/deepkiraninc/livekit-react-core/tar.gz/b3091930d17c7d584c6a7cdf63c4c54b3f195e4f(@livekit/protocol@1.13.0)(livekit-client@2.1.0)(tslib@2.6.2)
       '@livekit/protocol':
         specifier: ^1.12.0
         version: 1.13.0
@@ -798,6 +798,15 @@ packages:
 
   '@livekit/changesets-changelog-github@0.0.4':
     resolution: {integrity: sha512-MXaiLYwgkYciZb8G2wkVtZ1pJJzZmVx5cM30Q+ClslrIYyAqQhRbPmZDM79/5CGxb1MTemR/tfOM25tgJgAK0g==}
+
+  '@livekit/components-core@https://codeload.github.com/deepkiraninc/livekit-react-core/tar.gz/b3091930d17c7d584c6a7cdf63c4c54b3f195e4f':
+    resolution: {tarball: https://codeload.github.com/deepkiraninc/livekit-react-core/tar.gz/b3091930d17c7d584c6a7cdf63c4c54b3f195e4f}
+    version: 0.10.0
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@livekit/protocol': ^1.12.0
+      livekit-client: ^2.1.0
+      tslib: ^2.6.2
 
   '@livekit/protocol@1.13.0':
     resolution: {integrity: sha512-M3U36VgRfb0VutWG6pnozXusL+mkYstbCctTLUyCIyye36Ztv1wA9zYpyYvz7VnsgmCn+g/g0eB2rnAkTVwcnA==}
@@ -5097,6 +5106,16 @@ snapshots:
       dotenv: 8.6.0
     transitivePeerDependencies:
       - encoding
+
+  '@livekit/components-core@https://codeload.github.com/deepkiraninc/livekit-react-core/tar.gz/b3091930d17c7d584c6a7cdf63c4c54b3f195e4f(@livekit/protocol@1.13.0)(livekit-client@2.1.0)(tslib@2.6.2)':
+    dependencies:
+      '@floating-ui/dom': 1.6.3
+      '@livekit/protocol': 1.13.0
+      email-regex: 5.0.0
+      livekit-client: 2.1.0
+      loglevel: 1.9.1
+      rxjs: 7.8.1
+      tslib: 2.6.2
 
   '@livekit/protocol@1.13.0':
     dependencies:
