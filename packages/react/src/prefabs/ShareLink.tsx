@@ -1,10 +1,11 @@
-/* eslint-disable prettier/prettier */
 import * as React from 'react';
 import { useEnsureParticipant, useRoomContext } from '../context';
 import { Toast } from '../components';
 import { useLocalParticipant } from '../hooks';
 import { setupParticipantName } from '@livekit/components-core';
 import { useObservableState } from '../hooks/internal';
+import { InviteViaPhone } from './InviteViaPhone';
+import { InviteViaEmail } from './InviteViaEmail';
 
 export function useGetLink() {
   const host = getHostUrl();
@@ -49,13 +50,19 @@ export function ShareLink({ ...props }: any) {
   const [users, setUsers] = React.useState<User[]>([]);
   const [searched, setSearched] = React.useState<User[]>([]);
   const [showToast, setShowToast] = React.useState<boolean>(false);
+  const [inviteVia, setInviteVia] = React.useState<string>('chat');
+
+  function showInviteVia(type: string) {
+    setInviteVia(type);
+  }
+
   // const [ checkedValues, setCheckedValues ] = React.useState<string[]>([]);
   const room = useGetRoom();
-
+  const participantName = room.localParticipant.name;
   async function searchUsers(key: string) {
     if (key) {
       const filteredData = users.filter(function (item) {
-        return (item.user_name.toLocaleLowerCase()).startsWith(key.toLocaleLowerCase());
+        return (item.full_name.toLocaleLowerCase()).includes(key.trim().toLocaleLowerCase());
       });
       setSearched(filteredData)
     } else {
@@ -202,38 +209,60 @@ export function ShareLink({ ...props }: any) {
 
       {showToast ? <Toast className="lk-toast-connection-state">Copied</Toast> : <></>}
 
-      {showInviteUser ? (
-        <form className="lk-chat-form" onSubmit={handleSubmit}>
-          <input
-            className="lk-form-control lk-chat-form-input"
-            ref={inputRef}
-            type="text"
-            placeholder="Search User..."
-            onChange={handleSubmit}
-          />
-        </form>
-      ) : (<></>)}
+      <div className="tl-invite-buttons">
+        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'chat'} onClick={() => showInviteVia('chat')}>
+          TL-Chat
+        </button>
+        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'phone'} onClick={() => showInviteVia('phone')}>
+          Phone
+        </button>
+        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'email'} onClick={() => showInviteVia('email')}>
+          Email
+        </button>
+      </div>
 
-      {showInviteUser && searched.length > 0 ? (
-        <ul className="lk-list lk-chat-messages" ref={ulRef}>
-          {searched.map((user, index) => {
-            return (
-              <li key={index} className="lk-chat-entry">
-                <div className='tl-list-user-box'>
-                  <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
-                  <span className="lk-message-body lk-message-text">{user.designation}</span>
-                </div>
+      {inviteVia === 'phone' ? <InviteViaPhone link={link} room_name={room.name} participant={participantName} /> : <></>}
+      {inviteVia === 'email' ? <InviteViaEmail link={link} room_name={room.name} participant={participantName} /> : <></>}
 
-                <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button tl-invite-button" + (user.invited ? ' invited' : '')}>
-                  {user.invited ? 'Invited' : 'Invite'}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      ) : (
-        ''
-      )}
+      {inviteVia === 'chat' ?
+        <>
+          {showInviteUser ? (
+            <form className="lk-chat-form" onSubmit={handleSubmit}>
+              <input
+                className="lk-form-control lk-chat-form-input"
+                ref={inputRef}
+                type="text"
+                placeholder="Search User..."
+                onChange={handleSubmit}
+              />
+            </form>
+          ) : (<></>)}
+
+          {showInviteUser && searched.length > 0 ? (
+            <ul className="lk-list lk-chat-messages" ref={ulRef}>
+              {searched.map((user, index) => {
+                return (
+                  <li key={index} className="lk-chat-entry">
+                    <div>
+                      <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
+                      <span className="lk-message-body lk-message-text">{user.designation}</span>
+                    </div>
+
+                    <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
+                      {user.invited ? 'Invited' : 'Invite'}
+                    </button>
+                  </li>
+                )
+              })
+              }
+            </ul>
+          ) : (
+            ''
+          )}
+        </>
+        :
+        <></>
+      }
     </div>
   );
 }

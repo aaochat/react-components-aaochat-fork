@@ -47,10 +47,10 @@
   },
   "typings": "dist/index.d.ts",
   "dependencies": {
+    "@livekit/components-core": "workspace:*",
     "@react-hook/latest": "1.0.3",
     "clsx": "2.1.0",
-    "usehooks-ts": "2.16.0",
-    "@livekit/components-core": "github:deepkiraninc/livekit-react-core#develop"
+    "usehooks-ts": "2.16.0"
   },
   "peerDependencies": {
     "livekit-client": "^2.1.0",
