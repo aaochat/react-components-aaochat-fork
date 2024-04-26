@@ -46,7 +46,7 @@
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@livekit/components-styles": "workspace:*",
+    "@livekit/components-styles": "^1.0.11",
     "@microsoft/api-extractor": "^7.36.0",
     "@size-limit/file": "^11.0.2",
     "@size-limit/webpack": "^11.0.2",
