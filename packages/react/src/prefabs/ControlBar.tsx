@@ -43,6 +43,7 @@ export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   screenShareTracks?: number;
   isWhiteboard?: boolean;
   saveUserChoices?: boolean;
+  showExtraSettingMenu?: boolean;
 }
 
 /**
@@ -68,6 +69,7 @@ export function ControlBar({
   screenShareTracks,
   isWhiteboard,
   saveUserChoices = true,
+  showExtraSettingMenu,
   ...props
 }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
@@ -284,18 +286,15 @@ export function ControlBar({
           {waitingRoomCount !== 0 && <span className="waiting-count">{waitingRoomCount}</span>}
         </UserToggle>
       )}
-      <div className="lk-button-group">
-        <div className="lk-button-group-menu">
-          <ExtraOptionMenu blurEnabled={false} shareScreenTracks={screenShareTracks} />
+      {showExtraSettingMenu && (
+        <div className="lk-button-group">
+          <div className="lk-button-group-menu">
+            <ExtraOptionMenu blurEnabled={false} shareScreenTracks={screenShareTracks} />
+          </div>
         </div>
-      </div>
+      )}
       {visibleControls.endForAll ? (
         <div className="tl-leave lk-button-group">
-          {/* <button className="lk-disconnect-button">
-            {showIcon && <LeaveIcon />}
-            {showText && "Leave"}
-          </button> */}
-
           <div className="tl-leave-btn lk-button-group-menu">
             <HostEndMeetingMenu
               leave={visibleControls.leave}

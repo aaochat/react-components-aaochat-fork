@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Toast } from "../components";
-
 /**
  * InviteViaPhoneProps
  * @interface InviteViaPhoneProps
@@ -11,37 +10,71 @@ export interface InviteViaPhoneEmailProps {
     link: string;
     room_name: string;
     participant: string | undefined;
+    isCallScreen: boolean;
 };
 
-export function InviteViaPhone({ link, room_name, participant, ...props }: InviteViaPhoneEmailProps) {
+export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...props }: InviteViaPhoneEmailProps) {
     const selectRef = React.useRef<HTMLSelectElement>(null);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [showToast, setShowToast] = React.useState<boolean>(false);
+    const [countries, setCountries] = React.useState([]);
+
+    React.useEffect(() => {
+        fetch(`/country-list.json`).then(async (res) => {
+            setCountries(await res.json());
+        });
+    }, [])
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
         if (inputRef.current && inputRef.current.value.trim() !== '') {
             const number = selectRef.current?.value + inputRef.current.value;
-            const data = {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "number": number, // body data type must match "Content-Type" header
-                    "link": link,
-                    "meeting_id": room_name,
-                    "participant": participant,
-                })
-            };
 
-            fetch(`/api/invite-phone`, data).then(async (res) => {
-                if (res.ok) {
-                    setShowToast(true);
-                } else {
-                    throw Error('Error fetching server url, check server logs');
-                }
-            });
+            if (isCallScreen) {
+                const queryParams = new URLSearchParams(window.location.search);
+                const token = queryParams.get("token");
+                const authKey = queryParams.get("authKey");
+
+                const data = {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "number": number, // body data type must match "Content-Type" header
+                        "token": token,
+                        "authkey": authKey,
+                        "meeting_id": room_name,
+                    })
+                };
+                fetch(`/api/invite-call-email-phone`, data).then(async (res) => {
+                    if (res.ok) {
+                        setShowToast(true);
+                    } else {
+                        throw Error('Error fetching server url, check server logs');
+                    }
+                });
+            } else {
+                const data = {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "number": number, // body data type must match "Content-Type" header
+                        "link": link,
+                        "meeting_id": room_name,
+                        "participant": participant,
+                    })
+                };
+                fetch(`/api/invite-phone`, data).then(async (res) => {
+                    if (res.ok) {
+                        setShowToast(true);
+                    } else {
+                        throw Error('Error fetching server url, check server logs');
+                    }
+                });
+            }
         }
     }
 
@@ -58,8 +91,9 @@ export function InviteViaPhone({ link, room_name, participant, ...props }: Invit
             {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
             <form className="lk-chat-form" onSubmit={handleSubmit}>
                 <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef}>
-                    <option value="+1">United States (+1)</option>
-                    <option value="+91">India (+91)</option>
+                    {countries.map((country: { name: string, dial_code: string; }) => (
+                        <option value={country.dial_code}>{country.name} ({country.dial_code})</option>
+                    ))}
                 </select>
 
                 <input className="lk-form-control lk-chat-form-input" type="tel" ref={inputRef} placeholder="Enter Mobile Number" />

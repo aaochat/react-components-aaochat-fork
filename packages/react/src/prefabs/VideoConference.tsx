@@ -38,6 +38,11 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   chatMessageDecoder?: MessageDecoder;
   /** @alpha */
   SettingsComponent?: React.ComponentType;
+  showChatButton: boolean;
+  showShareLink: boolean;
+  isCallScreen: boolean;
+  showParticipant: boolean;
+  showExtraSettingMenu: boolean;
 }
 
 /**
@@ -63,6 +68,11 @@ export function VideoConference({
   chatMessageDecoder,
   chatMessageEncoder,
   SettingsComponent,
+  showChatButton,
+  showShareLink,
+  showParticipant,
+  isCallScreen,
+  showExtraSettingMenu,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
@@ -85,8 +95,8 @@ export function VideoConference({
     metadata: p.metadata,
   });
 
-  const [showShareButton, setShowShareButton] = React.useState<boolean>(false);
-  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(false);
+  const [showShareButton, setShowShareButton] = React.useState<boolean>(showShareLink);
+  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(showParticipant);
   const [leaveButton, setLeaveButton] = React.useState<string>("Leave");
   const [endForAll, setEndForAll] = React.useState<string | false>(false);
 
@@ -259,7 +269,7 @@ export function VideoConference({
             )}
             <ControlBar
               controls={{
-                chat: true,
+                chat: showChatButton,
                 sharelink: showShareButton,
                 users: showParticipantButton,
                 leaveButton: leaveButton,
@@ -269,16 +279,19 @@ export function VideoConference({
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
               isWhiteboard={isWhiteboard}
+              showExtraSettingMenu={showExtraSettingMenu}
             />
           </div >
 
           {
             showShareButton ?
               (
-                <ShareLink style={{
-                  display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
-                }
-                } />
+                <ShareLink
+                  style={{
+                    display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                  }}
+                  isCallScreen={isCallScreen}
+                />
               ) : (
                 <></>
               )
