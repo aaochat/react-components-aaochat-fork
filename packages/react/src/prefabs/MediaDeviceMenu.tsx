@@ -122,14 +122,26 @@ export function MediaDeviceMenu({
           style={{ visibility: isOpen ? 'visible' : 'hidden' }}
         >
           {kind ? (
-            <MediaDeviceSelect
-              initialSelection={initialSelection}
-              onActiveDeviceChange={(deviceId) => handleActiveDeviceChange(kind, deviceId)}
-              onDeviceListChange={setDevices}
-              kind={kind}
-              track={tracks?.[kind]}
-              requestPermissions={needPermissions}
-            />
+            <>
+              <MediaDeviceSelect
+                initialSelection={initialSelection}
+                onActiveDeviceChange={(deviceId) => handleActiveDeviceChange(kind, deviceId)}
+                onDeviceListChange={setDevices}
+                kind={kind}
+                track={tracks?.[kind]}
+                requestPermissions={needPermissions}
+              />
+              {kind === 'audioinput' && (
+                <MediaDeviceSelect
+                  initialSelection={initialSelection}
+                  onActiveDeviceChange={(deviceId) => handleActiveDeviceChange('audiooutput', deviceId)}
+                  onDeviceListChange={setDevices}
+                  kind={'audiooutput'}
+                  track={tracks?.['audiooutput']}
+                  requestPermissions={needPermissions}
+                />
+              )}
+            </>
           ) : (
             <>
               <div className="lk-device-menu-heading">Audio inputs</div>
