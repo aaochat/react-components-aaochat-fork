@@ -123,6 +123,11 @@ export function MediaDeviceMenu({
         >
           {kind ? (
             <>
+              {kind === 'audioinput' && (
+                <span className='tl-device-action-type'>
+                  INPUT
+                </span>
+              )}
               <MediaDeviceSelect
                 initialSelection={initialSelection}
                 onActiveDeviceChange={(deviceId) => handleActiveDeviceChange(kind, deviceId)}
@@ -132,14 +137,19 @@ export function MediaDeviceMenu({
                 requestPermissions={needPermissions}
               />
               {kind === 'audioinput' && (
-                <MediaDeviceSelect
-                  initialSelection={initialSelection}
-                  onActiveDeviceChange={(deviceId) => handleActiveDeviceChange('audiooutput', deviceId)}
-                  onDeviceListChange={setDevices}
-                  kind={'audiooutput'}
-                  track={tracks?.['audiooutput']}
-                  requestPermissions={needPermissions}
-                />
+                <>
+                  <span className='tl-device-action-type'>
+                    OUTPUT
+                  </span>
+                  <MediaDeviceSelect
+                    initialSelection={initialSelection}
+                    onActiveDeviceChange={(deviceId) => handleActiveDeviceChange('audiooutput', deviceId)}
+                    onDeviceListChange={setDevices}
+                    kind={'audiooutput'}
+                    track={tracks?.['audiooutput']}
+                    requestPermissions={needPermissions}
+                  />
+                </>
               )}
             </>
           ) : (
