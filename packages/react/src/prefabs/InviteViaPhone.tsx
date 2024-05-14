@@ -37,6 +37,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
         if (inputRef.current && inputRef.current.value.trim() !== '') {
             const number = selectRef.current?.value + inputRef.current.value;
 
+            setEmpty();
             if (isCallScreen) {
                 const queryParams = new URLSearchParams(window.location.search);
                 const token = queryParams.get("token");
@@ -57,7 +58,6 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
                 fetch(`/api/invite-call-email-phone`, data).then(async (res) => {
                     if (res.ok) {
                         setShowToast(true);
-                        setEmpty();
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
@@ -78,7 +78,6 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
                 fetch(`/api/invite-phone`, data).then(async (res) => {
                     if (res.ok) {
                         setShowToast(true);
-                        setEmpty();
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
