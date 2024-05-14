@@ -6,6 +6,12 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [showToast, setShowToast] = React.useState<boolean>(false);
 
+    function setEmpty() {
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+    }
+
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
         if (inputRef.current && inputRef.current.value.trim() !== '') {
@@ -30,6 +36,7 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
                 fetch(`/api/invite-call-email-phone`, data).then(async (res) => {
                     if (res.ok) {
                         setShowToast(true);
+                        setEmpty();
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
@@ -52,6 +59,7 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
                 fetch(`/api/invite-email`, data).then(async (res) => {
                     if (res.ok) {
                         setShowToast(true);
+                        setEmpty();
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }

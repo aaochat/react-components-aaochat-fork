@@ -25,6 +25,13 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
         });
     }, [])
 
+    function setEmpty() {
+        if (inputRef.current && selectRef.current) {
+            inputRef.current.value = '';
+            selectRef.current.value = '';
+        }
+    }
+
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
         if (inputRef.current && inputRef.current.value.trim() !== '') {
@@ -50,6 +57,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
                 fetch(`/api/invite-call-email-phone`, data).then(async (res) => {
                     if (res.ok) {
                         setShowToast(true);
+                        setEmpty();
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
@@ -70,6 +78,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
                 fetch(`/api/invite-phone`, data).then(async (res) => {
                     if (res.ok) {
                         setShowToast(true);
+                        setEmpty();
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
@@ -92,7 +101,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
             <form className="lk-chat-form" onSubmit={handleSubmit}>
                 <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef}>
                     {countries.map((country: { name: string, dial_code: string; }) => (
-                        <option value={country.dial_code}>{country.name} ({country.dial_code})</option>
+                        <option value={country.dial_code}>{country.dial_code} - {country.name}</option>
                     ))}
                 </select>
 
