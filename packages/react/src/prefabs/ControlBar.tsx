@@ -231,6 +231,7 @@ export function ControlBar({
           </TrackToggle>
           <div className="lk-button-group-menu">
             <MediaDeviceMenu
+              initialSelection={'default'}
               kind="audioinput"
               onActiveDeviceChange={(_kind, deviceId) => saveAudioInputDeviceId(deviceId ?? '')}
             />
