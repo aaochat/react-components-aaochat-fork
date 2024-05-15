@@ -98,7 +98,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
         <div {...props}>
             {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
             <form className="lk-chat-form" onSubmit={handleSubmit}>
-                <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef}>
+                <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef} value={'+1'}>
                     {countries.map((country: { name: string, dial_code: string; }) => (
                         <option value={country.dial_code}>{country.dial_code} - {country.name}</option>
                     ))}

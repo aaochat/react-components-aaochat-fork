@@ -78,6 +78,7 @@ export const MediaDeviceSelect = /* @__PURE__ */ React.forwardRef<
     requestPermissions,
     onError: handleError,
   });
+
   React.useEffect(() => {
     if (initialSelection !== undefined) {
       setActiveMediaDevice(initialSelection);
@@ -91,6 +92,8 @@ export const MediaDeviceSelect = /* @__PURE__ */ React.forwardRef<
   }, [onDeviceListChange, devices]);
 
   React.useEffect(() => {
+    console.log({ kind, activeDeviceId });
+
     if (activeDeviceId && activeDeviceId !== '') {
       onActiveDeviceChange?.(activeDeviceId);
     }
