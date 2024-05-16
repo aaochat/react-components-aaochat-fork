@@ -51,7 +51,7 @@ export function WhiteboardIndicater({
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
-                room.localParticipant.publishData(data, 0);
+                room.localParticipant.publishData(data, { reliable: false });
                 updateMeta(false);
             } else {
                 if (dispatch) {
@@ -61,7 +61,7 @@ export function WhiteboardIndicater({
                 const data = encoder.encode(strData);
 
                 // publish lossy data to the entire room
-                room.localParticipant.publishData(data, 0);
+                room.localParticipant.publishData(data, { reliable: false });
                 updateMeta(true);
             }
         } catch (e: any) {

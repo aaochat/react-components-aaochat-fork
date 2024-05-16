@@ -4,10 +4,10 @@ import { useParticipants } from '../hooks';
 import { ParticipantLoop } from '../components';
 import { ParticipantList } from '../components/participant/ParticipantList';
 import { useRoomContext } from '../context';
-import type { LocalUserChoices } from './PreJoin';
 import { ToggleSwitch } from '../components/ToggleSwitch';
-import SvgApproveIcon from '../assets/icons/ApproveIcon';
-import SvgRejectIcon from '../assets/icons/RejectIcon';
+import SvgApproveIcon from '../assets/icons/tl/ApproveIcon';
+import SvgRejectIcon from '../assets/icons/tl/RejectIcon';
+import { LocalUserChoices } from '@livekit/components-core';
 
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {

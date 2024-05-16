@@ -33,44 +33,48 @@ export interface ChatEntryProps extends React.HTMLAttributes<HTMLLIElement> {
  * @see `Chat`
  * @public
  */
-export function ChatEntry({
-  entry,
-  hideName = false,
-  hideTimestamp = false,
-  messageFormatter,
-  ...props
-}: ChatEntryProps) {
-  const formattedMessage = React.useMemo(() => {
-    return messageFormatter ? messageFormatter(entry.message) : entry.message;
-  }, [entry.message, messageFormatter]);
-  const time = new Date(entry.timestamp);
-  const locale = navigator ? navigator.language : 'en-US';
+export const ChatEntry = /* @__PURE__ */ React.forwardRef<HTMLLIElement, ChatEntryProps>(
+  function ChatEntry(
+    { entry, hideName = false, hideTimestamp = false, messageFormatter, ...props }: ChatEntryProps,
+    ref,
+  ) {
+    const formattedMessage = React.useMemo(() => {
+      return messageFormatter ? messageFormatter(entry.message) : entry.message;
+    }, [entry.message, messageFormatter]);
+    const hasBeenEdited = !!entry.editTimestamp;
+    const time = new Date(entry.timestamp);
+    const locale = navigator ? navigator.language : 'en-US';
 
-  return (
-    <li
-      className="lk-chat-entry"
-      title={time.toLocaleTimeString(locale, { timeStyle: 'full' })}
-      data-lk-message-origin={entry.from?.isLocal ? 'local' : 'remote'}
-      {...props}
-    >
-      {(!hideTimestamp || !hideName) && (
-        <span className="lk-meta-data">
-          {!hideName && (
-            <strong className="lk-participant-name">
-              {entry.from?.name ?? entry.from?.identity}
-            </strong>
-          )}
-          {!hideTimestamp && (
-            <span className="lk-timestamp">
-              {time.toLocaleTimeString(locale, { timeStyle: 'short' })}
-            </span>
-          )}
-        </span>
-      )}
-      <span className="lk-message-body">{formattedMessage}</span>
-    </li>
-  );
-}
+    return (
+      <li
+        ref={ref}
+        className="lk-chat-entry"
+        title={time.toLocaleTimeString(locale, { timeStyle: 'full' })}
+        data-lk-message-origin={entry.from?.isLocal ? 'local' : 'remote'}
+        {...props}
+      >
+        {(!hideTimestamp || !hideName || hasBeenEdited) && (
+          <span className="lk-meta-data">
+            {!hideName && (
+              <strong className="lk-participant-name">
+                {entry.from?.name ?? entry.from?.identity}
+              </strong>
+            )}
+
+            {(!hideTimestamp || hasBeenEdited) && (
+              <span className="lk-timestamp">
+                {hasBeenEdited && 'edited '}
+                {time.toLocaleTimeString(locale, { timeStyle: 'short' })}
+              </span>
+            )}
+          </span>
+        )}
+
+        <span className="lk-message-body">{formattedMessage}</span>
+      </li>
+    );
+  },
+);
 
 export function nl2br(str: string, is_xhtml: any) {
   if (typeof str === 'undefined' || str === null) {

@@ -1,6 +1,6 @@
 {
   "name": "@livekit/components-react",
-  "version": "1.3.0",
+  "version": "2.2.1",
   "license": "Apache-2.0",
   "author": "LiveKit",
   "repository": {
@@ -33,11 +33,11 @@
     "src"
   ],
   "scripts": {
-    "build": "yarn gen:svg && tsup --onSuccess \"tsc --declaration --emitDeclarationOnly\"",
+    "build": "pnpm gen:svg && tsup --onSuccess \"tsc --declaration --emitDeclarationOnly\"",
     "dev": "tsup --watch --onSuccess \"tsc --declaration --emitDeclarationOnly\"",
-    "gen:icons": "svgr --out-dir ./src/assets/icons --typescript ../styles/assets/icons",
-    "gen:images": "svgr --out-dir ./src/assets/images --typescript --no-svgo ../styles/assets/images",
-    "gen:svg": "yarn gen:images && yarn gen:icons",
+    "gen:icons": "rimraf -I -g ./src/assets/icons/*Icon.tsx && svgr --template ./src/assets/template.js --out-dir ./src/assets/icons --typescript ../styles/assets/icons",
+    "gen:images": "rimraf -I -g ./src/assets/images/*.tsx && svgr --template ./src/assets/template.js --out-dir ./src/assets/images --typescript --no-svgo ../styles/assets/images",
+    "gen:svg": "pnpm gen:images && pnpm gen:icons",
     "lint": "eslint -f unix \"src/**/*.{ts,tsx}\"",
     "test": "vitest --run",
     "test:watch": "vitest",
@@ -47,36 +47,37 @@
   },
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@livekit/components-core": "0.7.0",
-    "@react-hook/latest": "^1.0.3",
-    "clsx": "^2.0.0",
-    "usehooks-ts": "^2.9.1"
+    "@livekit/components-core": "github:deepkiraninc/livekit-react-core#develop",
+    "@react-hook/latest": "1.0.3",
+    "clsx": "2.1.0",
+    "usehooks-ts": "2.16.0"
   },
   "peerDependencies": {
-    "livekit-client": "^1.15.13",
+    "livekit-client": "^2.1.0",
+    "@livekit/protocol": "^1.12.0",
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.35.0",
-    "@size-limit/file": "^8.2.4",
-    "@size-limit/webpack": "^8.2.4",
+    "@size-limit/file": "^11.0.2",
+    "@size-limit/webpack": "^11.0.2",
     "@svgr/cli": "^8.0.0",
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^15.0.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^4.0.0",
-    "jsdom": "^22.0.0",
+    "jsdom": "^24.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "size-limit": "^8.2.4",
-    "tsup": "^7.0.0",
-    "typescript": "5.2.2",
-    "vite": "^4.1.4",
-    "vitest": "^0.34.0"
+    "rimraf": "^5.0.5",
+    "size-limit": "^11.0.2",
+    "tsup": "^8.0.0",
+    "vitest": "^1.3.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"

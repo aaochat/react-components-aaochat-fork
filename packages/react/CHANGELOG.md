@@ -1,5 +1,237 @@
 # @livekit/components-react
 
+## 2.2.1
+
+### Patch Changes
+
+- Update docs for default connect value in LiveKitRoom - [#840](https://github.com/livekit/components-js/pull/840) ([@davidliu](https://github.com/davidliu))
+
+- Fix duplicated incoming audio when using AudioTrack renderer and its muted property - [#855](https://github.com/livekit/components-js/pull/855) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies []:
+  - @livekit/components-core@0.10.0
+
+## 2.2.0
+
+### Minor Changes
+
+- Don't auto subscribe to all audio tracks automatically in RoomAudioRenderer - [#847](https://github.com/livekit/components-js/pull/847) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- Fix docs for TrackMutedIndicator accepting track references - [#846](https://github.com/livekit/components-js/pull/846) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix releasing of local tracks in prejoin - [#844](https://github.com/livekit/components-js/pull/844) ([@lukasIO](https://github.com/lukasIO))
+
+## 2.1.3
+
+### Patch Changes
+
+- Fix participant tile audio muted data prop - [#838](https://github.com/livekit/components-js/pull/838) ([@lukasIO](https://github.com/lukasIO))
+
+- Remove useForwardedRef redeclaration - [#839](https://github.com/livekit/components-js/pull/839) ([@lukasIO](https://github.com/lukasIO))
+
+- Fix prejoin track lock release - [#842](https://github.com/livekit/components-js/pull/842) ([@lukasIO](https://github.com/lukasIO))
+
+## 2.1.2
+
+### Patch Changes
+
+- Forward AudioTrack ref via imperative handle (fixes audio rendering) - [#835](https://github.com/livekit/components-js/pull/835) ([@lukasIO](https://github.com/lukasIO))
+
+## 2.1.1
+
+### Patch Changes
+
+- Fix video rendering, use imperative handle to forward ref - [#831](https://github.com/livekit/components-js/pull/831) ([@lukasIO](https://github.com/lukasIO))
+
+## 2.1.0
+
+### Minor Changes
+
+- Require livekit-client ^2.1.0 peer dependency - [#830](https://github.com/livekit/components-js/pull/830) ([@lukasIO](https://github.com/lukasIO))
+
+- Support referencing components via refs - [#827](https://github.com/livekit/components-js/pull/827) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- Improve track acquiring and handling in usePreviewTracks - [#830](https://github.com/livekit/components-js/pull/830) ([@lukasIO](https://github.com/lukasIO))
+
+- Use participant array length to re-trigger sorting - [#829](https://github.com/livekit/components-js/pull/829) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`ccd551f98037427d92bb6e14560f972458a4544d`](https://github.com/livekit/components-js/commit/ccd551f98037427d92bb6e14560f972458a4544d)]:
+  - @livekit/components-core@0.10.0
+
+## 2.0.6
+
+### Patch Changes
+
+- Request device permissions when opening media device menu - [#820](https://github.com/livekit/components-js/pull/820) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`8c4e196adfe0f85e9eef5d6045eeda19d78a8e03`](https://github.com/livekit/components-js/commit/8c4e196adfe0f85e9eef5d6045eeda19d78a8e03)]:
+  - @livekit/components-core@0.9.3
+
+## 2.0.5
+
+### Patch Changes
+
+- Revert "Request device permissions when opening menu" due to change in behavior - [#810](https://github.com/livekit/components-js/pull/810) ([@davidzhao](https://github.com/davidzhao))
+
+## 2.0.4
+
+### Patch Changes
+
+- Request device permissions when opening media device menu - [#800](https://github.com/livekit/components-js/pull/800) ([@lukasIO](https://github.com/lukasIO))
+
+- Update livekit-client to 2.0.10 for Chrome 124 compatibility - [#806](https://github.com/livekit/components-js/pull/806) ([@davidzhao](https://github.com/davidzhao))
+
+- Updated dependencies [[`24de53696cd6c90cf32f0e35d3b64d6b20d8dc5b`](https://github.com/livekit/components-js/commit/24de53696cd6c90cf32f0e35d3b64d6b20d8dc5b)]:
+  - @livekit/components-core@0.9.2
+
+## 2.0.3
+
+### Patch Changes
+
+- Stop propagation of key events on chat input element - [#798](https://github.com/livekit/components-js/pull/798) ([@lukasIO](https://github.com/lukasIO))
+
+- Update docs for useDisconnectButton - [#796](https://github.com/livekit/components-js/pull/796) ([@lukasIO](https://github.com/lukasIO))
+
+## 2.0.2
+
+### Patch Changes
+
+- Remove unintended character in video conference view - [#794](https://github.com/livekit/components-js/pull/794) ([@lukasIO](https://github.com/lukasIO))
+
+## 2.0.1
+
+### Patch Changes
+
+- Fix check for process in style warning - [#782](https://github.com/livekit/components-js/pull/782) ([@lukasIO](https://github.com/lukasIO))
+
+- Add support for a settings modal render prop - [#781](https://github.com/livekit/components-js/pull/781) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`344dd70e23c7a1184cab6c066d5cf6ef9c919eb2`](https://github.com/livekit/components-js/commit/344dd70e23c7a1184cab6c066d5cf6ef9c919eb2)]:
+  - @livekit/components-core@0.9.1
+
+## 2.0.0
+
+### Major Changes
+
+- Remove previously deprecated APIs - [#774](https://github.com/livekit/components-js/pull/774) ([@lukasIO](https://github.com/lukasIO))
+
+- Add useParticipantTracks and remove useTrack hook - [#729](https://github.com/livekit/components-js/pull/729) ([@lukasIO](https://github.com/lukasIO))
+
+- Update to livekit-client v2 - read the migration guide [here](https://docs.livekit.io/guides/migrate-from-v1/)https://docs.livekit.io/guides/migrate-from-v1/ - [#733](https://github.com/livekit/components-js/pull/733) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- Initialize useMediaDevices useMediaDeviceSelect with empty array on error - [#770](https://github.com/livekit/components-js/pull/770) ([@lukasIO](https://github.com/lukasIO))
+
+- Do not crash in usePreviewDevice when user has not granted permission to media device - [#768](https://github.com/livekit/components-js/pull/768) ([@dnetteln](https://github.com/dnetteln))
+
+- Catch callback executions when chained as props - [#771](https://github.com/livekit/components-js/pull/771) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`6d3e25c593923eb86ee66b76455bb55a7da779b5`](https://github.com/livekit/components-js/commit/6d3e25c593923eb86ee66b76455bb55a7da779b5), [`e00d930a80bbcba30933656c484e064a683c5408`](https://github.com/livekit/components-js/commit/e00d930a80bbcba30933656c484e064a683c5408), [`5fa2d6b33c591a5cf511c015d066546c983bf2aa`](https://github.com/livekit/components-js/commit/5fa2d6b33c591a5cf511c015d066546c983bf2aa)]:
+  - @livekit/components-core@0.9.0
+
+## 1.5.3
+
+### Patch Changes
+
+- Add possibility to edit/update chat messages - [#757](https://github.com/livekit/components-js/pull/757) ([@lukasIO](https://github.com/lukasIO))
+
+- Use room as dependency to recreate localParticipant observable - [#753](https://github.com/livekit/components-js/pull/753) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies []:
+  - @livekit/components-core@0.8.3
+
+## 1.5.2
+
+### Patch Changes
+
+- Added close button in chat screen - [#740](https://github.com/livekit/components-js/pull/740) ([@govind-io](https://github.com/govind-io))
+
+- Add useTrackVolume hooks - [#735](https://github.com/livekit/components-js/pull/735) ([@lukasIO](https://github.com/lukasIO))
+
+- Log error on non-ok http statuses of useToken - [#739](https://github.com/livekit/components-js/pull/739) ([@lukasIO](https://github.com/lukasIO))
+
+- Pin all direct dependencies (Fixes an dependency resolve issue with a broken usehooks-ts release) - [#751](https://github.com/livekit/components-js/pull/751) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`e805d41b`](https://github.com/livekit/components-js/commit/e805d41b424b4c5618caff87bab65dbf5fbb648f), [`3e15bde4`](https://github.com/livekit/components-js/commit/3e15bde4720309869dc8f6b42ea7263f1bc8319e)]:
+  - @livekit/components-core@0.8.3
+
+## 1.5.1
+
+### Patch Changes
+
+- Fix render loop in TrackToggle onChange - [#734](https://github.com/livekit/components-js/pull/734) ([@harrywebdev](https://github.com/harrywebdev))
+
+## 1.5.0
+
+### Minor Changes
+
+- Add an `isUserInitiated` argument to the `onChange` callback on the `TrackToggle` component. - [#732](https://github.com/livekit/components-js/pull/732) ([@Ocupe](https://github.com/Ocupe))
+
+### Patch Changes
+
+- Emit missing style warning on VideoConference when in development mode - [#720](https://github.com/livekit/components-js/pull/720) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies []:
+  - @livekit/components-core@0.8.2
+
+## 1.4.2
+
+### Patch Changes
+
+- Updated dependencies [[`7017b588`](https://github.com/livekit/components-js/commit/7017b58897f54736e9d5db63b9c6da8d446516fb)]:
+  - @livekit/components-core@0.8.2
+
+## 1.4.1
+
+### Patch Changes
+
+- Surface encryption error on LiveKitRoom - [#706](https://github.com/livekit/components-js/pull/706) ([@lukasIO](https://github.com/lukasIO))
+
+- Add useStartVideo hook + update livekit client - [#714](https://github.com/livekit/components-js/pull/714) ([@lukasIO](https://github.com/lukasIO))
+
+- Add support for multiple chat windows - [#713](https://github.com/livekit/components-js/pull/713) ([@lukasIO](https://github.com/lukasIO))
+
+- Add StartMediaButton - [#717](https://github.com/livekit/components-js/pull/717) ([@lukasIO](https://github.com/lukasIO))
+
+- Add onError callback for MediaDeviceSelect - [#710](https://github.com/livekit/components-js/pull/710) ([@lukasIO](https://github.com/lukasIO))
+
+- Expose icons and hooks necessary to recreate participant tile - [#716](https://github.com/livekit/components-js/pull/716) ([@lukasIO](https://github.com/lukasIO))
+
+- Updated dependencies [[`da5ffe3b`](https://github.com/livekit/components-js/commit/da5ffe3b867de4d8567a544597905dd9b2fc8fd9), [`adc3d042`](https://github.com/livekit/components-js/commit/adc3d0427745000b73b70971297e9496c7eee9d6), [`11ec05d4`](https://github.com/livekit/components-js/commit/11ec05d4a753cd4e317e5031ccdb66137cab49b5), [`2dab3b08`](https://github.com/livekit/components-js/commit/2dab3b0855b09eb8c72c4c0c6fc63de5d5f6384d)]:
+  - @livekit/components-core@0.8.1
+
+## 1.4.0
+
+### Minor Changes
+
+- Add `usePersistentUserChoices` hook to save user choices saving functionality. - [#683](https://github.com/livekit/components-js/pull/683) ([@Ocupe](https://github.com/Ocupe))
+
+- Deprecate showE2EE options on PreJoin - [#693](https://github.com/livekit/components-js/pull/693) ([@lukasIO](https://github.com/lukasIO))
+
+### Patch Changes
+
+- Use more specific prop types for audio and video track - [#681](https://github.com/livekit/components-js/pull/681) ([@lukasIO](https://github.com/lukasIO))
+
+- Update PreJoin description and update docs. - [#682](https://github.com/livekit/components-js/pull/682) ([@Ocupe](https://github.com/Ocupe))
+
+- Fix `useTrackRef` for certain cases. - [#692](https://github.com/livekit/components-js/pull/692) ([@Ocupe](https://github.com/Ocupe))
+
+- Fix chat messages are not scrollable. - [#662](https://github.com/livekit/components-js/pull/662) ([@Ocupe](https://github.com/Ocupe))
+
+- Export isTrackReference - [#696](https://github.com/livekit/components-js/pull/696) ([@lukasIO](https://github.com/lukasIO))
+
+- Allow track placeholders to be pinned - [#666](https://github.com/livekit/components-js/pull/666) ([@lukasIO](https://github.com/lukasIO))
+
+- Remove non-exposed orphaned icons `QualityUnknownIcon.tsx` and `UserSilhouetteIcon.tsx`. - [#647](https://github.com/livekit/components-js/pull/647) ([@hehehai](https://github.com/hehehai))
+
+- Updated dependencies [[`01611f5d`](https://github.com/livekit/components-js/commit/01611f5d2498c8dcdc231e5e305f281c9c2d9311), [`946d2b06`](https://github.com/livekit/components-js/commit/946d2b06d78a5f8ab721a98fbebe6b16a2e98463)]:
+  - @livekit/components-core@0.8.0
+
 ## 1.3.0
 
 ### Minor Changes

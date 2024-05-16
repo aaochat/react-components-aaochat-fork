@@ -27,6 +27,7 @@ import { Users } from './Users';
 import { ShareLink } from './ShareLink';
 import { useObservableState } from '../hooks/internal';
 import { WhiteboardState } from '../context/whiteboard-context';
+import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
 
 /**
  * @public
@@ -35,6 +36,13 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   chatMessageFormatter?: MessageFormatter;
   chatMessageEncoder?: MessageEncoder;
   chatMessageDecoder?: MessageDecoder;
+  /** @alpha */
+  SettingsComponent?: React.ComponentType;
+  showChatButton: boolean;
+  showShareLink: boolean;
+  isCallScreen: boolean;
+  showParticipant: boolean;
+  showExtraSettingMenu: boolean;
 }
 
 /**
@@ -59,11 +67,18 @@ export function VideoConference({
   chatMessageFormatter,
   chatMessageDecoder,
   chatMessageEncoder,
+  SettingsComponent,
+  showChatButton,
+  showShareLink,
+  showParticipant,
+  isCallScreen,
+  showExtraSettingMenu,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
     unreadMessages: 0,
+    showSettings: false,
   });
 
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
@@ -80,8 +95,8 @@ export function VideoConference({
     metadata: p.metadata,
   });
 
-  const [showShareButton, setShowShareButton] = React.useState<boolean>(false);
-  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(false);
+  const [showShareButton, setShowShareButton] = React.useState<boolean>(showShareLink);
+  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(showParticipant);
   const [leaveButton, setLeaveButton] = React.useState<string>("Leave");
   const [endForAll, setEndForAll] = React.useState<string | false>(false);
 
@@ -224,6 +239,7 @@ export function VideoConference({
       setIsWhiteboard(false);
     }
   });
+  useWarnAboutMissingStyles();
 
   return (
     <div className="lk-video-conference" {...props}>
@@ -253,25 +269,29 @@ export function VideoConference({
             )}
             <ControlBar
               controls={{
-                chat: true,
+                chat: showChatButton,
                 sharelink: showShareButton,
                 users: showParticipantButton,
                 leaveButton: leaveButton,
                 endForAll: endForAll,
+                settings: !!SettingsComponent
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
               isWhiteboard={isWhiteboard}
+              showExtraSettingMenu={showExtraSettingMenu}
             />
           </div >
 
           {
             showShareButton ?
               (
-                <ShareLink style={{
-                  display: widgetState.showChat == 'show_invite' ? 'flex' : 'none'
-                }
-                } />
+                <ShareLink
+                  style={{
+                    display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                  }}
+                  isCallScreen={isCallScreen}
+                />
               ) : (
                 <></>
               )
@@ -280,7 +300,7 @@ export function VideoConference({
           {
             showParticipantButton ? (
               <Users
-                style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
+                style={{ display: widgetState.showChat == 'show_users' ? 'block' : 'none' }}
                 onWaitingRoomChange={updateCount}
               />
             ) : (<></>)
@@ -301,6 +321,16 @@ export function VideoConference({
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}
           />
+          {
+            SettingsComponent && (
+              <div
+                className="lk-settings-menu-modal"
+                style={{ display: widgetState.showSettings ? 'block' : 'none' }}
+              >
+                <SettingsComponent />
+              </div>
+            )
+          }
         </LayoutContextProvider >
       )
       }
