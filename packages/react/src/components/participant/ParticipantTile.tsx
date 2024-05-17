@@ -132,6 +132,13 @@ export const ParticipantTile = /* @__PURE__ */ React.forwardRef<
     [trackReference, layoutContext],
   );
 
+  const [imageUrl, setImageUrl] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (trackReference.participant.name)
+      setImageUrl(`https://ui-avatars.com/api/?name=${trackReference.participant.name}&background=111111&color=fff&size=128&rounded=true`);
+
+  }, [trackReference]);
 
   return (
     <div ref={ref} style={{ position: 'relative' }} {...elementProps}>
@@ -160,7 +167,11 @@ export const ParticipantTile = /* @__PURE__ */ React.forwardRef<
                   )
                 ))}
               <div className="lk-participant-placeholder">
-                <ParticipantPlaceholder />
+                {imageUrl ? (
+                  <img src={imageUrl} alt="" />
+                ) : (
+                  <ParticipantPlaceholder />
+                )}
               </div>
               <div className="lk-participant-metadata">
                 <div className="lk-participant-metadata-item">
@@ -194,6 +205,6 @@ export const ParticipantTile = /* @__PURE__ */ React.forwardRef<
 
         </ParticipantContextIfNeeded>
       </TrackRefContextIfNeeded>
-    </div>
+    </div >
   );
 });
