@@ -82,7 +82,7 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
             <form className="lk-chat-form" onSubmit={handleSubmit}>
                 <input className="lk-form-control lk-chat-form-input" type="email" ref={inputRef} placeholder="Enter Email" />
 
-                <button type="button" onClick={handleSubmit} className="lk-button lk-chat-form-button tl-invite-button">
+                <button type="submit" className="lk-button lk-chat-form-button tl-invite-button">
                     Invite
                 </button>
             </form>
