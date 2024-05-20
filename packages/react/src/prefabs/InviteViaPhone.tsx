@@ -113,7 +113,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
                     ))}
                 </select>
 
-                <input className="lk-form-control lk-chat-form-input" type="tel" ref={inputRef} placeholder="Enter Mobile Number" />
+                <input className="lk-form-control lk-chat-form-input" type="tel" ref={inputRef} placeholder="Enter Mobile Number" pattern="[0-9]" />
 
                 <button type="button" onClick={handleSubmit} className="lk-button lk-chat-form-button tl-invite-button">
                     Invite

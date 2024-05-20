@@ -223,6 +223,10 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
     }
   }, [ulRef, users]);
 
+  React.useEffect(() => {
+    setSearched(users);
+  }, [inviteVia])
+
   return (
     <div {...props} className="lk-chat lk-sharelink">
       {!isCallScreen ?
