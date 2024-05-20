@@ -136,7 +136,7 @@ export const ParticipantTile = /* @__PURE__ */ React.forwardRef<
 
   React.useEffect(() => {
     if (trackReference.participant.name)
-      setImageUrl(`https://ui-avatars.com/api/?name=${trackReference.participant.name}&background=111111&color=fff&size=128&rounded=true`);
+      setImageUrl(`https://ui-avatars.com/api/?name=${trackReference.participant.name}&background=111111&color=fff&size=156&rounded=true`);
 
   }, [trackReference]);
 
