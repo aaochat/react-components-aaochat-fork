@@ -5,6 +5,7 @@ import { DisconnectButton } from '../components';
 import { useRoomContext } from '../context';
 import { useLocalParticipant, useParticipants } from '../hooks';
 import { getDomainIdentifier } from './ShareLink';
+import { LeaveIcon } from '../assets/icons';
 
 /** @public */
 export interface HostEndMeetingMenuProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -57,7 +58,7 @@ export function HostEndMeetingMenu({
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
 
         if (tooltip.current) {
-          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y + 5}px` });
+          Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y - 5}px` });
         }
       });
       setUpdateRequired(false);
@@ -77,7 +78,6 @@ export function HostEndMeetingMenu({
       if (event.target === button.current) {
         return;
       }
-
 
       if (isOpen && wasClickOutside(tooltip.current, event)) {
         setIsOpen(false);
@@ -211,6 +211,8 @@ export function HostEndMeetingMenu({
         ref={button}
       >
         {props.children}
+        {showIcon && <LeaveIcon />}
+        {showText && "Leave"}
       </button>
       {/** only render when enabled in order to make sure that the permissions are requested only if the menu is enabled */}
       <div
