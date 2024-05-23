@@ -30,8 +30,7 @@ pipeline{
             when {
                 branch 'business-aaochat-dev'
             }
-            steps {
-                script {
+            steps{
                 echo "========executing business-aaochat-dev branch========"
                 sh '''yarn install'''
                 sh '''yarn build'''
@@ -53,22 +52,11 @@ pipeline{
                     sudo git add .
                     sudo git commit -m "Yarn built update from jenkins for components" || true
                     sudo git push origin business-develop'''
-                    env.STAGE1_SUCCEEDED = 'true'
-                }
-            }
-            post {
-                failure {
-                    script {
-                        env.STAGE1_SUCCEEDED = 'false'
-                    }
-                }
             }
         }
         stage('Trigger develop downstream job') {
             when {
-                expression {
-                    env.STAGE1_SUCCEEDED == 'true'
-                }
+                branch 'business-aaochat-dev'
             }
             steps {
                 script {
@@ -102,29 +90,20 @@ pipeline{
                     sudo git add .
                     sudo git commit -m "Yarn built update from jenkins for components" || true
                     sudo git push origin business-master'''
-                    env.STAGE1_SUCCEEDED = 'true'
-            }
-        }
-            post {
-                failure {
-                    script {
-                        env.STAGE1_SUCCEEDED = 'false'
-                    }
-                }
             }
         }
         stage('Trigger master downstream job') {
             when {
-                expression {
-                    env.STAGE1_SUCCEEDED == 'true'
-                }
+                branch 'business-aaochat'
             }
             steps {
                 script {
                     def result = build job: 'W-business-meet.aaochat.com/master'
                 }
             }
-        } 
+        }  
+          
+    }
     post {
         always {
             script {
