@@ -54,7 +54,7 @@ pipeline{
                     sudo git push origin business-develop'''
             }
         }
-        stage('Trigger downstream job') {
+        stage('Trigger develop downstream job') {
             when {
                 branch 'business-aaochat-dev'
             }
@@ -92,7 +92,7 @@ pipeline{
                     sudo git push origin business-master'''
             }
         }
-        stage('Trigger downstream job') {
+        stage('Trigger master downstream job') {
             when {
                 branch 'business-aaochat'
             }
