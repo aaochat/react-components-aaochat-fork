@@ -26,7 +26,7 @@ pipeline{
                 }
             }
         }
-         stage("Develop"){
+        stage("Develop"){
             when {
                 branch 'business-aaochat-dev'
             }
@@ -53,13 +53,17 @@ pipeline{
                     sudo git commit -m "Yarn built update from jenkins for components" || true
                     sudo git push origin business-develop'''
             }
+        }
+        stage('Trigger downstream job') {
+            when {
+                branch 'business-aaochat-dev'
+            }
             steps {
                 script {
                     def result = build job: 'W-business-meet.aaochat.com/develop'
                 }
             }
         }
-        
         stage("Master"){
             when {
                 branch 'business-aaochat'
@@ -86,6 +90,11 @@ pipeline{
                     sudo git add .
                     sudo git commit -m "Yarn built update from jenkins for components" || true
                     sudo git push origin business-master'''
+            }
+        }
+        stage('Trigger downstream job') {
+            when {
+                branch 'business-aaochat'
             }
             steps {
                 script {
