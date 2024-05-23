@@ -1,7 +1,7 @@
-import * as React from 'react';
+
 import { useLayoutContext } from '../../context';
 import { mergeProps } from '../../utils';
-import { setupShareLinkToggle } from '@livekit/components-core';
+import * as React from 'react';
 
 interface UseToggleShareLinkProps {
   props: React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -9,7 +9,7 @@ interface UseToggleShareLinkProps {
 
 function useToggleShareLink({ props }: UseToggleShareLinkProps) {
   const { dispatch, state } = useLayoutContext().widget;
-  const { className } = React.useMemo(() => setupShareLinkToggle(), []);
+  const className = 'lk-button';
 
   const mergedProps = React.useMemo(
     () =>

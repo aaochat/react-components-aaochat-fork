@@ -1,7 +1,6 @@
 import { computeMenuPosition, setupDisconnectButton, wasClickOutside } from '@livekit/components-core';
 import * as React from 'react';
 import { DisconnectButton } from '../components';
-// import { LeaveIcon } from '../assets/icons';
 import { useRoomContext } from '../context';
 import { useLocalParticipant, useParticipants } from '../hooks';
 import { getDomainIdentifier } from './ShareLink';
@@ -56,8 +55,9 @@ export function HostEndMeetingMenu({
   React.useLayoutEffect(() => {
     if (button.current && tooltip.current && updateRequired) {
       computeMenuPosition(button.current, tooltip.current).then(({ x, y }) => {
-
         if (tooltip.current) {
+          console.log({ x, y });
+
           Object.assign(tooltip.current.style, { left: `${x}px`, top: `${y - 5}px` });
         }
       });
