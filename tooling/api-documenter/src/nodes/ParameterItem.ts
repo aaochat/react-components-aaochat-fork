@@ -15,6 +15,7 @@ interface IAttributes {
   type: string;
   optional: boolean;
   description: readonly DocNode[];
+  deprecated?: readonly DocNode[];
 }
 
 /**

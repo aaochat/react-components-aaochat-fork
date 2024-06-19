@@ -5,7 +5,7 @@ import type {
   WidgetState,
 } from '@livekit/components-core';
 import { isEqualTrackRef, isTrackReference, isWeb, log, setupParticipantName } from '@livekit/components-core';
-import { RoomEvent, Track } from 'livekit-client';
+import { RoomEvent, Track, TrackPublication } from 'livekit-client';
 import * as React from 'react';
 import type { MessageFormatter } from '../components';
 import {
@@ -17,15 +17,18 @@ import {
   LayoutContextProvider,
   ParticipantTile,
   RoomAudioRenderer,
-  formatChatMessageLinks,
+  formatChatMessageLinks
 } from '../components';
-import { useCreateLayoutContext, useEnsureParticipant } from '../context';
-import { useLocalParticipant, usePinnedTracks, useTracks } from '../hooks';
+import { useCreateLayoutContext, useEnsureParticipant, useRoomContext } from '../context';
+import { useLocalParticipant, usePinnedTracks, useTracks, useWhiteboard } from '../hooks';
 import { Chat } from './Chat';
 import { ControlBar } from './ControlBar';
 import { Users } from './Users';
 import { ShareLink } from './ShareLink';
 import { useObservableState } from '../hooks/internal';
+import { WhiteboardState } from '../context/whiteboard-context';
+import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
+import { CallUser } from './CallUser';
 
 /**
  * @public
@@ -34,6 +37,14 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   chatMessageFormatter?: MessageFormatter;
   chatMessageEncoder?: MessageEncoder;
   chatMessageDecoder?: MessageDecoder;
+  /** @alpha */
+  SettingsComponent?: React.ComponentType;
+  showChatButton: boolean;
+  showShareLink: boolean;
+  isCallScreen: boolean;
+  showParticipant: boolean;
+  showExtraSettingMenu: boolean;
+  socket?: any;
 }
 
 /**
@@ -58,11 +69,19 @@ export function VideoConference({
   chatMessageFormatter,
   chatMessageDecoder,
   chatMessageEncoder,
+  SettingsComponent,
+  showChatButton,
+  showShareLink,
+  showParticipant,
+  isCallScreen,
+  showExtraSettingMenu,
+  socket,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
     showChat: null,
     unreadMessages: 0,
+    showSettings: false,
   });
 
   const lastAutoFocusedScreenShareTrack = React.useRef<TrackReferenceOrPlaceholder | null>(null);
@@ -79,14 +98,13 @@ export function VideoConference({
     metadata: p.metadata,
   });
 
-  const [showShareButton, setShowShareButton] = React.useState<boolean>(false);
-  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(false);
+  const [showShareButton, setShowShareButton] = React.useState<boolean>(showShareLink);
+  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(showParticipant);
   const [leaveButton, setLeaveButton] = React.useState<string>("Leave");
   const [endForAll, setEndForAll] = React.useState<string | false>(false);
 
   const meta = metadata ? JSON.parse(metadata) : {};
 
-  // const [waiting, setWaiting] = React.useState<string | null>(null); // Used to show toast message
   const [waitingRoomCount, setWaitingRoomCount] = React.useState<number>(0);
 
   const tracks = useTracks(
@@ -118,19 +136,17 @@ export function VideoConference({
     .filter(isTrackReference)
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
 
+  const whitePub = new TrackPublication(Track.Kind.Unknown, 'whiteboard', "whiteboard");
+  const whiteboardTrack = {
+    participant: p,
+    publication: whitePub,
+    source: Track.Source.Unknown,
+  }
+
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
 
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
   console.log({ version: 0.1 });
-
-  // React.useEffect(() => {
-  //   if (waiting) {
-  //     // Remove toast message after 2 second
-  //     setTimeout(() => {
-  //       setWaiting(null);
-  //     }, 3000);
-  //   }
-  // }, [waiting]);
 
   React.useEffect(() => {
     if (meta && meta.host) {
@@ -189,6 +205,63 @@ export function VideoConference({
     focusTrack?.publication?.trackSid,
   ]);
 
+  const room = useRoomContext();
+  const decoder = new TextDecoder();
+  const { isWhiteboardShared } = useWhiteboard();
+  const whiteboardUpdate = (state: WhiteboardState) => {
+    log.debug('updating widget state', state);
+    if (state.show_whiteboard) {
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+    } else {
+      layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+    }
+  };
+
+  React.useEffect(() => {
+    // console.log("Updating initail whiteboard setting");
+    if (isWhiteboardShared) {
+      layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+      layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+    } else {
+      layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
+      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+    }
+  }, [isWhiteboardShared]);
+
+  const [isWhiteboard, setIsWhiteboard] = React.useState<boolean>(false);
+
+  // receive data from other participants
+  room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
+    const strData = decoder.decode(payload)
+    const str = JSON.parse(strData);
+
+    if (str.openWhiteboard) {
+      // layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+      // layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
+      setIsWhiteboard(true);
+    } else {
+      // layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+      setIsWhiteboard(false);
+    }
+  });
+  useWarnAboutMissingStyles();
+
+  const [invitedUsers, setInvitedUsers] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    if (socket) {
+      socket.on("meeting:update", (meetingData: any) => {
+        // Handle meeting update event
+        setInvitedUsers(meetingData.users.filter(
+          (userId: any) =>
+            !meetingData.cancelled_by.includes(userId) &&
+            !meetingData.ended_by.includes(userId)
+        ))
+      });
+    }
+
+  }, [socket]);
+
   return (
     <div className="lk-video-conference" {...props}>
       {isWeb() && (
@@ -196,6 +269,7 @@ export function VideoConference({
           value={layoutContext}
           // onPinChange={handleFocusStateChange}
           onWidgetChange={widgetUpdate}
+          onWhiteboardChange={whiteboardUpdate}
         >
           <div className="lk-video-conference-inner">
             {!focusTrack ? (
@@ -216,24 +290,39 @@ export function VideoConference({
             )}
             <ControlBar
               controls={{
-                chat: true,
+                chat: showChatButton,
                 sharelink: showShareButton,
                 users: showParticipantButton,
                 leaveButton: leaveButton,
                 endForAll: endForAll,
+                settings: !!SettingsComponent
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
+              isWhiteboard={isWhiteboard}
+              showExtraSettingMenu={showExtraSettingMenu}
             />
           </div>
 
           {
             showShareButton ?
               (
-                <ShareLink style={{
-                  display: widgetState.showChat == 'show_invite' ? 'flex' : 'none'
-                }
-                } />
+                <>
+                  {isCallScreen ? <CallUser
+                    style={{
+                      display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                    }}
+                    socket={socket}
+                    contactsList={invitedUsers}
+                  /> : <ShareLink
+                    style={{
+                      display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                    }}
+                    isCallScreen={isCallScreen}
+                  />
+                  }
+                </>
+
               ) : (
                 <></>
               )
@@ -242,7 +331,7 @@ export function VideoConference({
           {
             showParticipantButton ? (
               <Users
-                style={{ display: widgetState.showChat == 'show_users' ? 'flex' : 'none' }}
+                style={{ display: widgetState.showChat == 'show_users' ? 'block' : 'none' }}
                 onWaitingRoomChange={updateCount}
               />
               // setWaiting={setWaitingMessage}
@@ -255,6 +344,16 @@ export function VideoConference({
             messageEncoder={chatMessageEncoder}
             messageDecoder={chatMessageDecoder}
           />
+          {
+            SettingsComponent && (
+              <div
+                className="lk-settings-menu-modal"
+                style={{ display: widgetState.showSettings ? 'block' : 'none' }}
+              >
+                <SettingsComponent />
+              </div>
+            )
+          }
         </LayoutContextProvider >
       )
       }

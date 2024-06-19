@@ -6,43 +6,49 @@
   "author": "LiveKit",
   "scripts": {
     "build": "turbo run build",
+    "build:styles": "turbo run build --filter=@livekit/components-styles...",
     "build:core": "turbo run build --filter=@livekit/components-core...",
     "build:react": "turbo run build --filter=@livekit/components-react...",
-    "build:styles": "turbo run build --filter=@livekit/components-styles...",
     "dev:next": "turbo run dev --filter=@livekit/component-example-next...",
     "dev:storybook": "turbo run dev --filter=@livekit/component-docs-storybook...",
     "format:check": "prettier --check \"**/src/**/*.{ts,tsx,md}\"",
     "format:write": "prettier --write \"**/src/**/*.{ts,tsx,md}\"",
     "gen:docs": "turbo run gen:docs",
-    "gen:docs:watch": "nodemon --watch \"tooling/api-documenter/src/**/*\" --watch \"packages/react/src/**/*\" --ignore \"packages/react/src/assets/**/*\" -e js,jsx,ts,tsx -x \"yarn gen:docs\"",
+    "gen:docs:watch": "nodemon --watch \"tooling/api-documenter/src/**/*\" --watch \"packages/react/src/**/*\" --ignore \"packages/react/src/assets/**/*\" -e js,jsx,ts,tsx -x \"pnpm gen:docs\"",
     "lint": "turbo run lint",
-    "release": "turbo run build --filter=./packages/* && changeset publish",
+    "preinstall": "npx only-allow pnpm",
+    "ci:publish": "turbo run build --filter=./packages/* && pnpm gen:docs && changeset publish",
     "start:next": "turbo run start --filter=@livekit/component-example-next...",
     "test": "turbo run test",
     "tooling:update-readme-nav": "node tooling/readme-manager/update-nav-in-readmes.js",
     "api:check": "turbo run api-check",
-    "api-extractor": "turbo run api-extractor"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "dependencies": {
-    "livekit-client": "^1.15.13",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "api-extractor": "turbo run api-extractor",
+    "cleanup": "find . -type d \\( -name 'node_modules' -o -name '.turbo' -o -name 'dist' \\) -prune -exec rm -rf '{}' +",
+    "link-local-client": "npm pkg set \"pnpm.overrides.livekit-client\"=\"file:../client-sdk-js\" && pnpm install",
+    "unlink-local-client": "npm pkg delete \"pnpm.overrides.livekit-client\" && pnpm install"
   },
   "peerDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "livekit-client": "2.1.0"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.0",
+    "@changesets/cli": "^2.27.1",
     "@livekit/changesets-changelog-github": "^0.0.4",
-    "@rushstack/heft": "^0.58.2",
+    "@rushstack/heft": "^0.66.0",
     "glob": "^8.1.0",
     "husky": "^8.0.3",
-    "nodemon": "^2.0.22",
-    "prettier": "^2.8.3",
-    "turbo": "^1.9.3",
-    "typescript": "5.2.2"
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5",
+    "turbo": "^1.12.2",
+    "typescript": "5.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {}
+  },
+  "dependencies": {
+    "@livekit/track-processors": "^0.3.1"
   }
 }
