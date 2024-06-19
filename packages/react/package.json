@@ -47,7 +47,7 @@
   },
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@livekit/components-core": "workspace:*",
+    "@livekit/components-core": "github:aaochat/livekit-react-core#business-develop",
     "@react-hook/latest": "1.0.3",
     "clsx": "2.1.0",
     "react-select": "^5.8.0",
