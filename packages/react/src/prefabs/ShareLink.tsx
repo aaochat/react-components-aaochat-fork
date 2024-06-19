@@ -131,12 +131,13 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
   }
 
   async function handleInvite(user: User) {
+    setInvitedFirst(user, true);
     let data = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json'
       },
-      body: ''
+      body: ""
     };
 
     if (isCallScreen) {
@@ -147,38 +148,42 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
       })
     } else {
       data.body = JSON.stringify({
-        "users": JSON.stringify([user]), // body data type must match "Content-Type" header
+        "userId": user.user_id, // body data type must match "Content-Type" header
+        "userName": user.full_name, // body data type must match "Content-Type" header
         "message": link,
         "meeting_id": room.name,
+        "token": getToken(),
+        "domain": getDomainIdentifier()
       })
     }
 
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
-        user.invited = true;
-        // 1. Find the user with the provided id
-        const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the user as invited
-        const updatedUser = { ...users[currentUserIndex], invited: true };
-        // 3. Update the todo list with the updated todo
-        const newUsers = [
-          ...users.slice(0, currentUserIndex),
-          updatedUser,
-          ...users.slice(currentUserIndex + 1)
-        ];
-        setUsers(newUsers);
+        setInvitedFirst(user, false);
+        // user.invited = true;
+        // // 1. Find the user with the provided id
+        // const currentUserIndex = users.findIndex((item) => item.user_id === user.user_id);
+        // // 2. Mark the user as invited
+        // const updatedUser = { ...users[currentUserIndex], invited: true };
+        // // 3. Update the todo list with the updated todo
+        // const newUsers = [
+        //   ...users.slice(0, currentUserIndex),
+        //   updatedUser,
+        //   ...users.slice(currentUserIndex + 1)
+        // ];
+        // setUsers(newUsers);
 
-        // 1. Find the user with the provided id
-        const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
-        // 2. Mark the todo as complete
-        const updatedSearched = { ...searched[currentSearchedIndex], invited: true };
-        // 3. Update the todo list with the updated todo
-        const newSearched = [
-          ...searched.slice(0, currentSearchedIndex),
-          updatedSearched,
-          ...searched.slice(currentSearchedIndex + 1)
-        ];
-        setSearched(newSearched);
+        // // 1. Find the user with the provided id
+        // const currentSearchedIndex = searched.findIndex((item) => item.user_id === user.user_id);
+        // // 2. Mark the todo as complete
+        // const updatedSearched = { ...searched[currentSearchedIndex], invited: true };
+        // // 3. Update the todo list with the updated todo
+        // const newSearched = [
+        //   ...searched.slice(0, currentSearchedIndex),
+        //   updatedSearched,
+        //   ...searched.slice(currentSearchedIndex + 1)
+        // ];
+        // setSearched(newSearched);
       } else {
         throw Error('Error fetching server url, check server logs');
       }
@@ -213,15 +218,6 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
     }
   }, [p]);
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    if (inputRef.current && inputRef.current.value.trim() !== '') {
-      searchUsers(inputRef.current.value);
-    } else {
-      setSearched(users);
-    }
-  }
-
   async function setInvitedFirst(user: User, valueToSet: boolean = true) {
     user.invited = valueToSet;
 
@@ -236,32 +232,32 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
     setSearched(newSearched);
   }
 
-  async function handleInvite(user: User) {
-    setInvitedFirst(user, true);
-    const data = {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "userId": user.user_id, // body data type must match "Content-Type" header
-        "userName": user.full_name, // body data type must match "Content-Type" header
-        "message": link,
-        "meeting_id": room.name,
-        "token": getToken(),
-        "domain": getDomainIdentifier()
-      })
-    };
+  // async function handleInvite(user: User) {
+  //   setInvitedFirst(user, true);
+  //   const data = {
+  //     method: "POST", // *GET, POST, PUT, DELETE, etc.
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       "userId": user.user_id, // body data type must match "Content-Type" header
+  //       "userName": user.full_name, // body data type must match "Content-Type" header
+  //       "message": link,
+  //       "meeting_id": room.name,
+  //       "token": getToken(),
+  //       "domain": getDomainIdentifier()
+  //     })
+  //   };
 
-    fetch(`/api/invite-user`, data).then(async (res) => {
-      if (res.ok) {
+  //   fetch(`/api/invite-user`, data).then(async (res) => {
+  //     if (res.ok) {
 
-      } else {
-        setInvitedFirst(user, false);
-        throw Error('Error fetching server url, check server logs');
-      }
-    });
-  }
+  //     } else {
+  //       setInvitedFirst(user, false);
+  //       throw Error('Error fetching server url, check server logs');
+  //     }
+  //   });
+  // }
 
   async function handleCopy() {
     navigator.clipboard.writeText(link);
@@ -302,7 +298,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
 
       <div className="tl-invite-buttons">
         <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'chat'} onClick={() => showInviteVia('chat')}>
-          TL-Chat
+          Contact
         </button>
         <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'phone'} onClick={() => showInviteVia('phone')}>
           Phone
@@ -335,8 +331,8 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
                 return (
                   <li key={index} className="lk-chat-entry">
                     <div>
-                      <span className="lk-message-body">{user.full_name} {user.ext_no ? ` - ${user.ext_no}` : ''}</span>
-                      <span className="lk-message-body lk-message-text">{user.designation}</span>
+                      <span className="lk-message-body">{user.full_name}</span>
+                      <span className="lk-message-body lk-message-text">{user.user_name}</span>
                     </div>
 
                     <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>

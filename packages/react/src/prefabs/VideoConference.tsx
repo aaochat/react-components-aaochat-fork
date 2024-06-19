@@ -28,6 +28,7 @@ import { ShareLink } from './ShareLink';
 import { useObservableState } from '../hooks/internal';
 import { WhiteboardState } from '../context/whiteboard-context';
 import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
+import { CallUser } from './CallUser';
 
 /**
  * @public
@@ -43,6 +44,7 @@ export interface VideoConferenceProps extends React.HTMLAttributes<HTMLDivElemen
   isCallScreen: boolean;
   showParticipant: boolean;
   showExtraSettingMenu: boolean;
+  socket?: any;
 }
 
 /**
@@ -73,6 +75,7 @@ export function VideoConference({
   showParticipant,
   isCallScreen,
   showExtraSettingMenu,
+  socket,
   ...props
 }: VideoConferenceProps) {
   const [widgetState, setWidgetState] = React.useState<WidgetState>({
@@ -243,6 +246,22 @@ export function VideoConference({
   });
   useWarnAboutMissingStyles();
 
+  const [invitedUsers, setInvitedUsers] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    if (socket) {
+      socket.on("meeting:update", (meetingData: any) => {
+        // Handle meeting update event
+        setInvitedUsers(meetingData.users.filter(
+          (userId: any) =>
+            !meetingData.cancelled_by.includes(userId) &&
+            !meetingData.ended_by.includes(userId)
+        ))
+      });
+    }
+
+  }, [socket]);
+
   return (
     <div className="lk-video-conference" {...props}>
       {isWeb() && (
@@ -288,12 +307,22 @@ export function VideoConference({
           {
             showShareButton ?
               (
-                <ShareLink
-                  style={{
-                    display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
-                  }}
-                  isCallScreen={isCallScreen}
-                />
+                <>
+                  {isCallScreen ? <CallUser
+                    style={{
+                      display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                    }}
+                    socket={socket}
+                    contactsList={invitedUsers}
+                  /> : <ShareLink
+                    style={{
+                      display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                    }}
+                    isCallScreen={isCallScreen}
+                  />
+                  }
+                </>
+
               ) : (
                 <></>
               )
