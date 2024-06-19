@@ -8,7 +8,7 @@ pipeline{
         label "built-in"
     }
     tools{
-        nodejs 'NodeJS 18.16.0'
+        nodejs 'NodeJS 18.17.1 TL-meet'
     }
     stages{
         stage("Start Notification") {
@@ -32,8 +32,8 @@ pipeline{
             }
             steps{
                 echo "========executing business-aaochat-dev branch========"
-                sh '''yarn install'''
-                sh '''yarn build'''
+                sh '''pnpm install --no-frozen-lockfile'''
+                sh '''pnpm build'''
                 sh '''cd /home/ubuntu/Business-Aaochat-Meet-Beta/livekit-react-core/
                     sudo git reset --hard business-develop
                     sudo git stash
@@ -70,8 +70,8 @@ pipeline{
             }
             steps{
                 echo "========executing business-aaochat branch========"
-                sh '''yarn install'''
-                sh '''yarn build'''
+                sh '''pnpm install --no-frozen-lockfile'''
+                sh '''pnpm build'''
                 sh '''cd /home/ubuntu/Business-Aaochat-Meet/livekit-react-core/
                     sudo git reset --hard business-master
                     sudo git stash
