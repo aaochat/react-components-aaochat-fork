@@ -16,6 +16,7 @@ pipeline{
                 script {
                     def startData = [
                         "display_name": env.JOB_NAME,
+                        "branch": env.GIT_BRANCH,
                         "build": [
                             "notes": "aaochat/react-components-aaochat-fork",
                            "phase": "STARTED"
