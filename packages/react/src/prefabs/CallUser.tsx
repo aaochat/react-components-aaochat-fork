@@ -54,12 +54,6 @@ export function CallUser({
     }, [])
 
     React.useEffect(() => {
-        // socket = io(CHAT_SERVER_URL || "", {
-        //     reconnection: true,
-        //     autoConnect: true,
-        //     transports: ["websocket"],
-        // });
-
         if (socket) {
             socket.on("meeting:update", (meetingData: any) => {
                 // Handle meeting update event
@@ -187,6 +181,8 @@ export function CallUser({
     React.useEffect(() => {
         usersList2();
     }, []);
+    const ulRef = React.useRef<HTMLUListElement>(null);
+    const ulRef2 = React.useRef<HTMLUListElement>(null);
 
     const handleKeyPress = (event: any) => {
         const keyCode = event.keyCode || event.which;
@@ -310,12 +306,6 @@ export function CallUser({
             return (
                 <>
                     <div style={{ minWidth: "100px" }}>
-                        {/* <select className="lk-form-control lk-chat-form-input tl-select" value={selectedValue}
-                            onChange={handleChange}>
-                            {countries.map((country: { name: string, dial_code: string; }) => (
-                                <option value={country.dial_code}>{country.dial_code} - {country.name}</option>
-                            ))}
-                        </select> */}
                         <Select
                             value={selectedValue}
                             onChange={handleChange}
@@ -363,7 +353,6 @@ export function CallUser({
         <div
             {...props}
             className="lk-chat lk-users"
-            style={{ overflowY: "hidden" }}
         >
             <div style={{ height: "-webkit-fill-available" }}>
                 <div style={{ position: "relative" }}>
@@ -377,16 +366,6 @@ export function CallUser({
                                 position: "sticky",
                             }}
                         >
-                            {/* <div
-                                style={{
-                                    cursor: "pointer",
-                                    marginTop: "5px",
-                                    marginLeft: "5px",
-                                }}
-                                onClick={onMemberButtonClick}
-                            >
-                                <Close style={{ cursor: "pointer", alignSelf: "flex-start" }} />
-                            </div> */}
                             <div
                                 style={{
                                     display: "flex",
@@ -547,82 +526,54 @@ export function CallUser({
                     }
                 >
                     {activeTab == "contacts" &&
-                        filteredContacts.map((item: any) => (
-                            <div
-                                className="tl-participant-li "
-                                style={{ paddingLeft: "15px", paddingRight: "15px" }}
-                                key={item._id}
-                            >
-                                <div
-                                    className="lk-participant-metadata"
-                                    style={{ marginRight: "3px", marginBottom: "10px" }}
-                                >
-                                    <div
-                                        className=""
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-around",
-                                            height: "38px",
-                                        }}
-                                    >
-                                        <span>{item.full_name}</span>
-                                        <span style={{ color: "grey", fontSize: "14px" }}>
-                                            {item.designation}
-                                        </span>
-                                    </div>
-                                    <div className="display-flex">
-                                        <button
-                                            disabled={invitedUsers.includes(item.user_id)}
-                                            className={`lk-button   ${invitedUsers.includes(item.user_id) ? "lk-secondary" : "lk-success"}`}
-                                            style={{
-                                                marginRight: "3px",
-                                                marginBottom: "3px",
-                                                cursor: `${invitedUsers.includes(item.user_id) ? "inherit" : "pointer"}`,
-                                            }}
-                                            onClick={() => calling(item.user_id)}
-                                        >
-                                            {/* <SvgApproveIcon /> */}
-                                            {invitedUsers.includes(item.user_id) ? "Invited" : "Call"}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        <ul className="lk-list lk-chat-messages" ref={ulRef}>
+                            {filteredContacts.map((user, index) => {
+                                return (
+                                    <li key={index} className="lk-chat-entry">
+                                        <div>
+                                            <span className="lk-message-body">{user.full_name}</span>
+                                            <span className="lk-message-body lk-message-text">{user.user_name}</span>
+
+                                            <button
+                                                disabled={invitedUsers.includes(user.user_id)}
+                                                className={`lk-button   ${invitedUsers.includes(user.user_id) ? "lk-secondary" : "lk-success"}`}
+                                                style={{
+                                                    marginRight: "3px",
+                                                    marginBottom: "3px",
+                                                    cursor: `${invitedUsers.includes(user.user_id) ? "inherit" : "pointer"}`,
+                                                }}
+                                                onClick={() => calling(user.user_id)}
+                                            >
+                                                {invitedUsers.includes(user.user_id) ? "Invited" : "Call"}
+                                            </button>
+                                        </div>
+
+                                        {/* <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
+                                            {user.invited ? 'Invited' : 'Invite'}
+                                        </button> */}
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    }
                     {activeTab == "callParticipants" &&
-                        filteredParticipants.map((item: any) => (
-                            <div
-                                className="tl-participant-li "
-                                style={{ paddingLeft: "15px", paddingRight: "15px" }}
-                                key={item._id}
-                            >
-                                <div
-                                    className="lk-participant-metadata"
-                                    style={{ marginRight: "3px", marginBottom: "10px" }}
-                                >
-                                    <div
-                                        className=""
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-around",
-                                            height: "38px",
-                                        }}
-                                    >
-                                        <span>
-                                            {item.full_name}
-                                            {room.localParticipant.identity == item.user_id
+                        <ul className="lk-list lk-chat-messages" ref={ulRef2}>
+                            {filteredParticipants.map((user, index) => {
+                                return (
+                                    <li key={index} className="lk-chat-entry">
+                                        <div>
+                                            <span className="lk-message-body">{user.full_name} {room.localParticipant.identity == user.user_id
                                                 ? " (me)"
-                                                : ""}
-                                        </span>
-                                        <span style={{ color: "grey", fontSize: "14px" }}>
-                                            {item.designation ? item.designation : "-"}
-                                        </span>
-                                    </div>
-                                    <div className="display-flex"></div>
-                                </div>
-                            </div>
-                        ))}
+                                                : ""}</span>
+                                            <span className="lk-message-body lk-message-text">{user.designation ? user.designation : "-"}</span>
+
+                                            <div>&nbsp;</div>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    }
                 </div>
             </div>
         </div>

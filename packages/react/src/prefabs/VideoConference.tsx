@@ -118,6 +118,8 @@ export function VideoConference({
   const widgetUpdate = (state: WidgetState) => {
     log.debug('updating widget state', state);
     setWidgetState(state);
+    console.log(widgetState);
+
   };
 
   const updateCount = (count: number) => {
@@ -146,7 +148,6 @@ export function VideoConference({
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
 
   const carouselTracks = tracks.filter((track) => !isEqualTrackRef(track, focusTrack));
-  console.log({ version: 0.1 });
 
   React.useEffect(() => {
     if (meta && meta.host) {
@@ -305,27 +306,27 @@ export function VideoConference({
           </div>
 
           {
-            showShareButton ?
-              (
-                <>
-                  {isCallScreen ? <CallUser
-                    style={{
-                      display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
-                    }}
-                    socket={socket}
-                    contactsList={invitedUsers}
-                  /> : <ShareLink
-                    style={{
-                      display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
-                    }}
-                    isCallScreen={isCallScreen}
-                  />
-                  }
-                </>
+            showShareButton && isCallScreen ? (
+              <CallUser
+                style={{
+                  display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                }}
+                socket={socket}
+                contactsList={invitedUsers}
+              />
+            ) : (<></>)
+          }
 
-              ) : (
-                <></>
-              )
+          {
+            showShareButton && !isCallScreen ?
+              (
+                <ShareLink
+                  style={{
+                    display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
+                  }}
+                  isCallScreen={isCallScreen}
+                />
+              ) : (<></>)
           }
 
           {
@@ -334,16 +335,20 @@ export function VideoConference({
                 style={{ display: widgetState.showChat == 'show_users' ? 'block' : 'none' }}
                 onWaitingRoomChange={updateCount}
               />
-              // setWaiting={setWaitingMessage}
             ) : (<></>)
           }
 
-          <Chat
-            style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
-            messageFormatter={formatChatMessageLinks}
-            messageEncoder={chatMessageEncoder}
-            messageDecoder={chatMessageDecoder}
-          />
+          {
+            showChatButton ? (
+              <Chat
+                style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
+                messageFormatter={formatChatMessageLinks}
+                messageEncoder={chatMessageEncoder}
+                messageDecoder={chatMessageDecoder}
+              />
+            ) : (<></>)
+          }
+
           {
             SettingsComponent && (
               <div
