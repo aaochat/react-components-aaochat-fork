@@ -518,63 +518,55 @@ export function CallUser({
                     </div>
                 </div>
 
-                <div
-                    style={
-                        props?.style?.display == "grid"
-                            ? { height: "80vh", overflow: "auto" }
-                            : {}
-                    }
-                >
-                    {activeTab == "contacts" &&
-                        <ul className="lk-list lk-chat-messages" ref={ulRef}>
-                            {filteredContacts.map((user, index) => {
-                                return (
-                                    <li key={index} className="lk-chat-entry">
-                                        <div>
-                                            <span className="lk-message-body">{user.full_name}</span>
-                                            <span className="lk-message-body lk-message-text">{user.user_name}</span>
+                {activeTab == "contacts" &&
+                    <ul style={{ height: "80vh" }} className="lk-list lk-chat-messages" ref={ulRef}>
+                        {filteredContacts.map((user, index) => {
+                            return (
+                                <li key={index} className="lk-chat-entry">
+                                    <div>
+                                        <span className="lk-message-body">{user.full_name}</span>
+                                        <span className="lk-message-body lk-message-text">{user.user_name}</span>
 
-                                            <button
-                                                disabled={invitedUsers.includes(user.user_id)}
-                                                className={`lk-button   ${invitedUsers.includes(user.user_id) ? "lk-secondary" : "lk-success"}`}
-                                                style={{
-                                                    marginRight: "3px",
-                                                    marginBottom: "3px",
-                                                    cursor: `${invitedUsers.includes(user.user_id) ? "inherit" : "pointer"}`,
-                                                }}
-                                                onClick={() => calling(user.user_id)}
-                                            >
-                                                {invitedUsers.includes(user.user_id) ? "Invited" : "Call"}
-                                            </button>
-                                        </div>
+                                        <button
+                                            disabled={invitedUsers.includes(user.user_id)}
+                                            className={`lk-button   ${invitedUsers.includes(user.user_id) ? "lk-secondary" : "lk-success"}`}
+                                            style={{
+                                                marginRight: "3px",
+                                                marginBottom: "3px",
+                                                cursor: `${invitedUsers.includes(user.user_id) ? "inherit" : "pointer"}`,
+                                            }}
+                                            onClick={() => calling(user.user_id)}
+                                        >
+                                            {invitedUsers.includes(user.user_id) ? "Invited" : "Call"}
+                                        </button>
+                                    </div>
 
-                                        {/* <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
+                                    {/* <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
                                             {user.invited ? 'Invited' : 'Invite'}
                                         </button> */}
-                                    </li>
-                                )
-                            })}
-                        </ul>
-                    }
-                    {activeTab == "callParticipants" &&
-                        <ul className="lk-list lk-chat-messages" ref={ulRef2}>
-                            {filteredParticipants.map((user, index) => {
-                                return (
-                                    <li key={index} className="lk-chat-entry">
-                                        <div>
-                                            <span className="lk-message-body">{user.full_name} {room.localParticipant.identity == user.user_id
-                                                ? " (me)"
-                                                : ""}</span>
-                                            <span className="lk-message-body lk-message-text">{user.designation ? user.designation : "-"}</span>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                }
+                {activeTab == "callParticipants" &&
+                    <ul style={{ height: "80vh" }} className="lk-list lk-chat-messages" ref={ulRef2}>
+                        {filteredParticipants.map((user, index) => {
+                            return (
+                                <li key={index} className="lk-chat-entry">
+                                    <div>
+                                        <span className="lk-message-body">{user.full_name} {room.localParticipant.identity == user.user_id
+                                            ? " (me)"
+                                            : ""}</span>
+                                        <span className="lk-message-body lk-message-text">{user.designation ? user.designation : "-"}</span>
 
-                                            <div>&nbsp;</div>
-                                        </div>
-                                    </li>
-                                )
-                            })}
-                        </ul>
-                    }
-                </div>
+                                        <div>&nbsp;</div>
+                                    </div>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                }
             </div>
         </div>
     );
