@@ -181,6 +181,7 @@ export function CallUser({
     React.useEffect(() => {
         usersList2();
     }, []);
+
     const ulRef = React.useRef<HTMLUListElement>(null);
     const ulRef2 = React.useRef<HTMLUListElement>(null);
 
@@ -519,13 +520,13 @@ export function CallUser({
                 </div>
 
                 {activeTab == "contacts" &&
-                    <ul style={{ height: "80vh" }} className="lk-list lk-chat-messages" ref={ulRef}>
+                    <ul style={{ height: "77vh", overflow: "scroll", display: "block" }} className="lk-list lk-chat-messages" ref={ulRef}>
                         {filteredContacts.map((user, index) => {
                             return (
                                 <li key={index} className="lk-chat-entry">
                                     <div>
-                                        <span className="lk-message-body">{user.full_name}</span>
-                                        <span className="lk-message-body lk-message-text">{user.user_name}</span>
+                                        <span className="lk-message-body text-ellipsis">{user.full_name}</span>
+                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.user_name}</span>
 
                                         <button
                                             disabled={invitedUsers.includes(user.user_id)}
@@ -550,15 +551,15 @@ export function CallUser({
                     </ul>
                 }
                 {activeTab == "callParticipants" &&
-                    <ul style={{ height: "80vh" }} className="lk-list lk-chat-messages" ref={ulRef2}>
+                    <ul style={{ height: "77vh", overflow: "scroll", display: "block" }} className="lk-list lk-chat-messages" ref={ulRef2}>
                         {filteredParticipants.map((user, index) => {
                             return (
                                 <li key={index} className="lk-chat-entry">
                                     <div>
-                                        <span className="lk-message-body">{user.full_name} {room.localParticipant.identity == user.user_id
+                                        <span className="lk-message-body text-ellipsis">{user.full_name} {room.localParticipant.identity == user.user_id
                                             ? " (me)"
                                             : ""}</span>
-                                        <span className="lk-message-body lk-message-text">{user.designation ? user.designation : "-"}</span>
+                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : "-"}</span>
 
                                         <div>&nbsp;</div>
                                     </div>
