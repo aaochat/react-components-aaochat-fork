@@ -86,6 +86,7 @@ export function CallUser({
     const queryParams = new URLSearchParams(window.location.search);
     const token = queryParams.get("token");
     const authKey = queryParams.get("authKey");
+    const invitedOnCall = queryParams.get("invited");
 
     async function calling(id: string) {
         const response = await fetch(
@@ -180,7 +181,7 @@ export function CallUser({
 
     React.useEffect(() => {
         usersList2();
-    }, []);
+    }, [CHAT_SERVER_URL]);
 
     const ulRef = React.useRef<HTMLUListElement>(null);
     const ulRef2 = React.useRef<HTMLUListElement>(null);
@@ -395,23 +396,26 @@ export function CallUser({
                                     Participants
                                 </button>
 
-                                <button
-                                    type="button"
-                                    className="outline-none"
-                                    style={{
-                                        borderBottom:
-                                            activeTab === "contacts" ? "2px solid gold" : "none",
-                                        backgroundColor: "transparent",
-                                        borderTop: "none",
-                                        borderLeft: "none",
-                                        borderRight: "none",
-                                        cursor: "pointer",
-                                        padding: "10px",
-                                    }}
-                                    onClick={() => handleTabChange("contacts")}
-                                >
-                                    Contacts
-                                </button>
+                                {!invitedOnCall &&
+                                    (
+                                        <button
+                                            type="button"
+                                            className="outline-none"
+                                            style={{
+                                                borderBottom:
+                                                    activeTab === "contacts" ? "2px solid gold" : "none",
+                                                backgroundColor: "transparent",
+                                                borderTop: "none",
+                                                borderLeft: "none",
+                                                borderRight: "none",
+                                                cursor: "pointer",
+                                                padding: "10px",
+                                            }}
+                                            onClick={() => handleTabChange("contacts")}
+                                        >
+                                            Contacts
+                                        </button>
+                                    )}
 
                                 <button
                                     type="button"
