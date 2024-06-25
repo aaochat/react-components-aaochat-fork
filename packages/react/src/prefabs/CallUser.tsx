@@ -360,80 +360,37 @@ export function CallUser({
                 <div style={{ position: "relative" }}>
                     <div style={{ position: "sticky", top: 0, zIndex: 1 }}>
                         <div
-                            style={{
-                                display: "flex",
-                                marginBottom: "inherit",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                position: "sticky",
-                            }}
+                            className="tl-invite-buttons"
                         >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    marginRight: "12%",
-                                    marginBottom: "inherit",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
+                            <button
+                                type="button"
+                                className="lk-button lk-chat-form-button"
+                                aria-pressed={activeTab === 'callParticipants'}
+                                onClick={() => handleTabChange("callParticipants")}
                             >
-                                <button
-                                    type="button"
-                                    style={{
-                                        borderBottom:
-                                            activeTab === "callParticipants"
-                                                ? "2px solid gold"
-                                                : "none ",
-                                        backgroundColor: "transparent",
-                                        borderTop: "none",
-                                        borderLeft: "none",
-                                        borderRight: "none",
-                                        cursor: "pointer",
-                                        padding: "10px",
-                                    }}
-                                    onClick={() => handleTabChange("callParticipants")}
-                                >
-                                    Participants
-                                </button>
+                                Participants
+                            </button>
 
-                                {!invitedOnCall &&
-                                    (
-                                        <button
-                                            type="button"
-                                            className="outline-none"
-                                            style={{
-                                                borderBottom:
-                                                    activeTab === "contacts" ? "2px solid gold" : "none",
-                                                backgroundColor: "transparent",
-                                                borderTop: "none",
-                                                borderLeft: "none",
-                                                borderRight: "none",
-                                                cursor: "pointer",
-                                                padding: "10px",
-                                            }}
-                                            onClick={() => handleTabChange("contacts")}
-                                        >
-                                            Contacts
-                                        </button>
-                                    )}
+                            {!invitedOnCall &&
+                                (
+                                    <button
+                                        type="button"
+                                        className="lk-button lk-chat-form-button"
+                                        aria-pressed={activeTab === 'contacts'}
+                                        onClick={() => handleTabChange("contacts")}
+                                    >
+                                        Contacts
+                                    </button>
+                                )}
 
-                                <button
-                                    type="button"
-                                    style={{
-                                        borderBottom:
-                                            activeTab === "invite" ? "2px solid gold" : "none ",
-                                        backgroundColor: "transparent",
-                                        borderTop: "none",
-                                        borderLeft: "none",
-                                        borderRight: "none",
-                                        cursor: "pointer",
-                                        padding: "10px",
-                                    }}
-                                    onClick={() => handleTabChange("invite")}
-                                >
-                                    Invite
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                className="lk-button lk-chat-form-button"
+                                aria-pressed={activeTab === 'invite'}
+                                onClick={() => handleTabChange("invite")}
+                            >
+                                Invite
+                            </button>
                         </div>
 
                         {activeTab != "invite" && (
@@ -528,7 +485,7 @@ export function CallUser({
                         {filteredContacts.map((user, index) => {
                             return (
                                 <li key={index} className="lk-chat-entry">
-                                    <div>
+                                    <div style={{ width: "100%" }}>
                                         <span className="lk-message-body text-ellipsis">{user.full_name}</span>
                                         <span className="lk-message-body lk-message-text text-ellipsis">{user.user_name}</span>
 

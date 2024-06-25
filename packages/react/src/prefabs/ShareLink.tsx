@@ -330,7 +330,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
               {searched.map((user, index) => {
                 return (
                   <li key={index} className="lk-chat-entry">
-                    <div>
+                    <div style={{ width: "100%" }}>
                       <span className="lk-message-body">{user.full_name}</span>
                       <span className="lk-message-body lk-message-text">{user.user_name}</span>
                     </div>
