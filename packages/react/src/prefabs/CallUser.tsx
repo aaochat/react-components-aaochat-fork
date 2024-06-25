@@ -487,7 +487,7 @@ export function CallUser({
                                 <li key={index} className="lk-chat-entry">
                                     <div style={{ width: "100%" }}>
                                         <span className="lk-message-body text-ellipsis">{user.full_name}</span>
-                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.user_name}</span>
+                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation}</span>
 
                                         <button
                                             disabled={invitedUsers.includes(user.user_id)}
