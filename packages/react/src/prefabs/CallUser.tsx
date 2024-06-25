@@ -515,13 +515,11 @@ export function CallUser({
                         {filteredParticipants.map((user, index) => {
                             return (
                                 <li key={index} className="lk-chat-entry">
-                                    <div>
+                                    <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
                                         <span className="lk-message-body text-ellipsis">{user.full_name} {room.localParticipant.identity == user.user_id
                                             ? " (me)"
                                             : ""}</span>
                                         <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : "-"}</span>
-
-                                        <div>&nbsp;</div>
                                     </div>
                                 </li>
                             )

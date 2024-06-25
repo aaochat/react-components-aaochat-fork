@@ -117,6 +117,10 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
     };
 
     const customStyles = {
+        container: (provided: any) => ({
+            ...provided,
+            width: "100%",
+        }),
         control: (provided: any) => ({
             ...provided,
             backgroundColor: "#2b2b2b",
