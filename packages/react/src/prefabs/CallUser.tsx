@@ -43,8 +43,8 @@ export function CallUser({
     const [timeoutIds, setTimeoutIds] = React.useState<number[]>([]);
     const [countries, setCountries] = React.useState([]);
     const [selectedValue, setSelectedValue] = React.useState({
-        value: "",
-        label: "",
+        value: "+1",
+        label: "+1",
     });
 
     React.useEffect(() => {
@@ -72,7 +72,6 @@ export function CallUser({
     }, [socket]);
 
     const handleChange = (event: any) => {
-        console.log(event);
         setSelectedValue(event);
     };
 

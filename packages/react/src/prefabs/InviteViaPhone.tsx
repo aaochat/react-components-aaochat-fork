@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Toast } from "../components";
+import Select from 'react-select';
 
 /**
  * InviteViaPhoneProps
@@ -16,7 +17,7 @@ export interface InviteViaPhoneEmailProps {
 
 export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...props }: InviteViaPhoneEmailProps) {
     const selectRef = React.useRef<HTMLSelectElement>(null);
-    const [defaultValue, setDefaultValue] = React.useState<string>('+1');
+    // const [defaultValue, setDefaultValue] = React.useState<string>('+1');
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [showToast, setShowToast] = React.useState<boolean>(false);
     const [countries, setCountries] = React.useState([]);
@@ -31,7 +32,10 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
         if (inputRef.current && selectRef.current) {
             inputRef.current.value = '';
             selectRef.current.value = '';
-            setDefaultValue('+1');
+            setSelectedValue({
+                value: "+1",
+                label: "+1",
+            });
         }
     }
 
@@ -97,21 +101,62 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
         }
     }, [showToast]);
 
-    function changeValue() {
-        if (selectRef.current) {
-            setDefaultValue(selectRef.current.value);
-        }
-    }
+    // function changeValue() {
+    //     if (selectRef.current) {
+    //         setDefaultValue(selectRef.current.value);
+    //     }
+    // }
+
+    const [selectedValue, setSelectedValue] = React.useState({
+        value: "+1",
+        label: "+1",
+    });
+
+    const handleChange = (event: any) => {
+        setSelectedValue(event);
+    };
+
+    const customStyles = {
+        control: (provided: any) => ({
+            ...provided,
+            backgroundColor: "#2b2b2b",
+            borderColor: "hsl(0deg 0% 11.76%)",
+            color: "white",
+        }),
+
+        singleValue: (provided: any) => ({
+            ...provided,
+            color: "white",
+        }),
+        option: (provided: any) => ({
+            ...provided,
+            color: "black",
+        }),
+        menu: (provided: any) => ({
+            ...provided,
+            backgroundColor: "white",
+        }),
+    };
 
     return (
         <div {...props}>
             {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
             <form className="lk-chat-form" onSubmit={handleSubmit}>
-                <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef} value={defaultValue} onChange={changeValue}>
+                <Select
+                    value={selectedValue}
+                    onChange={handleChange}
+                    options={countries.map((country: { name: string, dial_code: string; }) => ({
+                        value: country.dial_code,
+                        label: `${country.dial_code}`,
+                    }))}
+                    styles={customStyles}
+                    placeholder="Select your country"
+                />
+                {/* <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef} value={defaultValue} onChange={changeValue}>
                     {countries.map((country: { name: string, dial_code: string; }) => (
                         <option value={country.dial_code}>{country.dial_code} - {country.name}</option>
                     ))}
-                </select>
+                </select> */}
 
                 <input className="lk-form-control lk-chat-form-input" type="tel" ref={inputRef} placeholder="Enter Mobile Number" pattern="[0-9]+" title="Enter valid mobile number" maxLength={10} minLength={10} />
 
