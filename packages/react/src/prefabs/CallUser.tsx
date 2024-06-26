@@ -353,7 +353,7 @@ export function CallUser({
     return (
         <div
             {...props}
-            className="lk-chat lk-users"
+            className="lk-chat lk-sharelink"
         >
             <div style={{ height: "-webkit-fill-available" }}>
                 <div style={{ position: "relative" }}>
@@ -487,20 +487,19 @@ export function CallUser({
                                     <div style={{ width: "100%" }}>
                                         <span className="lk-message-body text-ellipsis">{user.full_name}</span>
                                         <span className="lk-message-body lk-message-text text-ellipsis">{user.designation}</span>
-
-                                        <button
-                                            disabled={invitedUsers.includes(user.user_id)}
-                                            className={`lk-button   ${invitedUsers.includes(user.user_id) ? "lk-secondary" : "lk-success"}`}
-                                            style={{
-                                                marginRight: "3px",
-                                                marginBottom: "3px",
-                                                cursor: `${invitedUsers.includes(user.user_id) ? "inherit" : "pointer"}`,
-                                            }}
-                                            onClick={() => calling(user.user_id)}
-                                        >
-                                            {invitedUsers.includes(user.user_id) ? "Invited" : "Call"}
-                                        </button>
                                     </div>
+                                    <button
+                                        disabled={invitedUsers.includes(user.user_id)}
+                                        className={`lk-button   ${invitedUsers.includes(user.user_id) ? "lk-secondary" : "lk-success"}`}
+                                        style={{
+                                            marginRight: "3px",
+                                            marginBottom: "3px",
+                                            cursor: `${invitedUsers.includes(user.user_id) ? "inherit" : "pointer"}`,
+                                        }}
+                                        onClick={() => calling(user.user_id)}
+                                    >
+                                        {invitedUsers.includes(user.user_id) ? "Invited" : "Call"}
+                                    </button>
 
                                     {/* <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
                                             {user.invited ? 'Invited' : 'Invite'}
