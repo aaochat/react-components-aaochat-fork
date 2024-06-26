@@ -246,7 +246,7 @@ export function PreJoin({
     saveAudioInputEnabled,
     saveVideoInputDeviceId,
     saveVideoInputEnabled,
-    saveUsername,
+    // saveUsername,
   } = usePersistentUserChoices({
     defaults: partialDefaults,
     preventSave: !persistUserChoices,
@@ -277,9 +277,9 @@ export function PreJoin({
   React.useEffect(() => {
     saveVideoInputDeviceId(videoDeviceId);
   }, [videoDeviceId, saveVideoInputDeviceId]);
-  React.useEffect(() => {
-    saveUsername(username);
-  }, [username, saveUsername]);
+  // React.useEffect(() => {
+  //   saveUsername(username);
+  // }, [username, saveUsername]);
 
   const tracks = usePreviewTracks(
     {

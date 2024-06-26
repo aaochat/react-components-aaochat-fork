@@ -13,9 +13,10 @@ export interface InviteViaPhoneEmailProps {
     room_name: string;
     participant: string | undefined;
     isCallScreen: boolean;
+    style?: React.CSSProperties;
 };
 
-export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...props }: InviteViaPhoneEmailProps) {
+export function InviteViaPhone({ link, room_name, participant, isCallScreen, style, ...props }: InviteViaPhoneEmailProps) {
     const selectRef = React.useRef<HTMLSelectElement>(null);
     // const [defaultValue, setDefaultValue] = React.useState<string>('+1');
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -143,7 +144,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
     };
 
     return (
-        <div {...props}>
+        <div style={style} {...props}>
             {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
             <form className="lk-chat-form" style={{ display: "flex", alignItems: "center" }} onSubmit={handleSubmit}>
                 <Select

@@ -308,8 +308,9 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
         </button>
       </div>
 
-      {inviteVia === 'phone' ? <InviteViaPhone link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} /> : <></>}
-      {inviteVia === 'email' ? <InviteViaEmail link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} /> : <></>}
+      <InviteViaPhone link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'phone' ? "block" : "none" }} />
+
+      <InviteViaEmail link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'email' ? "block" : "none" }} />
 
       {inviteVia === 'chat' ?
         <>
@@ -332,7 +333,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
                   <li key={index} className="lk-chat-entry">
                     <div style={{ width: "100%" }}>
                       <span className="lk-message-body">{user.full_name}</span>
-                      <span className="lk-message-body lk-message-text">{user.designation}</span>
+                      <span className="lk-message-body lk-message-text">{user.designation ? user.designation : '&nbsp;'}</span>
                     </div>
 
                     <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (user.invited ? ' invited' : '')}>
