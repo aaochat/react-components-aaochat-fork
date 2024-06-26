@@ -310,9 +310,11 @@ export function CallUser({
                         <Select
                             value={selectedValue}
                             onChange={handleChange}
-                            options={countries.map((country: { name: string, dial_code: string; }) => ({
+                            options={countries.map((country: {
+                                name: string, dial_code: string; code: string;
+                            }) => ({
                                 value: country.dial_code,
-                                label: `${country.dial_code}`,
+                                label: `${country.dial_code} - ${country.code}`,
                             }))}
                             styles={customStyles}
                             placeholder="Select your country"
@@ -486,7 +488,7 @@ export function CallUser({
                                 <li key={index} className="lk-chat-entry">
                                     <div style={{ width: "100%" }}>
                                         <span className="lk-message-body text-ellipsis">{user.full_name}</span>
-                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation}</span>
+                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : "-"}</span>
                                     </div>
                                     <button
                                         disabled={invitedUsers.includes(user.user_id)}

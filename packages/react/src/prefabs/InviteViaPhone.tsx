@@ -50,7 +50,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                 const queryParams = new URLSearchParams(window.location.search);
                 const token = queryParams.get("token");
                 const authKey = queryParams.get("authKey");
-
+                setShowToast(true);
                 const data = {
                     method: "POST",
                     headers: {
@@ -65,12 +65,13 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                 };
                 fetch(`/api/invite-call-email-phone`, data).then(async (res) => {
                     if (res.ok) {
-                        setShowToast(true);
+
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
                 });
             } else {
+                setShowToast(true);
                 const data = {
                     method: "POST",
                     headers: {
@@ -85,7 +86,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                 };
                 fetch(`/api/invite-phone`, data).then(async (res) => {
                     if (res.ok) {
-                        setShowToast(true);
+
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
@@ -101,12 +102,6 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
             }, 3000)
         }
     }, [showToast]);
-
-    // function changeValue() {
-    //     if (selectRef.current) {
-    //         setDefaultValue(selectRef.current.value);
-    //     }
-    // }
 
     const [selectedValue, setSelectedValue] = React.useState({
         value: "+1",
@@ -150,9 +145,11 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                 <Select
                     value={selectedValue}
                     onChange={handleChange}
-                    options={countries.map((country: { name: string, dial_code: string; }) => ({
+                    options={countries.map((country: {
+                        name: string, dial_code: string; code: string;
+                    }) => ({
                         value: country.dial_code,
-                        label: `${country.dial_code}`,
+                        label: `${country.dial_code} - ${country.code}`,
                     }))}
                     styles={customStyles}
                     placeholder="Select your country"
