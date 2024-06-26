@@ -300,6 +300,7 @@ export function CallUser({
         menu: (provided: any) => ({
             ...provided,
             backgroundColor: "white",
+            width: "130px",
         }),
         menuList: (base: any) => ({
             ...base,
@@ -323,7 +324,7 @@ export function CallUser({
         if (selectedOption === "phone") {
             return (
                 <>
-                    <div style={{ maxWidth: "150px" }}>
+                    <div style={{ minWidth: "100px", maxWidth: "150px" }}>
                         <Select
                             value={selectedValue}
                             onChange={handleChange}

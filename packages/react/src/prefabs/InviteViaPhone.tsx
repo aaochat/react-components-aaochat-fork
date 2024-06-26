@@ -135,25 +135,46 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
         menu: (provided: any) => ({
             ...provided,
             backgroundColor: "white",
+            width: "130px",
         }),
+        menuList: (base: any) => ({
+            ...base,
+            // height: "100px",
+
+            "::-webkit-scrollbar": {
+                width: "5px"
+            },
+            "::-webkit-scrollbar-track": {
+                background: "#000"
+            },
+            "::-webkit-scrollbar-thumb": {
+                background: "#888"
+            },
+            "::-webkit-scrollbar-thumb:hover": {
+                background: "#555"
+            }
+        })
     };
 
     return (
         <div style={style} {...props}>
             {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
             <form className="lk-chat-form" style={{ display: "flex", alignItems: "center" }} onSubmit={handleSubmit}>
-                <Select
-                    value={selectedValue}
-                    onChange={handleChange}
-                    options={countries.map((country: {
-                        name: string, dial_code: string; code: string;
-                    }) => ({
-                        value: country.dial_code,
-                        label: `${country.dial_code} - ${country.code}`,
-                    }))}
-                    styles={customStyles}
-                    placeholder="Select your country"
-                />
+                <div style={{ minWidth: "100px", maxWidth: "150px" }}>
+                    <Select
+                        value={selectedValue}
+                        onChange={handleChange}
+                        options={countries.map((country: {
+                            name: string, dial_code: string; code: string;
+                        }) => ({
+                            value: country.dial_code,
+                            label: `${country.dial_code} - ${country.code}`,
+                        }))}
+                        styles={customStyles}
+                        placeholder="Select your country"
+                    />
+                </div>
+
                 {/* <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef} value={defaultValue} onChange={changeValue}>
                     {countries.map((country: { name: string, dial_code: string; }) => (
                         <option value={country.dial_code}>{country.dial_code} - {country.name}</option>
