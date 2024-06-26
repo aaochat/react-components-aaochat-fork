@@ -301,12 +301,29 @@ export function CallUser({
             ...provided,
             backgroundColor: "white",
         }),
+        menuList: (base: any) => ({
+            ...base,
+            // height: "100px",
+
+            "::-webkit-scrollbar": {
+                width: "5px"
+            },
+            "::-webkit-scrollbar-track": {
+                background: "#000"
+            },
+            "::-webkit-scrollbar-thumb": {
+                background: "#888"
+            },
+            "::-webkit-scrollbar-thumb:hover": {
+                background: "#555"
+            }
+        })
     };
     const renderInputField = () => {
         if (selectedOption === "phone") {
             return (
                 <>
-                    <div style={{ minWidth: "100px" }}>
+                    <div style={{ maxWidth: "150px" }}>
                         <Select
                             value={selectedValue}
                             onChange={handleChange}
