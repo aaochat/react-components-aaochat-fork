@@ -18,6 +18,7 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
             const email = inputRef.current.value;
 
             setEmpty();
+            setShowToast(true);
             if (isCallScreen) {
                 const queryParams = new URLSearchParams(window.location.search);
                 const token = queryParams.get("token");
@@ -37,13 +38,12 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
                 };
                 fetch(`/api/invite-call-email-phone`, data).then(async (res) => {
                     if (res.ok) {
-                        setShowToast(true);
+
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
                 });
             } else {
-
                 const data = {
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     headers: {
@@ -59,7 +59,7 @@ export function InviteViaEmail({ link, room_name, participant, isCallScreen, ...
 
                 fetch(`/api/invite-email`, data).then(async (res) => {
                     if (res.ok) {
-                        setShowToast(true);
+                        // setShowToast(true);
                     } else {
                         throw Error('Error fetching server url, check server logs');
                     }
