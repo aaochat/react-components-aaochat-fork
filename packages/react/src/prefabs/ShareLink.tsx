@@ -326,7 +326,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
           ) : (<></>)}
 
           {showInviteUser && searched.length > 0 ? (
-            <ul className="lk-list lk-chat-messages" ref={ulRef}>
+            <ul style={{ height: "77vh", overflow: "scroll", display: "block" }} className="lk-list lk-chat-messages" ref={ulRef}>
               {searched.map((user, index) => {
                 return (
                   <li key={index} className="lk-chat-entry">

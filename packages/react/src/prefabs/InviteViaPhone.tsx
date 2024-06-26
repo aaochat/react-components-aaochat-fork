@@ -42,7 +42,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
         if (inputRef.current && inputRef.current.value.trim() !== '') {
-            const number = selectRef.current?.value + inputRef.current.value;
+            const number = selectedValue.value + inputRef.current.value;
 
             setEmpty();
             if (isCallScreen) {
@@ -145,7 +145,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, ...
     return (
         <div {...props}>
             {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
-            <form className="lk-chat-form" onSubmit={handleSubmit}>
+            <form className="lk-chat-form" style={{ display: "flex", alignItems: "center" }} onSubmit={handleSubmit}>
                 <Select
                     value={selectedValue}
                     onChange={handleChange}

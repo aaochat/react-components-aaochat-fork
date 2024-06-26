@@ -448,7 +448,7 @@ export function CallUser({
                                         </div>
                                     </div>
 
-                                    <div className="lk-chat-form">
+                                    <div className="lk-chat-form" style={{ display: "flex", alignItems: "center" }}>
                                         {renderInputField()}
                                         <button
                                             disabled={
