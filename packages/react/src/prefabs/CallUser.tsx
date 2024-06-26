@@ -71,8 +71,11 @@ export function CallUser({
 
     }, [socket]);
 
-    const handleChange = (event: any) => {
-        setSelectedValue(event);
+    const handleChange = (selectedCountry: any) => {
+        setSelectedValue({
+            value: selectedCountry.value,
+            label: selectedCountry.value,
+        });
     };
 
     const handleTabChange = (tab: string) => {

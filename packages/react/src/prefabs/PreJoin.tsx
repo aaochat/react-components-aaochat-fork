@@ -262,7 +262,7 @@ export function PreJoin({
   const [videoDeviceId, setVideoDeviceId] = React.useState<string>(
     initialUserChoices.videoDeviceId,
   );
-  const [username, setUsername] = React.useState(initialUserChoices.username);
+  const [username, setUsername] = React.useState(defaults.username ?? initialUserChoices.username);
 
   // Save user choices to persistent storage.
   React.useEffect(() => {

@@ -108,8 +108,11 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
         label: "+1",
     });
 
-    const handleChange = (event: any) => {
-        setSelectedValue(event);
+    const handleChange = (selectedCountry: any) => {
+        setSelectedValue({
+            value: selectedCountry.value,
+            label: selectedCountry.value,
+        });
     };
 
     const customStyles = {
@@ -174,12 +177,6 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                         placeholder="Select your country"
                     />
                 </div>
-
-                {/* <select className="lk-form-control lk-chat-form-input tl-select" ref={selectRef} value={defaultValue} onChange={changeValue}>
-                    {countries.map((country: { name: string, dial_code: string; }) => (
-                        <option value={country.dial_code}>{country.dial_code} - {country.name}</option>
-                    ))}
-                </select> */}
 
                 <input className="lk-form-control lk-chat-form-input" type="tel" ref={inputRef} placeholder="Enter Mobile Number" pattern="[0-9]+" title="Enter valid mobile number" maxLength={10} minLength={10} />
 
