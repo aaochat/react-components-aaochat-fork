@@ -2,6 +2,7 @@ import * as React from "react";
 import { useParticipants } from "../hooks";
 import { useRoomContext } from "../context";
 import Select from "react-select";
+import { Toast } from "../components";
 // import Close from "../assets/icons/Close";
 
 /** @public */
@@ -46,6 +47,7 @@ export function CallUser({
         value: "+1",
         label: "+1",
     });
+    const [showToast, setShowToast] = React.useState<boolean | string>(false);
 
     React.useEffect(() => {
         fetch(`/country-list.json`).then(async (res) => {
@@ -279,7 +281,7 @@ export function CallUser({
                 });
                 setEmail("");
                 const jsonResponse = await response.json();
-                alert(jsonResponse.message);
+                setShowToast(jsonResponse.message);
             }
         }
     };
@@ -373,11 +375,20 @@ export function CallUser({
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     };
+
+    React.useEffect(() => {
+        if (showToast) {
+            setTimeout(() => {
+                setShowToast(false);
+            }, 3000)
+        }
+    }, [showToast]);
     return (
         <div
             {...props}
             className="lk-chat lk-sharelink"
         >
+            {showToast ? <Toast className="lk-toast-connection-state">{showToast}</Toast> : <></>}
             <div style={{ height: "-webkit-fill-available" }}>
                 <div style={{ position: "relative" }}>
                     <div style={{ position: "sticky", top: 0, zIndex: 1 }}>
