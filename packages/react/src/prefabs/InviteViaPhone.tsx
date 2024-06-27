@@ -17,10 +17,10 @@ export interface InviteViaPhoneEmailProps {
 };
 
 export function InviteViaPhone({ link, room_name, participant, isCallScreen, style, ...props }: InviteViaPhoneEmailProps) {
-    const selectRef = React.useRef<HTMLSelectElement>(null);
+    // const selectRef = React.useRef<HTMLSelectElement>(null);
     // const [defaultValue, setDefaultValue] = React.useState<string>('+1');
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    const [showToast, setShowToast] = React.useState<boolean>(false);
+    const [mobile, setMobile] = React.useState("");
+    const [showToast, setShowToast] = React.useState<boolean | string>(false);
     const [countries, setCountries] = React.useState([]);
 
     React.useEffect(() => {
@@ -30,9 +30,8 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
     }, [])
 
     function setEmpty() {
-        if (inputRef.current && selectRef.current) {
-            inputRef.current.value = '';
-            selectRef.current.value = '';
+        if (mobile) {
+            setMobile("");
             setSelectedValue({
                 value: "+1",
                 label: "+1",
@@ -42,15 +41,16 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
-        if (inputRef.current && inputRef.current.value.trim() !== '') {
-            const number = selectedValue.value + inputRef.current.value;
+        if (mobile && mobile.trim() !== '') {
+            const number = selectedValue.value + mobile;
 
             setEmpty();
+            setShowToast(number);
             if (isCallScreen) {
                 const queryParams = new URLSearchParams(window.location.search);
                 const token = queryParams.get("token");
                 const authKey = queryParams.get("authKey");
-                setShowToast(true);
+
                 const data = {
                     method: "POST",
                     headers: {
@@ -71,7 +71,6 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                     }
                 });
             } else {
-                setShowToast(true);
                 const data = {
                     method: "POST",
                     headers: {
@@ -161,7 +160,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
 
     return (
         <div style={style} {...props}>
-            {showToast ? <Toast className="lk-toast-connection-state">Invitation Sent</Toast> : <></>}
+            {showToast ? <Toast className="lk-toast-connection-state">Invitation sent successfully to {showToast}.</Toast> : <></>}
             <form className="lk-chat-form" style={{ display: "flex", alignItems: "center" }} onSubmit={handleSubmit}>
                 <div style={{ minWidth: "100px", maxWidth: "150px" }}>
                     <Select
@@ -178,7 +177,7 @@ export function InviteViaPhone({ link, room_name, participant, isCallScreen, sty
                     />
                 </div>
 
-                <input className="lk-form-control lk-chat-form-input" type="tel" ref={inputRef} placeholder="Enter Mobile Number" pattern="[0-9]+" title="Enter valid mobile number" maxLength={10} minLength={10} />
+                <input className="lk-form-control lk-chat-form-input" type="tel" onChange={(e) => setMobile(e.target.value)} placeholder="Enter Mobile Number" pattern="[0-9]+" title="Enter valid mobile number" maxLength={10} minLength={10} value={mobile} />
 
                 <button type="submit" className="lk-button lk-chat-form-button tl-invite-button">
                     Invite
