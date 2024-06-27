@@ -3,6 +3,7 @@ import { useParticipants } from "../hooks";
 import { useRoomContext } from "../context";
 import Select from "react-select";
 import { Toast } from "../components";
+import { useToast } from "../hooks/useToast";
 // import Close from "../assets/icons/Close";
 
 /** @public */
@@ -47,7 +48,7 @@ export function CallUser({
         value: "+1",
         label: "+1",
     });
-    const [showToast, setShowToast] = React.useState<boolean | string>(false);
+    const { showToast, setShowToast } = useToast();
 
     React.useEffect(() => {
         fetch(`/country-list.json`).then(async (res) => {
@@ -376,13 +377,6 @@ export function CallUser({
         return re.test(String(email).toLowerCase());
     };
 
-    React.useEffect(() => {
-        if (showToast) {
-            setTimeout(() => {
-                setShowToast(false);
-            }, 3000)
-        }
-    }, [showToast]);
     return (
         <div
             {...props}

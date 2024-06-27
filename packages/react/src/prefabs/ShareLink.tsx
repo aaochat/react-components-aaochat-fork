@@ -6,6 +6,7 @@ import { setupParticipantName } from '@livekit/components-core';
 import { useObservableState } from '../hooks/internal';
 import { InviteViaPhone } from './InviteViaPhone';
 import { InviteViaEmail } from './InviteViaEmail';
+import { useToast } from '../hooks/useToast';
 
 export function useGetLink() {
   const host = getHostUrl();
@@ -61,7 +62,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
   const { link } = useGetLink();
   const [users, setUsers] = React.useState<User[]>([]);
   const [searched, setSearched] = React.useState<User[]>([]);
-  const [showToast, setShowToast] = React.useState<boolean>(false);
+  const { showToast, setShowToast } = useToast();
   const [inviteVia, setInviteVia] = React.useState<string>('chat');
   const [invitedUsers, setInvitedUsers] =
     React.useState<string[]>([]);
@@ -160,7 +161,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
 
     fetch(`/api/invite-user`, data).then(async (res) => {
       if (res.ok) {
-        setInvitedFirst(user, false);
+        // setInvitedFirst(user, false);
       } else {
         throw Error('Error fetching server url, check server logs');
       }
@@ -195,32 +196,24 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
     }
   }, [p]);
 
-  async function setInvitedFirst(user: User, valueToSet: boolean = true) {
-    user.invited = valueToSet;
+  // async function setInvitedFirst(user: User, valueToSet: boolean = true) {
+  //   user.invited = valueToSet;
 
-    const newUsers = users.map((item) =>
-      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
-    );
-    setUsers(newUsers);
+  //   const newUsers = users.map((item) =>
+  //     item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+  //   );
+  //   setUsers(newUsers);
 
-    const newSearched = searched.map((item) =>
-      item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
-    );
-    setSearched(newSearched);
-  }
+  //   const newSearched = searched.map((item) =>
+  //     item.user_id === user.user_id ? { ...item, invited: valueToSet } : item
+  //   );
+  //   setSearched(newSearched);
+  // }
 
   async function handleCopy() {
     navigator.clipboard.writeText(link);
     setShowToast(true);
   }
-
-  React.useEffect(() => {
-    if (showToast) {
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000)
-    }
-  }, [showToast]);
 
   React.useEffect(() => {
     if (ulRef) {
@@ -278,9 +271,9 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
 
           {showInviteUser && searched.length > 0 ? (
             <ul style={{ height: "70vh", display: "block" }} className="lk-list lk-chat-messages" ref={ulRef}>
-              {searched.map((user, index) => {
+              {searched.map((user) => {
                 return (
-                  <li key={index} className="lk-chat-entry">
+                  <li key={user.user_id} className="lk-chat-entry">
                     <div style={{ width: "100%" }}>
                       <span className="lk-message-body">{user.full_name}</span>
                       <span className="lk-message-body lk-message-text">{user.designation ? user.designation : '-'}</span>
