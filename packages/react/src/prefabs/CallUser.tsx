@@ -4,6 +4,7 @@ import { useRoomContext } from "../context";
 import Select from "react-select";
 import { Toast } from "../components";
 import { useToast } from "../hooks/useToast";
+// import Close from "../assets/icons/Close";
 
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -129,8 +130,6 @@ export function CallUser({
     }, []);
 
     async function usersList2() {
-        console.log(CHAT_SERVER_URL);
-
         const response = await fetch(`${CHAT_SERVER_URL}/api/user/all-contact`, {
             method: "POST",
             headers: {
