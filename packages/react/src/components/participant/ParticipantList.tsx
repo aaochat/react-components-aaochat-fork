@@ -8,7 +8,6 @@ import { useEnsureParticipant } from '../../context';
 import { ParticipantContextIfNeeded } from './ParticipantTile';
 import { useParticipantTile } from '../../hooks';
 import { TrackMutedIndicator } from './TrackMutedIndicator';
-
 /** @public */
 export type ParticipantListProps = React.HTMLAttributes<HTMLDivElement> & {
   disableSpeakingIndicator?: boolean;
@@ -39,13 +38,16 @@ export const ParticipantList = ({
   ...htmlProps
 }: ParticipantListProps) => {
   const p = useEnsureParticipant(participant);
-  const { elementProps } = useParticipantTile({
+  const trackReference = {
     participant: p,
+    source: Track.Source.Camera,
+  };
+
+  const { elementProps } = useParticipantTile({
     htmlProps,
     disableSpeakingIndicator,
-    source: Track.Source.Microphone,
-    publication,
     onParticipantClick,
+    trackRef: trackReference
   });
 
   return (
@@ -59,11 +61,17 @@ export const ParticipantList = ({
               </div>
               <div className="display-flex">
                 <TrackMutedIndicator
-                  source={Track.Source.Microphone}
+                  trackRef={{
+                    participant: p,
+                    source: Track.Source.Microphone,
+                  }}
                   show={'always'}
                 ></TrackMutedIndicator>
                 <TrackMutedIndicator
-                  source={Track.Source.Camera}
+                  trackRef={{
+                    participant: p,
+                    source: Track.Source.Camera,
+                  }}
                   show={'always'}
                 ></TrackMutedIndicator>
               </div>

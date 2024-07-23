@@ -8,6 +8,9 @@ import { DocTableRow } from './DocTableRow';
 import { MarkDocTag } from './MarkDocTag';
 import { ParameterList } from './ParameterList';
 import { ParameterItem } from './ParameterItem';
+import { Callout } from './Callout';
+import { DocMdComment } from './DocMdComment';
+import { DocFrontmatter } from './DocFrontmatter';
 
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
@@ -25,6 +28,9 @@ export const enum CustomDocNodeKind {
   MarkDocTag = 'MarkDocTag',
   ParameterList = 'ParameterList',
   ParameterItem = 'ParameterItem',
+  Callout = 'Callout',
+  MdComment = 'MdComment',
+  Frontmatter = 'Frontmatter',
 }
 
 export class CustomDocNodes {
@@ -38,12 +44,15 @@ export class CustomDocNodes {
         { docNodeKind: CustomDocNodeKind.EmphasisSpan, constructor: DocEmphasisSpan },
         { docNodeKind: CustomDocNodeKind.Heading, constructor: DocHeading },
         { docNodeKind: CustomDocNodeKind.NoteBox, constructor: DocNoteBox },
+        { docNodeKind: CustomDocNodeKind.Callout, constructor: Callout },
         { docNodeKind: CustomDocNodeKind.Table, constructor: DocTable },
         { docNodeKind: CustomDocNodeKind.TableCell, constructor: DocTableCell },
         { docNodeKind: CustomDocNodeKind.TableRow, constructor: DocTableRow },
         { docNodeKind: CustomDocNodeKind.MarkDocTag, constructor: MarkDocTag },
         { docNodeKind: CustomDocNodeKind.ParameterList, constructor: ParameterList },
         { docNodeKind: CustomDocNodeKind.ParameterItem, constructor: ParameterItem },
+        { docNodeKind: CustomDocNodeKind.Frontmatter, constructor: DocFrontmatter },
+        { docNodeKind: CustomDocNodeKind.MdComment, constructor: DocMdComment },
       ]);
 
       configuration.docNodeManager.registerAllowableChildren(CustomDocNodeKind.EmphasisSpan, [
@@ -54,9 +63,12 @@ export class CustomDocNodes {
       configuration.docNodeManager.registerAllowableChildren(DocNodeKind.Section, [
         CustomDocNodeKind.Heading,
         CustomDocNodeKind.NoteBox,
+        CustomDocNodeKind.Callout,
         CustomDocNodeKind.Table,
         CustomDocNodeKind.MarkDocTag,
         CustomDocNodeKind.ParameterList,
+        CustomDocNodeKind.Frontmatter,
+        CustomDocNodeKind.MdComment,
       ]);
 
       configuration.docNodeManager.registerAllowableChildren(DocNodeKind.Paragraph, [

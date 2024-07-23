@@ -7,9 +7,6 @@ A LiveKit Components implementation in [React](https://reactjs.org/).
 ## Monorepo Navigation
 
 - [Home](../../README.md)
-- **Docs**
-  - [Docs](../../docs/alpha-docs/README.md)
-  - [Storybook](../../docs/storybook/README.md)
 - **Framework Implementations**:
   - [React 👈](../../packages/react/README.md)
 - **Examples**
@@ -23,7 +20,7 @@ A LiveKit Components implementation in [React](https://reactjs.org/).
 ## Install
 
 ```bash
-yarn install @livekit/components-react
+npm install @livekit/components-react
 ```
 
 ## Usage

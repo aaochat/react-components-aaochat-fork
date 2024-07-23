@@ -57,16 +57,18 @@ export function UserChat({
             data-lk-message-origin={entry.from?.isLocal ? 'local' : 'remote'}
             {...props}
         >
-            {!entry.from?.isLocal ?
-                <span className="lk-meta-data">
-                    <strong className="lk-participant-name">
-                        {entry.from?.name ?? entry.from?.identity}
-                    </strong>
-                </span>
-                :
-                <></>
-            }
-            <span className="lk-message-body">{formattedMessage}</span>
+            <div className='chat_box'>
+                {!entry.from?.isLocal ?
+                    <span className="lk-meta-data">
+                        <strong className="lk-participant-name tl-participant-name">
+                            {entry.from?.name ?? entry.from?.identity}
+                        </strong>
+                    </span>
+                    :
+                    <></>
+                }
+                <span className="lk-message-body">{formattedMessage}</span>
+            </div>
         </li>
     );
 }

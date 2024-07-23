@@ -14,11 +14,12 @@ import {
 import styles from '../styles/Clubhouse.module.scss';
 import { Track } from 'livekit-client';
 import { useMemo, useState } from 'react';
+import { generateRandomUserId } from '../lib/helper';
 
 const Clubhouse = () => {
   const params = typeof window !== 'undefined' ? new URLSearchParams(location.search) : null;
   const roomName = params?.get('room') ?? 'test-room';
-  const userIdentity = params?.get('user') ?? 'test-identity';
+  const userIdentity = params?.get('user') ?? generateRandomUserId();
 
   const token = useToken(process.env.NEXT_PUBLIC_LK_TOKEN_ENDPOINT, roomName, {
     userInfo: {
@@ -64,6 +65,7 @@ const Clubhouse = () => {
           <ControlBar
             variation="minimal"
             controls={{ microphone: true, camera: false, screenShare: false }}
+            waitingRoomCount={0}
           />
           <RoomAudioRenderer />
         </div>
@@ -101,7 +103,7 @@ const CustomParticipantTile = () => {
       >
         <div
           className={styles.avatar}
-          // className="z-10 grid aspect-square items-center overflow-hidden rounded-full bg-beige transition-all will-change-transform"
+        // className="z-10 grid aspect-square items-center overflow-hidden rounded-full bg-beige transition-all will-change-transform"
         >
           <img
             src={`https://avatars.dicebear.com/api/avataaars/${id}.svg?mouth=default,smile,tongue&eyes=default,happy,hearts&eyebrows=default,defaultNatural,flatNatural`}

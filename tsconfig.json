@@ -13,7 +13,7 @@
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,
     // linter checks for common issues
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     // noUnused* overlap with @typescript-eslint/no-unused-vars, can disable if duplicative
     "noUnusedLocals": true,
@@ -27,6 +27,11 @@
     // significant perf increase by skipping checking .d.ts files, particularly those in node_modules. Recommended by TS
     "skipLibCheck": true,
     // error out if import and file system have a casing mismatch. Recommended by TS
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@livekit/components-core": ["./packages/core/dist/index.d.ts"],
+      "@livekit/components-react": ["./packages/react/dist/index.d.ts"],
+      "@livekit/components-styles": ["./packages/styles/dist/types/general/index.css.d.ts"]
+    }
   }
 }

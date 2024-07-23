@@ -9,7 +9,11 @@ export interface TrackToggleProps<T extends ToggleSource>
   source: T;
   showIcon?: boolean;
   initialState?: boolean;
-  onChange?: (enabled: boolean) => void;
+  /**
+   * Function that is called when the enabled state of the toggle changes.
+   * The second function argument `isUserInitiated` is `true` if the change was initiated by a user interaction, such as a click.
+   */
+  onChange?: (enabled: boolean, isUserInitiated: boolean) => void;
   captureOptions?: CaptureOptionsBySource<T>;
 }
 
@@ -26,13 +30,15 @@ export interface TrackToggleProps<T extends ToggleSource>
  * ```
  * @public
  */
-export function TrackToggle<T extends ToggleSource>({ showIcon, ...props }: TrackToggleProps<T>) {
+export const TrackToggle = /* @__PURE__ */ React.forwardRef(function TrackToggle<
+  T extends ToggleSource,
+>({ showIcon, ...props }: TrackToggleProps<T>, ref: React.ForwardedRef<HTMLButtonElement>) {
   const { buttonProps, enabled } = useTrackToggle(props);
 
   return (
-    <button {...buttonProps}>
+    <button ref={ref} {...buttonProps}>
       {(showIcon ?? true) && getSourceIcon(props.source, enabled)}
       {props.children}
     </button>
   );
-}
+});

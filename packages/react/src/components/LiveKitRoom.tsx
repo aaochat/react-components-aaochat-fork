@@ -46,7 +46,7 @@ export interface LiveKitRoomProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   screen?: ScreenShareCaptureOptions | boolean;
   /**
    * If set to true a connection to LiveKit room is initiated.
-   * @defaultValue `false`
+   * @defaultValue `true`
    */
   connect?: boolean;
   /**
@@ -67,6 +67,7 @@ export interface LiveKitRoomProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   onDisconnected?: () => void;
   onError?: (error: Error) => void;
   onMediaDeviceFailure?: (failure?: MediaDeviceFailure) => void;
+  onEncryptionError?: (error: Error) => void;
   /**
    * Optional room instance.
    * By passing your own room instance you overwrite the `options` parameter,
@@ -99,10 +100,13 @@ export interface LiveKitRoomProps extends Omit<React.HTMLAttributes<HTMLDivEleme
  * ```
  * @public
  */
-export function LiveKitRoom(props: React.PropsWithChildren<LiveKitRoomProps>) {
+export const LiveKitRoom = /* @__PURE__ */ React.forwardRef<
+  HTMLDivElement,
+  React.PropsWithChildren<LiveKitRoomProps>
+>(function LiveKitRoom(props: React.PropsWithChildren<LiveKitRoomProps>, ref) {
   const { room, htmlProps } = useLiveKitRoom(props);
   return (
-    <div {...htmlProps}>
+    <div ref={ref} {...htmlProps}>
       {room && (
         <RoomContext.Provider value={room}>
           <LKFeatureContext.Provider value={props.featureFlags}>
@@ -112,4 +116,4 @@ export function LiveKitRoom(props: React.PropsWithChildren<LiveKitRoomProps>) {
       )}
     </div>
   );
-}
+});

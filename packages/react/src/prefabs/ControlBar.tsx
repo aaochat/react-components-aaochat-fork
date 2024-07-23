@@ -4,18 +4,22 @@ import { MediaDeviceMenu } from './MediaDeviceMenu';
 import { HostEndMeetingMenu } from './HostEndMeetingMenu';
 import { DisconnectButton } from '../components/controls/DisconnectButton';
 import { TrackToggle } from '../components/controls/TrackToggle';
-import { StartAudio } from '../components/controls/StartAudio';
-import { ChatIcon, LeaveIcon } from '../assets/icons';
+import { ChatIcon, GearIcon, LeaveIcon } from '../assets/icons';
 import { ChatToggle } from '../components/controls/ChatToggle';
 import { ShareLinkToggle } from '../components/controls/ShareLinkToggle';
 import { UserToggle } from '../components/controls/UserToggle';
-import SvgInviteIcon from '../assets/icons/InviteIcon';
-import SvgUserIcon from '../assets/icons/UsersIcon';
-import { useLocalParticipantPermissions } from '../hooks';
+import SvgInviteIcon from '../assets/icons/tl/InviteIcon';
+import SvgUserIcon from '../assets/icons/tl/UsersIcon';
+
+import { useLocalParticipantPermissions, usePersistentUserChoices } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
 import { useLayoutContext, useMaybeLayoutContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
+import { ExtraOptionMenu } from './ExtraOptionMenu';
+import { useWhiteboard } from '../hooks/useWhiteboard';
+import { StartMediaButton } from '../components/controls/StartMediaButton';
+import { SettingsMenuToggle } from '../components/controls/SettingsMenuToggle';
 
 /** @public */
 export type ControlBarControls = {
@@ -28,6 +32,7 @@ export type ControlBarControls = {
   users?: boolean;
   leaveButton?: string;
   endForAll?: string | false;
+  settings?: boolean;
 };
 
 /** @public */
@@ -36,7 +41,10 @@ export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   controls?: ControlBarControls;
   waitingRoomCount: number;
   screenShareTracks?: number;
-};
+  isWhiteboard?: boolean;
+  saveUserChoices?: boolean;
+  showExtraSettingMenu?: boolean;
+}
 
 /**
  * The `ControlBar` prefab gives the user the basic user interface to control their
@@ -59,6 +67,9 @@ export function ControlBar({
   controls,
   waitingRoomCount,
   screenShareTracks,
+  isWhiteboard,
+  saveUserChoices = true,
+  showExtraSettingMenu,
   ...props
 }: ControlBarProps) {
   const layoutContext = useMaybeLayoutContext();
@@ -76,6 +87,8 @@ export function ControlBar({
       setIsUserOpen(layoutContext?.widget.state?.showChat == 'show_users');
     }
   }, [layoutContext?.widget.state?.showChat]);
+
+  const { isWhiteboardShared } = useWhiteboard();
 
   const isTooLittleSpace = useMediaQuery(
     `(max-width: ${isChatOpen || isShareLinkOpen || isUserOpen ? 1000 : 760}px)`,
@@ -117,9 +130,12 @@ export function ControlBar({
 
   const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
 
-  const onScreenShareChange = (enabled: boolean) => {
-    setIsScreenShareEnabled(enabled);
-  };
+  const onScreenShareChange = React.useCallback(
+    (enabled: boolean) => {
+      setIsScreenShareEnabled(enabled);
+    },
+    [setIsScreenShareEnabled],
+  );
 
   const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
   React.useEffect(() => {
@@ -127,7 +143,7 @@ export function ControlBar({
     const buttons = document.querySelectorAll('[data-lk-source]');
     if (!isScreenShareEnabled && screenShareTracks !== 0) {
       // Loop through each button and check its "data-lk-source" attribute
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         const source = button.getAttribute('data-lk-source');
 
         // Check if the "data-lk-source" attribute value is "screen_share"
@@ -138,7 +154,7 @@ export function ControlBar({
       });
     } else {
       // Loop through each button and check its "data-lk-source" attribute
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         const source = button.getAttribute('data-lk-source');
 
         // Check if the "data-lk-source" attribute value is "screen_share"
@@ -150,26 +166,89 @@ export function ControlBar({
     }
   }, [screenShareTracks, isScreenShareEnabled]);
 
+  React.useEffect(() => {
+    const buttons = document.querySelectorAll('[data-lk-source]');
+    if (isWhiteboardShared) {
+      buttons.forEach((button) => {
+        const source = button.getAttribute('data-lk-source');
+        if (source === 'screen_share') {
+          (button as HTMLButtonElement).disabled = true;
+        }
+      });
+    } else {
+      buttons.forEach((button) => {
+        const source = button.getAttribute('data-lk-source');
+        if (source === 'screen_share') {
+          (button as HTMLButtonElement).disabled = false;
+        }
+      });
+    }
+  }, [isWhiteboardShared]);
+
+  const [sharescreenTitle, setSharescreenTitle] = React.useState('You can share your screen');
+
+  React.useEffect(() => {
+    if (!isScreenShareEnabled && screenShareTracks !== 0) {
+      setSharescreenTitle('Someone has shared screen');
+    } else if (isWhiteboardShared) {
+      setSharescreenTitle('Whiteboard is shared');
+    } else if (isScreenShareEnabled) {
+      setSharescreenTitle("You're sharing your screen");
+    } else {
+      setSharescreenTitle('You can share your screen');
+    }
+  }, [isScreenShareEnabled, screenShareTracks, isWhiteboardShared]);
+
+  const {
+    saveAudioInputEnabled,
+    saveVideoInputEnabled,
+    saveAudioInputDeviceId,
+    saveVideoInputDeviceId,
+  } = usePersistentUserChoices({ preventSave: !saveUserChoices });
+
+  const microphoneOnChange = React.useCallback(
+    (enabled: boolean, isUserInitiated: boolean) =>
+      isUserInitiated ? saveAudioInputEnabled(enabled) : null,
+    [saveAudioInputEnabled],
+  );
+
+  const cameraOnChange = React.useCallback(
+    (enabled: boolean, isUserInitiated: boolean) =>
+      isUserInitiated ? saveVideoInputEnabled(enabled) : null,
+    [saveVideoInputEnabled],
+  );
+
   return (
     <div {...htmlProps}>
       {visibleControls.microphone && (
         <div className="lk-button-group">
-          <TrackToggle source={Track.Source.Microphone} showIcon={showIcon}>
+          <TrackToggle
+            source={Track.Source.Microphone}
+            showIcon={showIcon}
+            onChange={microphoneOnChange}
+          >
             {showText && 'Microphone'}
           </TrackToggle>
           <div className="lk-button-group-menu">
-            <MediaDeviceMenu kind="audioinput" />
+            <MediaDeviceMenu
+              initialSelection={'default'}
+              kind="audioinput"
+              onActiveDeviceChange={(_kind, deviceId) => saveAudioInputDeviceId(deviceId ?? '')}
+            />
           </div>
         </div>
       )}
 
       {visibleControls.camera && (
         <div className="lk-button-group">
-          <TrackToggle source={Track.Source.Camera} showIcon={showIcon}>
+          <TrackToggle source={Track.Source.Camera} showIcon={showIcon} onChange={cameraOnChange}>
             {showText && 'Camera'}
           </TrackToggle>
           <div className="lk-button-group-menu">
-            <MediaDeviceMenu kind="videoinput" />
+            <MediaDeviceMenu
+              kind="videoinput"
+              onActiveDeviceChange={(_kind, deviceId) => saveVideoInputDeviceId(deviceId ?? '')}
+            />
           </div>
         </div>
       )}
@@ -180,14 +259,8 @@ export function ControlBar({
           captureOptions={{ audio: true, selfBrowserSurface: 'include' }}
           showIcon={showIcon}
           onChange={onScreenShareChange}
-          disabled={!isScreenShareEnabled && screenShareTracks !== 0}
-          title={
-            !isScreenShareEnabled && screenShareTracks !== 0
-              ? 'Someone has shared screen'
-              : isScreenShareEnabled
-                ? "You're sharing your scrren"
-                : 'You can share your screen'
-          }
+          disabled={!isScreenShareEnabled && screenShareTracks !== 0 && isWhiteboardShared}
+          title={sharescreenTitle}
         >
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>
@@ -198,10 +271,9 @@ export function ControlBar({
           {showText && 'Chat'}
           {state && state.unreadMessages !== 0 && (
             <span className="waiting-count">
-              {state.unreadMessages < 10
-                ? (state.unreadMessages.toFixed(0))
-                : ('9+')}
-            </span>)}
+              {state.unreadMessages < 10 ? state.unreadMessages.toFixed(0) : '9+'}
+            </span>
+          )}
         </ChatToggle>
       )}
       {visibleControls.sharelink && (
@@ -217,13 +289,15 @@ export function ControlBar({
           {waitingRoomCount !== 0 && <span className="waiting-count">{waitingRoomCount}</span>}
         </UserToggle>
       )}
+      {showExtraSettingMenu && (
+        <div className="lk-button-group">
+          <div className="lk-button-group-menu">
+            <ExtraOptionMenu blurEnabled={false} shareScreenTracks={screenShareTracks} />
+          </div>
+        </div>
+      )}
       {visibleControls.endForAll ? (
         <div className="tl-leave lk-button-group">
-          {/* <button className="lk-disconnect-button">
-            {showIcon && <LeaveIcon />}
-            {showText && "Leave"}
-          </button> */}
-
           <div className="tl-leave-btn lk-button-group-menu">
             <HostEndMeetingMenu
               leave={visibleControls.leave}
@@ -233,14 +307,22 @@ export function ControlBar({
               showText={showText}
             />
           </div>
-        </div>
+        </div >
       ) : (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
           {showText && visibleControls.leaveButton}
         </DisconnectButton>
+      )
+      }
+      {visibleControls.settings && (
+        <SettingsMenuToggle>
+          {showIcon && <GearIcon />}
+          {showText && 'Settings'}
+        </SettingsMenuToggle>
       )}
-      <StartAudio label="Start Audio" />
-    </div >
+
+      <StartMediaButton />
+    </div>
   );
 }
