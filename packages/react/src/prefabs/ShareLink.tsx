@@ -276,7 +276,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
                   <li key={user.user_id} className="lk-chat-entry">
                     <div style={{ width: "100%" }}>
                       <span className="lk-message-body">{user.full_name}</span>
-                      <span className="lk-message-body lk-message-text">{user.designation ? user.designation : '-'}</span>
+                      <span className="lk-message-body lk-message-text">{user.designation ? user.designation : user.user_name ? user.user_name : "-"}</span>
                     </div>
 
                     <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (invitedUsers.includes(user.user_id) ? ' invited' : '')}>
