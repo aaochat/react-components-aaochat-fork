@@ -5,7 +5,7 @@ def CONTENT_TYPE = "application/json"
 
 pipeline{
     agent{
-        label "built-in"
+        label "Jenkins_slave"
     }
     tools{
         nodejs 'NodeJS 18.17.1 TL-meet'
