@@ -66,6 +66,7 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
   const [inviteVia, setInviteVia] = React.useState<string>('chat');
   const [invitedUsers, setInvitedUsers] =
     React.useState<string[]>([]);
+  const [allowOutsideInvites, setAllowOutsideInvites] = React.useState<boolean>(false);
   function showInviteVia(type: string) {
     setInviteVia(type);
   }
@@ -168,6 +169,8 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
     });
   }
 
+
+
   const { localParticipant } = useLocalParticipant();
   const p = useEnsureParticipant(localParticipant);
 
@@ -225,17 +228,49 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
     setSearched(users);
   }, [inviteVia])
 
+  async function checkAllowedOutside() {
+    const data = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        meeting_id: room.name,
+        domain: getDomainIdentifier(),
+      })
+    };
+
+    try {
+      const response = await fetch(`${getHostUrl()}/api/check-allowed-outside`, data);
+      if (response.ok) {
+        const result = await response.json();
+        setAllowOutsideInvites(result.allowed);
+      } else {
+        // If there's an error, default to not allowing outside invites
+        setAllowOutsideInvites(false);
+      }
+    } catch (error) {
+      console.error('Error checking outside invites:', error);
+      setAllowOutsideInvites(false);
+    }
+  }
+
+  React.useEffect(() => {
+    if (room.name) {
+      checkAllowedOutside();
+    }
+  }, [room.name]);
+
   return (
     <div {...props} className="lk-chat lk-sharelink">
-      {!isCallScreen ?
-        (
-          <form className="lk-chat-form">
-            <input className="lk-form-control lk-chat-form-input" type="text" value={link} readOnly />
-            <button type="button" className="lk-button lk-chat-form-button" onClick={handleCopy}>
-              Copy
-            </button>
-          </form>
-        ) : <></>}
+      {(!isCallScreen && allowOutsideInvites) && (
+        <form className="lk-chat-form">
+          <input className="lk-form-control lk-chat-form-input" type="text" value={link} readOnly />
+          <button type="button" className="lk-button lk-chat-form-button" onClick={handleCopy}>
+            Copy
+          </button>
+        </form>
+      )}
 
       {showToast ? <Toast className="lk-toast-connection-state">Copied</Toast> : <></>}
 
@@ -243,17 +278,24 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
         <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'chat'} onClick={() => showInviteVia('chat')}>
           Contact
         </button>
-        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'phone'} onClick={() => showInviteVia('phone')}>
-          Phone
-        </button>
-        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'email'} onClick={() => showInviteVia('email')}>
-          Email
-        </button>
+        {allowOutsideInvites && (
+          <>
+            <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'phone'} onClick={() => showInviteVia('phone')}>
+              Phone
+            </button>
+            <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'email'} onClick={() => showInviteVia('email')}>
+              Email
+            </button>
+          </>
+        )}
       </div>
 
-      <InviteViaPhone link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'phone' ? "block" : "none" }} />
-
-      <InviteViaEmail link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'email' ? "block" : "none" }} />
+      {allowOutsideInvites && (
+        <>
+          <InviteViaPhone link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'phone' ? "block" : "none" }} />
+          <InviteViaEmail link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'email' ? "block" : "none" }} />
+        </>
+      )}
 
       {inviteVia === 'chat' ?
         <>
