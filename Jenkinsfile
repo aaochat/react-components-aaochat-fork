@@ -35,7 +35,7 @@ pipeline{
                 echo "========executing business-aaochat-dev branch========"
                 sh '''pnpm install --no-frozen-lockfile'''
                 sh '''pnpm build'''
-                sh '''cd /home/ubuntu/Business-Aaochat-Meet-Beta/livekit-react-core/
+                sh '''cd /home/ubuntu/workspace/B-ba-meet-fork_business-aaochat/livekit-react-core/
                     sudo git reset --hard business-develop
                     sudo git stash
                     sudo git pull origin business-develop
@@ -44,7 +44,7 @@ pipeline{
                     sudo git add .
                     sudo git commit -m "Yarn built update from jenkins for core" || true
                     sudo git push origin business-develop'''
-                sh '''cd /home/ubuntu/Business-Aaochat-Meet-Beta/livekit-react-components/
+                sh '''cd /home/ubuntu/workspace/B-ba-meet-fork_business-aaochat/livekit-react-core/
                     sudo git reset --hard business-develop
                     sudo git stash
                     sudo git pull origin business-develop
@@ -73,7 +73,7 @@ pipeline{
                 echo "========executing business-aaochat branch========"
                 sh '''pnpm install --no-frozen-lockfile'''
                 sh '''pnpm build'''
-                sh '''cd /home/ubuntu/Business-Aaochat-Meet/livekit-react-core/
+                sh '''cd /home/ubuntu/workspace/B-ba-meet-fork_business-aaochat/livekit-react-core/
                     sudo git reset --hard business-master
                     sudo git stash
                     sudo git pull origin business-master
@@ -82,7 +82,7 @@ pipeline{
                     sudo git add .
                     sudo git commit -m "Yarn built update from jenkins for core" || true
                     sudo git push origin business-master'''
-                sh '''cd /home/ubuntu/Business-Aaochat-Meet/livekit-react-components/
+                sh '''cd /home/ubuntu/workspace/B-ba-meet-fork_business-aaochat/livekit-react-core/
                     sudo git reset --hard business-master
                     sudo git stash
                     sudo git pull origin business-master
