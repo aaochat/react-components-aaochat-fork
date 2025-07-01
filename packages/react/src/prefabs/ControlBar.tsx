@@ -13,13 +13,15 @@ import SvgUserIcon from '../assets/icons/tl/UsersIcon';
 
 import { useLocalParticipantPermissions, usePersistentUserChoices } from '../hooks';
 import { useMediaQuery } from '../hooks/internal';
-import { useLayoutContext, useMaybeLayoutContext } from '../context';
+import { useLayoutContext, useMaybeLayoutContext, useRoomContext } from '../context';
 import { supportsScreenSharing } from '@livekit/components-core';
 import { mergeProps } from '../utils';
 import { ExtraOptionMenu } from './ExtraOptionMenu';
 import { useWhiteboard } from '../hooks/useWhiteboard';
 import { StartMediaButton } from '../components/controls/StartMediaButton';
 import { SettingsMenuToggle } from '../components/controls/SettingsMenuToggle';
+import RecordingControls from './Recording';
+import RecordingIndicator from './RecordingIndicator';
 
 /** @public */
 export type ControlBarControls = {
@@ -76,7 +78,20 @@ export function ControlBar({
   const [isChatOpen, setIsChatOpen] = React.useState(false);
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
+  const [isRecording, setIsRecording] = React.useState(false);
   const { state } = useLayoutContext().widget;
+  const room = useRoomContext();
+  React.useEffect(() => {
+    if (room?.metadata) {
+      try {
+        const parsed = JSON.parse(room.metadata);
+        const recordingActive = parsed.recordingStarted === true;
+        setIsRecording(recordingActive);
+      } catch (err) {
+        console.error('Failed to parse room metadata:', err);
+      }
+    }
+  }, [room?.metadata]);
 
   React.useEffect(() => {
     if (layoutContext?.widget.state?.showChat == 'show_chat') {
@@ -126,6 +141,8 @@ export function ControlBar({
     [variation],
   );
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const isHost = urlParams.has('token');
   const browserSupportsScreenSharing = supportsScreenSharing();
 
   const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
@@ -265,6 +282,10 @@ export function ControlBar({
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>
       )}
+      {isHost && (visibleControls.sharelink || visibleControls.users) && (
+        <RecordingControls onRecordingChange={(val) => setIsRecording(val)} />
+      )}
+      {isRecording && <RecordingIndicator />}
       {visibleControls.chat && (
         <ChatToggle>
           {showIcon && <ChatIcon />}
@@ -307,14 +328,13 @@ export function ControlBar({
               showText={showText}
             />
           </div>
-        </div >
+        </div>
       ) : (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
           {showText && visibleControls.leaveButton}
         </DisconnectButton>
-      )
-      }
+      )}
       {visibleControls.settings && (
         <SettingsMenuToggle>
           {showIcon && <GearIcon />}
