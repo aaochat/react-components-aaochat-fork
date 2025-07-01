@@ -150,7 +150,7 @@ export default function RecordingControls({ onRecordingChange }: RecordingContro
                 }}
                 className="lk-recording-button"
               >
-                Snapshot
+                Image Recording
               </button>
             </li>
             <li>
