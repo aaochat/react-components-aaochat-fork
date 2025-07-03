@@ -79,6 +79,7 @@ export function ControlBar({
   const [isShareLinkOpen, setIsShareLinkOpen] = React.useState(false);
   const [isUserOpen, setIsUserOpen] = React.useState(false);
   const [isRecording, setIsRecording] = React.useState(false);
+  const [recordingStartTime, setRecordingStartTime] = React.useState<string | null>(null);
   const { state } = useLayoutContext().widget;
   const room = useRoomContext();
   React.useEffect(() => {
@@ -87,6 +88,11 @@ export function ControlBar({
         const parsed = JSON.parse(room.metadata);
         const recordingActive = parsed.recordingStarted === true;
         setIsRecording(recordingActive);
+        if (recordingActive && parsed.recording_start_time) {
+          setRecordingStartTime(parsed.recording_start_time);
+        } else {
+          setRecordingStartTime(null);
+        }
       } catch (err) {
         console.error('Failed to parse room metadata:', err);
       }
@@ -285,7 +291,9 @@ export function ControlBar({
       {isHost && (visibleControls.sharelink || visibleControls.users) && (
         <RecordingControls onRecordingChange={(val) => setIsRecording(val)} />
       )}
-      {isRecording && <RecordingIndicator />}
+      {isRecording && recordingStartTime && (
+        <RecordingIndicator recordingStartTime={recordingStartTime} />
+      )}
       {visibleControls.chat && (
         <ChatToggle>
           {showIcon && <ChatIcon />}
