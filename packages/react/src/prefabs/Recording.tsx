@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRoomContext } from '../context';
 import { getDomainIdentifier, getHostUrl, getToken } from './ShareLink';
-import { Chevron, MicIcon } from '../assets/icons';
+import { Chevron, RecordingIcon } from '../assets/icons';
 
 interface RecordingControlsProps {
   onRecordingChange?: (val: boolean) => void;
@@ -185,7 +185,7 @@ export default function RecordingControls({ onRecordingChange }: RecordingContro
           'Processing...'
         ) : (
           <>
-            <MicIcon />
+            <RecordingIcon color={isRecording ? 'red' : 'green'} />
             {isRecording ? 'Stop Recording' : 'Start Recording'}
           </>
         )}

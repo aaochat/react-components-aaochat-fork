@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { RecordingIcon } from '../assets/icons';
 
 interface RecordingIndicatorProps {
   recordingStartTime: string | null;
@@ -34,7 +35,9 @@ export default function RecordingIndicator({ recordingStartTime }: RecordingIndi
 
   return (
     <div className="lk-recording">
-      <span>🔴</span>
+      <span>
+        <RecordingIcon color="red" />
+      </span>
       <span>{formatTime(elapsedSeconds)}</span>
     </div>
   );
