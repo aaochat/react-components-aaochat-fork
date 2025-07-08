@@ -4,7 +4,13 @@ import type {
   TrackReferenceOrPlaceholder,
   WidgetState,
 } from '@livekit/components-core';
-import { isEqualTrackRef, isTrackReference, isWeb, log, setupParticipantName } from '@livekit/components-core';
+import {
+  isEqualTrackRef,
+  isTrackReference,
+  isWeb,
+  log,
+  setupParticipantName,
+} from '@livekit/components-core';
 import { RoomEvent, Track, TrackPublication } from 'livekit-client';
 import * as React from 'react';
 import type { MessageFormatter } from '../components';
@@ -17,7 +23,7 @@ import {
   LayoutContextProvider,
   ParticipantTile,
   RoomAudioRenderer,
-  formatChatMessageLinks
+  formatChatMessageLinks,
 } from '../components';
 import { useCreateLayoutContext, useEnsureParticipant, useRoomContext } from '../context';
 import { useLocalParticipant, usePinnedTracks, useTracks, useWhiteboard } from '../hooks';
@@ -99,8 +105,9 @@ export function VideoConference({
   });
 
   const [showShareButton, setShowShareButton] = React.useState<boolean>(showShareLink);
-  const [showParticipantButton, setShowParticipantButton] = React.useState<boolean>(showParticipant);
-  const [leaveButton, setLeaveButton] = React.useState<string>("Leave");
+  const [showParticipantButton, setShowParticipantButton] =
+    React.useState<boolean>(showParticipant);
+  const [leaveButton, setLeaveButton] = React.useState<string>('Leave');
   const [endForAll, setEndForAll] = React.useState<string | false>(false);
 
   const meta = metadata ? JSON.parse(metadata) : {};
@@ -119,7 +126,6 @@ export function VideoConference({
     log.debug('updating widget state', state);
     setWidgetState(state);
     console.log(widgetState);
-
   };
 
   const updateCount = (count: number) => {
@@ -138,12 +144,12 @@ export function VideoConference({
     .filter(isTrackReference)
     .filter((track) => track.publication.source === Track.Source.ScreenShare);
 
-  const whitePub = new TrackPublication(Track.Kind.Unknown, 'whiteboard', "whiteboard");
+  const whitePub = new TrackPublication(Track.Kind.Unknown, 'whiteboard', 'whiteboard');
   const whiteboardTrack = {
     participant: p,
     publication: whitePub,
     source: Track.Source.Unknown,
-  }
+  };
 
   const focusTrack = usePinnedTracks(layoutContext)?.[0];
 
@@ -158,8 +164,8 @@ export function VideoConference({
 
       setShowShareButton(true);
       setShowParticipantButton(true);
-      setLeaveButton("Leave Meeting");
-      setEndForAll("End Meeting for All");
+      setLeaveButton('Leave Meeting');
+      setEndForAll('End Meeting for All');
     }
   }, [meta]);
 
@@ -173,8 +179,8 @@ export function VideoConference({
 
       setShowShareButton(true);
       setShowParticipantButton(true);
-      setLeaveButton("Leave Meeting");
-      setEndForAll("End Meeting for All");
+      setLeaveButton('Leave Meeting');
+      setEndForAll('End Meeting for All');
     }
   }, [p]);
 
@@ -222,10 +228,10 @@ export function VideoConference({
     // console.log("Updating initail whiteboard setting");
     if (isWhiteboardShared) {
       layoutContext.pin.dispatch?.({ msg: 'set_pin', trackReference: whiteboardTrack });
-      layoutContext.whiteboard.dispatch?.({ msg: "show_whiteboard" });
+      layoutContext.whiteboard.dispatch?.({ msg: 'show_whiteboard' });
     } else {
       layoutContext.pin.dispatch?.({ msg: 'clear_pin' });
-      layoutContext.whiteboard.dispatch?.({ msg: "hide_whiteboard" });
+      layoutContext.whiteboard.dispatch?.({ msg: 'hide_whiteboard' });
     }
   }, [isWhiteboardShared]);
 
@@ -233,7 +239,7 @@ export function VideoConference({
 
   // receive data from other participants
   room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
-    const strData = decoder.decode(payload)
+    const strData = decoder.decode(payload);
     const str = JSON.parse(strData);
 
     if (str.openWhiteboard) {
@@ -251,16 +257,16 @@ export function VideoConference({
 
   React.useEffect(() => {
     if (socket) {
-      socket.on("meeting:update", (meetingData: any) => {
+      socket.on('meeting:update', (meetingData: any) => {
         // Handle meeting update event
-        setInvitedUsers(meetingData.users.filter(
-          (userId: any) =>
-            !meetingData.cancelled_by.includes(userId) &&
-            !meetingData.ended_by.includes(userId)
-        ))
+        setInvitedUsers(
+          meetingData.users.filter(
+            (userId: any) =>
+              !meetingData.cancelled_by.includes(userId) && !meetingData.ended_by.includes(userId),
+          ),
+        );
       });
     }
-
   }, [socket]);
 
   return (
@@ -296,7 +302,7 @@ export function VideoConference({
                 users: showParticipantButton,
                 leaveButton: leaveButton,
                 endForAll: endForAll,
-                settings: !!SettingsComponent
+                settings: !!SettingsComponent,
               }}
               waitingRoomCount={waitingRoomCount}
               screenShareTracks={screenShareTracks.length}
@@ -305,65 +311,61 @@ export function VideoConference({
             />
           </div>
 
-          {
-            showShareButton && isCallScreen ? (
-              <CallUser
-                style={{
-                  display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
-                }}
-                socket={socket}
-                contactsList={invitedUsers}
-              />
-            ) : (<></>)
-          }
+          {showShareButton && isCallScreen ? (
+            <CallUser
+              style={{
+                display: widgetState.showChat == 'show_invite' ? 'block' : 'none',
+              }}
+              socket={socket}
+              contactsList={invitedUsers}
+            />
+          ) : (
+            <></>
+          )}
 
-          {
-            showShareButton && !isCallScreen ?
-              (
-                <ShareLink
-                  style={{
-                    display: widgetState.showChat == 'show_invite' ? 'block' : 'none'
-                  }}
-                  isCallScreen={isCallScreen}
-                />
-              ) : (<></>)
-          }
+          {showShareButton && !isCallScreen ? (
+            <ShareLink
+              style={{
+                display: widgetState.showChat == 'show_invite' ? 'block' : 'none',
+              }}
+              isCallScreen={isCallScreen}
+            />
+          ) : (
+            <></>
+          )}
 
-          {
-            showParticipantButton ? (
-              <Users
-                style={{ display: widgetState.showChat == 'show_users' ? 'block' : 'none' }}
-                onWaitingRoomChange={updateCount}
-              />
-            ) : (<></>)
-          }
+          {showParticipantButton ? (
+            <Users
+              style={{ display: widgetState.showChat == 'show_users' ? 'block' : 'none' }}
+              onWaitingRoomChange={updateCount}
+            />
+          ) : (
+            <></>
+          )}
 
-          {
-            showChatButton ? (
-              <Chat
-                style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
-                messageFormatter={formatChatMessageLinks}
-                messageEncoder={chatMessageEncoder}
-                messageDecoder={chatMessageDecoder}
-              />
-            ) : (<></>)
-          }
+          {showChatButton ? (
+            <Chat
+              style={{ display: widgetState.showChat == 'show_chat' ? 'flex' : 'none' }}
+              messageFormatter={formatChatMessageLinks}
+              messageEncoder={chatMessageEncoder}
+              messageDecoder={chatMessageDecoder}
+            />
+          ) : (
+            <></>
+          )}
 
-          {
-            SettingsComponent && (
-              <div
-                className="lk-settings-menu-modal"
-                style={{ display: widgetState.showSettings ? 'block' : 'none' }}
-              >
-                <SettingsComponent />
-              </div>
-            )
-          }
-        </LayoutContextProvider >
-      )
-      }
+          {SettingsComponent && (
+            <div
+              className="lk-settings-menu-modal"
+              style={{ display: widgetState.showSettings ? 'block' : 'none' }}
+            >
+              <SettingsComponent />
+            </div>
+          )}
+        </LayoutContextProvider>
+      )}
       <RoomAudioRenderer />
       <ConnectionStateToast />
-    </div >
+    </div>
   );
 }

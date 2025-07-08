@@ -24,7 +24,7 @@ export function getHostUrl() {
 }
 
 export function getDomainIdentifier() {
-  return typeof window ? ((window.location.href).split("/"))[3] : '';
+  return typeof window ? window.location.href.split('/')[3] : '';
 }
 
 export function getToken() {
@@ -37,12 +37,12 @@ export type User = {
   user_name: string;
   designation: string;
   full_name: string;
-  invited: boolean
+  invited: boolean;
 };
 
 export interface ShareLinkProps extends React.HTMLAttributes<HTMLDivElement> {
   isCallScreen: boolean;
-};
+}
 
 /**
  * The Chat component adds a basis chat functionality to the LiveKit room. The messages are distributed to all participants
@@ -64,8 +64,8 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
   const [searched, setSearched] = React.useState<User[]>([]);
   const { showToast, setShowToast } = useToast();
   const [inviteVia, setInviteVia] = React.useState<string>('chat');
-  const [invitedUsers, setInvitedUsers] =
-    React.useState<string[]>([]);
+  const [invitedUsers, setInvitedUsers] = React.useState<string[]>([]);
+  const [allowOutsideInvites, setAllowOutsideInvites] = React.useState<boolean>(false);
   function showInviteVia(type: string) {
     setInviteVia(type);
   }
@@ -76,17 +76,17 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
   async function searchUsers(key: string) {
     if (key) {
       const filteredData = users.filter(function (item) {
-        return (item.full_name.toLocaleLowerCase()).includes(key.trim().toLocaleLowerCase());
+        return item.full_name.toLocaleLowerCase().includes(key.trim().toLocaleLowerCase());
       });
-      setSearched(filteredData)
+      setSearched(filteredData);
     } else {
-      setSearched(users)
+      setSearched(users);
     }
   }
 
   const queryParams = new URLSearchParams(window.location.search);
-  const token = queryParams.get("token");
-  const authKey = queryParams.get("authKey");
+  const token = queryParams.get('token');
+  const authKey = queryParams.get('authKey');
   let postRequest: any = {
     meeting_id: room.name,
     token: getToken(),
@@ -100,11 +100,11 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
 
   async function getUsers() {
     const data = {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(postRequest)
+      body: JSON.stringify(postRequest),
     };
     fetch(`${getHostUrl()}/api/get-users`, data).then(async (res) => {
       if (res.ok) {
@@ -135,28 +135,28 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
   async function handleInvite(user: User) {
     setInvitedUsers((prevUser) => [...prevUser, user.user_id]);
     let data = {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: ""
+      body: '',
     };
 
     if (isCallScreen) {
       data.body = JSON.stringify({
-        "invite_user_id": user.user_id,
-        "meeting_id": room.name,
-        "authKey": authKey,
-      })
+        invite_user_id: user.user_id,
+        meeting_id: room.name,
+        authKey: authKey,
+      });
     } else {
       data.body = JSON.stringify({
-        "userId": user.user_id, // body data type must match "Content-Type" header
-        "userName": user.full_name, // body data type must match "Content-Type" header
-        "message": link,
-        "meeting_id": room.name,
-        "token": getToken(),
-        "domain": getDomainIdentifier()
-      })
+        userId: user.user_id, // body data type must match "Content-Type" header
+        userName: user.full_name, // body data type must match "Content-Type" header
+        message: link,
+        meeting_id: room.name,
+        token: getToken(),
+        domain: getDomainIdentifier(),
+      });
     }
 
     fetch(`/api/invite-user`, data).then(async (res) => {
@@ -223,39 +223,105 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
 
   React.useEffect(() => {
     setSearched(users);
-  }, [inviteVia])
+  }, [inviteVia]);
+
+  async function checkAllowedOutside() {
+    const data = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        meeting_id: room.name,
+        domain: getDomainIdentifier(),
+      }),
+    };
+
+    try {
+      const response = await fetch(`${getHostUrl()}/api/check-allowed-outside`, data);
+      if (response.ok) {
+        const result = await response.json();
+        setAllowOutsideInvites(result.allowed);
+      } else {
+        // If there's an error, default to not allowing outside invites
+        setAllowOutsideInvites(false);
+      }
+    } catch (error) {
+      console.error('Error checking outside invites:', error);
+      setAllowOutsideInvites(false);
+    }
+  }
+
+  React.useEffect(() => {
+    if (room.name) {
+      checkAllowedOutside();
+    }
+  }, [room.name]);
 
   return (
     <div {...props} className="lk-chat lk-sharelink">
-      {!isCallScreen ?
-        (
-          <form className="lk-chat-form">
-            <input className="lk-form-control lk-chat-form-input" type="text" value={link} readOnly />
-            <button type="button" className="lk-button lk-chat-form-button" onClick={handleCopy}>
-              Copy
-            </button>
-          </form>
-        ) : <></>}
+      {!isCallScreen && allowOutsideInvites && (
+        <form className="lk-chat-form">
+          <input className="lk-form-control lk-chat-form-input" type="text" value={link} readOnly />
+          <button type="button" className="lk-button lk-chat-form-button" onClick={handleCopy}>
+            Copy
+          </button>
+        </form>
+      )}
 
       {showToast ? <Toast className="lk-toast-connection-state">Copied</Toast> : <></>}
 
       <div className="tl-invite-buttons">
-        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'chat'} onClick={() => showInviteVia('chat')}>
+        <button
+          type="button"
+          className="lk-button lk-chat-form-button"
+          aria-pressed={inviteVia === 'chat'}
+          onClick={() => showInviteVia('chat')}
+        >
           Contact
         </button>
-        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'phone'} onClick={() => showInviteVia('phone')}>
-          Phone
-        </button>
-        <button type="button" className="lk-button lk-chat-form-button" aria-pressed={inviteVia === 'email'} onClick={() => showInviteVia('email')}>
-          Email
-        </button>
+        {allowOutsideInvites && (
+          <>
+            <button
+              type="button"
+              className="lk-button lk-chat-form-button"
+              aria-pressed={inviteVia === 'phone'}
+              onClick={() => showInviteVia('phone')}
+            >
+              Phone
+            </button>
+            <button
+              type="button"
+              className="lk-button lk-chat-form-button"
+              aria-pressed={inviteVia === 'email'}
+              onClick={() => showInviteVia('email')}
+            >
+              Email
+            </button>
+          </>
+        )}
       </div>
 
-      <InviteViaPhone link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'phone' ? "block" : "none" }} />
+      {allowOutsideInvites && (
+        <>
+          <InviteViaPhone
+            link={link}
+            room_name={room.name}
+            participant={participantName}
+            isCallScreen={isCallScreen}
+            style={{ display: inviteVia === 'phone' ? 'block' : 'none' }}
+          />
+          <InviteViaEmail
+            link={link}
+            room_name={room.name}
+            participant={participantName}
+            isCallScreen={isCallScreen}
+            style={{ display: inviteVia === 'email' ? 'block' : 'none' }}
+          />
+        </>
+      )}
 
-      <InviteViaEmail link={link} room_name={room.name} participant={participantName} isCallScreen={isCallScreen} style={{ "display": inviteVia === 'email' ? "block" : "none" }} />
-
-      {inviteVia === 'chat' ?
+      {inviteVia === 'chat' ? (
         <>
           {showInviteUser ? (
             <form className="lk-chat-form" onSubmit={handleSubmit}>
@@ -267,32 +333,53 @@ export function ShareLink({ isCallScreen, ...props }: ShareLinkProps) {
                 onChange={handleSubmit}
               />
             </form>
-          ) : (<></>)}
+          ) : (
+            <></>
+          )}
 
           {showInviteUser && searched.length > 0 ? (
-            <ul style={{ height: "70vh", display: "block" }} className="lk-list lk-chat-messages" ref={ulRef}>
+            <ul
+              style={{ height: '70vh', display: 'block' }}
+              className="lk-list lk-chat-messages"
+              ref={ulRef}
+            >
               {searched.map((user) => {
                 return (
                   <li key={user.user_id} className="lk-chat-entry">
-                    <div style={{ width: "100%" }}>
+                    <div style={{ width: '100%' }}>
                       <span className="lk-message-body">{user.full_name}</span>
-                      <span className="lk-message-body lk-message-text">{user.designation ? user.designation : '-'}</span>
+                      <span className="lk-message-body lk-message-text">
+                        {user.designation
+                          ? user.designation
+                          : user.user_name
+                            ? user.user_name != user.full_name
+                              ? user.user_name
+                              : '-'
+                            : '-'}
+                      </span>
                     </div>
 
-                    <button type="button" onClick={() => handleInvite(user)} className={"lk-button lk-chat-form-button" + (invitedUsers.includes(user.user_id) ? ' invited' : '')}>
-                      {invitedUsers.includes(user.user_id) ? "Invited" : "Invite"}
+                    <button
+                      type="button"
+                      onClick={() => handleInvite(user)}
+                      className={
+                        'lk-button lk-chat-form-button' +
+                        (invitedUsers.includes(user.user_id) ? ' invited' : '')
+                      }
+                    >
+                      {invitedUsers.includes(user.user_id) ? 'Invited' : 'Invite'}
                     </button>
                   </li>
-                )
+                );
               })}
             </ul>
           ) : (
             ''
           )}
         </>
-        :
+      ) : (
         <></>
-      }
+      )}
     </div>
   );
 }

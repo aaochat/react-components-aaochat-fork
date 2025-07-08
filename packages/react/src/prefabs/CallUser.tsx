@@ -4,6 +4,7 @@ import { useRoomContext } from "../context";
 import Select from "react-select";
 import { Toast } from "../components";
 import { useToast } from "../hooks/useToast";
+// import Close from "../assets/icons/Close";
 
 /** @public */
 export interface UserProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -59,7 +60,6 @@ export function CallUser({
         if (socket) {
             socket.on("meeting:update", (meetingData: any) => {
                 // Handle meeting update event
-
                 setInvitedUsers(
                     meetingData.users.filter(
                         (userId: any) =>
@@ -67,7 +67,6 @@ export function CallUser({
                             !meetingData.ended_by.includes(userId)
                     )
                 );
-                // You can update your component state or perform any other actions here
             });
         }
 
@@ -112,7 +111,6 @@ export function CallUser({
             throw new Error("Failed to fetch data");
         }
 
-        // const data = await response.json();
         setInvitedUsers((prevUsers) => [...prevUsers, id]);
         const timeoutId = setTimeout(() => {
             setInvitedUsers((prevUsers) =>
@@ -120,7 +118,6 @@ export function CallUser({
             );
         }, 30000);
         setTimeoutIds((prevTimeoutIds: any) => [...prevTimeoutIds, timeoutId]);
-        // setContacts(data.response.users)
     }
     React.useEffect(() => {
         return () => {
@@ -129,8 +126,6 @@ export function CallUser({
     }, []);
 
     async function usersList2() {
-        console.log(CHAT_SERVER_URL);
-
         const response = await fetch(`${CHAT_SERVER_URL}/api/user/all-contact`, {
             method: "POST",
             headers: {
@@ -515,7 +510,7 @@ export function CallUser({
                                 <li key={index} className="lk-chat-entry">
                                     <div style={{ width: "100%" }}>
                                         <span className="lk-message-body text-ellipsis">{user.full_name}</span>
-                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : "-"}</span>
+                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : user.user_name ? user.user_name : "-"}</span>
                                     </div>
                                     <button
                                         disabled={invitedUsers.includes(user.user_id)}
@@ -547,7 +542,7 @@ export function CallUser({
                                         <span className="lk-message-body text-ellipsis">{user.full_name} {room.localParticipant.identity == user.user_id
                                             ? " (me)"
                                             : ""}</span>
-                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : "-"}</span>
+                                        <span className="lk-message-body lk-message-text text-ellipsis">{user.designation ? user.designation : user.user_name ? user.user_name : "-"}</span>
                                     </div>
                                 </li>
                             )

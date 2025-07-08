@@ -33,6 +33,7 @@ pipeline{
             }
             steps{
                 echo "========executing business-aaochat-dev branch========"
+                echo "changed code"
                 sh '''pnpm install --no-frozen-lockfile'''
                 sh '''pnpm build'''
                 sh '''cd /home/ubuntu/Business-Aaochat-Meet-Beta/livekit-react-core/
