@@ -50,6 +50,7 @@ export interface PreJoinProps
   micLabel?: string;
   camLabel?: string;
   userLabel?: string;
+  isValidDomain?: boolean;
   /**
    * If true, user choices are persisted across sessions.
    * @defaultValue true
@@ -222,6 +223,7 @@ export function PreJoin({
   onSubmit,
   onError,
   debug,
+  isValidDomain,
   joinLabel = 'Join Room',
   micLabel = 'Microphone',
   camLabel = 'Camera',
@@ -343,8 +345,8 @@ export function PreJoin({
       audioDeviceId,
     };
     setUserChoices(newUserChoices);
-    setIsValid(handleValidation(newUserChoices));
-  }, [username, videoEnabled, handleValidation, audioEnabled, audioDeviceId, videoDeviceId]);
+    setIsValid(handleValidation(newUserChoices) && isValidDomain);
+  }, [username, videoEnabled, handleValidation, audioEnabled, audioDeviceId, videoDeviceId, isValidDomain]);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
