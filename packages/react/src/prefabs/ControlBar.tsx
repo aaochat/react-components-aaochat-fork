@@ -289,7 +289,7 @@ export function ControlBar({
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>
       )}
-      {isHost && isMeeting && (visibleControls.sharelink || visibleControls.users) && (
+      {isMeeting && (visibleControls.endForAll) && (
         <RecordingControls onRecordingChange={(val) => setIsRecording(val)} />
       )}
 
