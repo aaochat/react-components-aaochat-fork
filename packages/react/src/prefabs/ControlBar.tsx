@@ -147,8 +147,8 @@ export function ControlBar({
     [variation],
   );
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const isHost = urlParams.has('token');
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const isHost = urlParams.has('token');
   const isMeeting = window.location.pathname.includes('meeting');
   const browserSupportsScreenSharing = supportsScreenSharing();
 
