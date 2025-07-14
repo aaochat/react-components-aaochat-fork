@@ -86,7 +86,7 @@ export function ControlBar({
     if (room?.metadata) {
       try {
         const parsed = JSON.parse(room.metadata);
-        const recordingActive = parsed.recordingStarted === true;
+        const recordingActive = parsed.recording_started === true;
         setIsRecording(recordingActive);
         if (recordingActive && parsed.recording_start_time) {
           setRecordingStartTime(parsed.recording_start_time);
