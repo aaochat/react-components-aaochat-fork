@@ -86,7 +86,7 @@ export function ControlBar({
     if (room?.metadata) {
       try {
         const parsed = JSON.parse(room.metadata);
-        const recordingActive = parsed.recordingStarted === true;
+        const recordingActive = parsed.recording_started === true;
         setIsRecording(recordingActive);
         if (recordingActive && parsed.recording_start_time) {
           setRecordingStartTime(parsed.recording_start_time);
@@ -147,8 +147,8 @@ export function ControlBar({
     [variation],
   );
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const isHost = urlParams.has('token');
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const isHost = urlParams.has('token');
   const isMeeting = window.location.pathname.includes('meeting');
   const browserSupportsScreenSharing = supportsScreenSharing();
 
@@ -289,7 +289,7 @@ export function ControlBar({
           {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
         </TrackToggle>
       )}
-      {isHost && isMeeting && (visibleControls.sharelink || visibleControls.users) && (
+      {isMeeting && (visibleControls.endForAll) && (
         <RecordingControls onRecordingChange={(val) => setIsRecording(val)} />
       )}
 

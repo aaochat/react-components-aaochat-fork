@@ -26,7 +26,7 @@ export default function RecordingControls({ onRecordingChange }: RecordingContro
     if (room?.metadata) {
       try {
         const parsed = JSON.parse(room.metadata);
-        const recordingActive = parsed.recordingStarted === true;
+        const recordingActive = parsed.recording_started === true;
         setIsRecording(recordingActive);
         onRecordingChange?.(recordingActive);
       } catch (err) {
