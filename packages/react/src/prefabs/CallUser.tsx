@@ -38,7 +38,8 @@ export function CallUser({
     const [email, setEmail] = React.useState("");
     const [disableButton, setdisableButton] = React.useState(false);
     const room = useRoomContext();
-    let CHAT_SERVER_URL = room.metadata ? JSON.parse(room.metadata).app_url : "";
+    const CHAT_SERVER_URL = room.metadata ? JSON.parse(room.metadata).app_url : "";
+    const domain = room.metadata ? JSON.parse(room.metadata).domain : "";
     const [activeTab, setActiveTab] = React.useState("contacts");
     const [invitedUsers, setInvitedUsers] =
         React.useState<string[]>(contactsList);
@@ -97,6 +98,7 @@ export function CallUser({
             {
                 method: "POST",
                 headers: {
+                    "domain": domain,
                     Accept: "application/json",
                     "Content-Type": "application/json",
                     Authorization: authKey ? authKey : "",
@@ -129,6 +131,7 @@ export function CallUser({
         const response = await fetch(`${CHAT_SERVER_URL}/api/user/all-contact`, {
             method: "POST",
             headers: {
+                "domain": domain,
                 Accept: "application/json",
                 "Content-Type": "application/json",
                 Authorization: authKey ? authKey : "",
@@ -253,6 +256,7 @@ export function CallUser({
                 {
                     method: "POST",
                     headers: {
+                        "domain": domain,
                         Accept: "application/json",
                         "Content-Type": "application/json",
                         Authorization: authKey ? authKey : "",
